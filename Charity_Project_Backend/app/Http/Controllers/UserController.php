@@ -58,16 +58,11 @@ class UserController extends Controller
     public function editPassword(Request $request)
     {
         $validate = $request->validate([
-            'old_password' => 'required|string',
             'new_password' => 'required|string|min:6|max:10|confirmed',
         ]);
 
         $user = Auth::user();
-
-        if (!Hash::check($request->old_password, $user->password)) {
-            return response()->json(['message' => 'the old password is incorrect'], 400);
-        }
-
+        
         // تحديث كلمة المرور بشكل صحيح
         $user->update([
             'password' => Hash::make($request->new_password)
