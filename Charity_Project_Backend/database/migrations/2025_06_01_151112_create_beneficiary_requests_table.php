@@ -18,6 +18,7 @@ return new class extends Migration
             $table->enum('marital_status', ['single', 'married', 'divorced', 'widowed']);
             $table->integer('number_of_kids')->default(0);
             $table->string('city');
+            $table->text('kids_description');
             $table->string('home_address');
             $table->float('monthly_income')->default(0);
             $table->string('current_job');

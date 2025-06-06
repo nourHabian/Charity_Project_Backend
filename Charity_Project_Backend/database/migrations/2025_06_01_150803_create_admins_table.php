@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('admins', function (Blueprint $table) {
             $table->id();
             $table->string('full_name');
-            $table->string('phone_number')->unique();
             $table->string('email')->unique();
             $table->string('password');
             $table->integer('number_of_donations')->default(0);

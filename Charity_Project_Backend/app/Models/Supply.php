@@ -7,4 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Supply extends Model
 {
     //
+    public function beneficiaryRequests() {
+        return $this->belongsToMany(BeneficiaryRequest::class, 'requested_supplies')->withTimestamps();
+    }
 }

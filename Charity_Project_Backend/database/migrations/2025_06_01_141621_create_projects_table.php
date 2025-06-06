@@ -20,7 +20,10 @@ return new class extends Migration
             $table->float('current_amount');
             $table->enum('status', ['in_progress', 'on_hold', 'completed', 'cancelled'])->default('in_progress');
             $table->enum('priority', ['low', 'medium', 'high', 'critical']);
-            $table->boolean('accepts_volunteers')->default(false);
+            $table->enum('duration_type', ['temporary', 'permanent', 'volunteer'])->default('temporary');
+            $table->string('location')->nullable();
+            $table->integer('volunteer_hours')->nullable();
+            $table->string('required_tasks')->nullable();
             $table->timestamps();
         });
     }
