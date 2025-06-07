@@ -46,6 +46,10 @@ class User extends Authenticatable
         return $this->hasMany(Feedback::class);
     }
 
+    public function projects() {
+        return $this->hasMany(Project::class);
+    }
+
     public function notifications() {
         return $this->hasMany(Notification::class);
     }

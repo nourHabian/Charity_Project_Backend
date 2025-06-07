@@ -22,6 +22,7 @@ class AddProjectRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'user_id' => 'required_if:duration_type,تطوعي|integer|exists:types,id',
             'type_id' => 'required|integer|exists:types,id',
             'name' => 'required|string|max:200',
             'description' => 'required|string|max:200',

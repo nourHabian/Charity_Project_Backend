@@ -15,6 +15,9 @@ class ProjectController extends Controller
     public function addProject(AddProjectRequest $request)
     {
         $validatedData = $request->validated();
+        // لازم شيك انو الكلفة الابتدائية يلي دخلها اصغر من رصيد الجمعية لهاد النوع
+        // تزبيط تخزين الصورة
+        // تزبيط رسائل الاشعارات
         $project = Project::create($validatedData);
         $users = User::all();
         if ($project->duration_type == 'تطوعي') {
@@ -39,8 +42,13 @@ class ProjectController extends Controller
                 Notification::create($notification);
             }
         }
-        // اذا كان المشروع نوعو فردي لازم روح لعند المحتاج يلي طالب هاد التبرع وابعتلو نوتفيكيشن انو نزلت حالتك بالمشروع
-        // لازم شيك انو الكلفة الابتدائية يلي دخلها اصغر من رصيد الجمعية لهاد النوع
+        if ($project->duration_type == 'فردي') {
+            $notification = [
+                'user_id' => $project->user_id,
+                'message' => ['تم تنزيل حالتك على التطبيق']
+            ];
+            Notification::create($notification);
+        }
         return response()->json($project, 201);
     }
 
