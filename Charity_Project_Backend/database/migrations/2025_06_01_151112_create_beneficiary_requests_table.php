@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->foreignId('type_id')->constrained('types')->cascadeOnDelete();
-            $table->enum('marital_status', ['single', 'married', 'divorced', 'widowed']);
+            $table->enum('marital_status', ['أعزب', 'متزوج', 'مطلق', 'أرمل']);
             $table->integer('number_of_kids')->default(0);
             $table->string('city');
             $table->text('kids_description');
@@ -28,9 +28,9 @@ return new class extends Migration
             $table->integer('number_of_needy')->nullable();
             $table->float('expected_cost')->nullable();
             $table->text('description');
-            $table->enum('severity_level', ['low', 'medium', 'high', 'critical'])->default('medium');
+            $table->enum('severity_level', ['منخفض', 'متوسط', 'مرتفع', 'حرج'])->default('متوسط');
             $table->string('document_path')->nullable();
-            $table->enum('current_housing_condition', ['own', 'rent', 'hosted'])->nullable();
+            $table->enum('current_housing_condition', ['ملك', 'أجار', 'استضافة'])->nullable();
             $table->string('host_address')->nullable();
             $table->string('host_number')->nullable();
             $table->timestamps();

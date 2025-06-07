@@ -17,16 +17,16 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->date('date_of_birth')->nullable();
-            $table->enum('gender', ['male', 'female'])->nullable();
-            $table->enum('role', ['donor', 'beneficiary', 'volunteer', ]);
+            $table->enum('gender', ['ذكر', 'أنثى'])->nullable();
+            $table->enum('role', ['متبرع', 'مستفيد', 'متطوع']);
             $table->float('balance')->default(0);
             $table->bigInteger('points')->default(0);
             $table->integer('weekly_points')->default(0);
             $table->date('beneficiary_last_order')->nullable();
-            $table->enum('beneficiary_status', ['pending', 'approved', 'rejected', 'delivered'])->nullable();
+            $table->enum('beneficiary_status', ['معلق', 'مقبول', 'مرفوض', 'منتهي'])->nullable(); // منتهي يعني تم توصيل الطلب
             $table->float('monthly_donation')->default(0);
             $table->boolean('ban')->default(false);
-            $table->enum('volunteer_status', ['pending', 'approved', 'rejected'])->nullable();
+            $table->enum('volunteer_status', ['معلق', 'مقبول', 'مرفوض'])->nullable();
             $table->boolean('is_working')->default(false);
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();

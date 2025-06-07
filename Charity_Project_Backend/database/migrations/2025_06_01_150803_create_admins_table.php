@@ -16,9 +16,6 @@ return new class extends Migration
             $table->string('full_name');
             $table->string('email')->unique();
             $table->string('password');
-            $table->integer('number_of_donations')->default(0);
-            $table->integer('number_of_beneficiaries')->default(0);
-            $table->float('charity_balance')->default(0);
             $table->timestamps();
         });
     }
