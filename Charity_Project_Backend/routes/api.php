@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -15,6 +16,15 @@ Route::post('/login', [UserController::class, 'login']);
 Route::post('/logout', [UserController::class, 'logout'])->middleware('auth:sanctum');
 Route::put('/editpassword', [UserController::class, 'editPassword'])->middleware('auth:sanctum');
 Route::get('/getUser', [UserController::class, 'GetUserInformation'])->middleware('auth:sanctum');
+
+
+
+Route::post('/admin/addProject', [ProjectController::class, 'addProject']);
+Route::put('/admin/editProject/{id}', [ProjectController::class, 'editProject']);
+Route::get('/getallProject', [ProjectController::class, 'getallProject']);
+Route::delete('/admin/deleteProject/{id}', [ProjectController::class, 'deleteProject']);
+
+
 
 
 /*

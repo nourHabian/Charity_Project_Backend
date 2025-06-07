@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('password');
             $table->date('date_of_birth')->nullable();
             $table->enum('gender', ['male', 'female'])->nullable();
-            $table->enum('role', ['donor', 'beneficiary', 'volunteer', 'admin']);
+            $table->enum('role', ['donor', 'beneficiary', 'volunteer', ]);
             $table->float('balance')->default(0);
             $table->bigInteger('points')->default(0);
             $table->integer('weekly_points')->default(0);
