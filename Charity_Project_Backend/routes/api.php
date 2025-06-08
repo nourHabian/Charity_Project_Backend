@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\VolunteerController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -13,9 +15,11 @@ Route::post('/register', [UserController::class, 'register']);
 
 Route::post('/login', [UserController::class, 'login']);
 
-Route::post('/logout', [UserController::class, 'logout'])->middleware('auth:sanctum');
-Route::put('/editpassword', [UserController::class, 'editPassword'])->middleware('auth:sanctum');
-Route::get('/getUser', [UserController::class, 'GetUserInformation'])->middleware('auth:sanctum');
+
+
+Route::post('/logout', [UserController::class, 'logout']);
+Route::put('/editpassword', [UserController::class, 'editPassword']);
+Route::get('/getUser', [UserController::class, 'GetUserInformation']);
 
 
 
@@ -25,7 +29,8 @@ Route::get('/getallProject', [ProjectController::class, 'getallProject']);
 Route::delete('/admin/deleteProject/{id}', [ProjectController::class, 'deleteProject']);
 
 
-
+Route::post('/donor/volunteerrequest', [VolunteerController::class, 'addvolunteerrequest']);
+Route::get('/admin/getallvolunteerrequest', [VolunteerController::class, 'getallvolunteerrequest']);
 
 /*
 

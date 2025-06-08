@@ -13,7 +13,8 @@ use Illuminate\Support\Facades\Auth;
 class ProjectController extends Controller
 {
     public function addProject(AddProjectRequest $request)
-    {
+    {   
+       
         $validatedData = $request->validated();
         // لازم شيك انو الكلفة الابتدائية يلي دخلها اصغر من رصيد الجمعية لهاد النوع
         // تزبيط تخزين الصورة

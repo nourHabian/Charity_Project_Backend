@@ -7,4 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 class RequestedSupply extends Model
 {
     //
+    protected $guarded = [];
 }
