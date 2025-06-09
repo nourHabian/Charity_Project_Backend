@@ -32,9 +32,9 @@ class AddVolunteerRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => 'required|integer|exists:users,id',
+            'user_id' => 'nullable|integer|exists:users,id',
             'project_id' => 'nullable|integer|exists:users,id',
-            'phone_number'=>'required|string|max:10',
+            'phone_number'=>'required|string|min:10',
             'age'=>'required|integer|max:50',
             'purpose_of_volunteering'=>'required|string',
             'current_location'=>'required|string',

@@ -6,6 +6,7 @@ use App\Http\Requests\AddVolunteerRequest;
 use App\Models\User;
 use App\Models\Volunteer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class VolunteerController extends Controller
 {
@@ -14,7 +15,10 @@ class VolunteerController extends Controller
     
     public function addvolunteerrequest(AddVolunteerRequest $request)
 {
+
+    $user_id=Auth::User()->id;
     $validatedData = $request->validated();
+    $validatedData['user_id']=$user_id;
     $volunteer = Volunteer::create($validatedData);
 
     $user = User::find($validatedData['user_id']);
@@ -30,7 +34,8 @@ class VolunteerController extends Controller
 
 
 public function getallvolunteerrequest(){
- 
+
+     
      $volunteer_request = Volunteer::all();
         return response()->json($volunteer_request , 200);
 

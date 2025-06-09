@@ -6,6 +6,7 @@ use App\Http\Requests\AddProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Models\Notification;
 use App\Models\Project;
+use App\Models\Type;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -53,7 +54,7 @@ class ProjectController extends Controller
         return response()->json($project, 201);
     }
 
-
+//عرض كل المشاريع 
 
     public function getallProject()
     {
@@ -61,6 +62,23 @@ class ProjectController extends Controller
         $project = Project::all();
         return response()->json($project, 200);
     }
+
+      //ارجاع المشاريع التطوع حسب التايب
+          public function getProjectbyvolunteeringdomain($volunteeringdomain)
+{
+    $type =Type::where('name', $volunteeringdomain)->first();
+
+    if ($type) {
+        $projects =Project::where('type_id', $type->id)
+            ->where('duration_type', 'تطوعي')
+            ->get();
+
+        return response()->json($projects, 200);
+    } else {
+        return response()->json(['message' => 'لا يوجد نوع بهذا الاسم'], 404);
+    }
+}
+
 
 
     public function deleteProject($id)

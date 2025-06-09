@@ -28,8 +28,10 @@ Route::put('/admin/editProject/{id}', [ProjectController::class, 'editProject'])
 Route::get('/getallProject', [ProjectController::class, 'getallProject']);
 Route::delete('/admin/deleteProject/{id}', [ProjectController::class, 'deleteProject']);
 
+Route::get('/getProjectbyvolunteeringdomain/{volunteeringdomain}', [ProjectController::class, 'getProjectbyvolunteeringdomain']);
 
-Route::post('/donor/volunteerrequest', [VolunteerController::class, 'addvolunteerrequest']);
+
+Route::post('/donor/volunteerrequest', [VolunteerController::class, 'addvolunteerrequest'])->middleware('auth:sanctum');
 Route::get('/admin/getallvolunteerrequest', [VolunteerController::class, 'getallvolunteerrequest']);
 
 /*

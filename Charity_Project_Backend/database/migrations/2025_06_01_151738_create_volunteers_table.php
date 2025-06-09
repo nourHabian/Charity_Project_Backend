@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('volunteers', function (Blueprint $table) {
             $table->id();
-             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+             $table->foreignId('user_id')->nullable()->constrained('users')->cascadeOnDelete();
             $table->foreignId('type_id')->nullable()->constrained('types')->cascadeOnDelete();
             $table->string('phone_number');
             $table->integer('age');
