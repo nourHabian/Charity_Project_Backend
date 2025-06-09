@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('donations', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-            $table->foreignId('project_id')->constrained('projects')->cascadeOnDelete();
-            $table->enum('type', ['project_donation', 'zakat', 'monthly_donation'])->default('project_donation');
+            $table->foreignId('project_id')->nullable()->constrained('projects')->cascadeOnDelete();
+            $table->enum('type', ['project_donation', 'zakat', 'monthly_donation', 'gift'])->default('project_donation');
             $table->float('money');
             $table->timestamps();
         });

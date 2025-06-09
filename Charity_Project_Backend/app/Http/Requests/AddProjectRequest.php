@@ -22,13 +22,13 @@ class AddProjectRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => 'required_if:duration_type,تطوعي|integer|exists:types,id',
+            'user_id' => 'required_if:duration_type,تطوعي|integer|exists:users,id',
             'type_id' => 'required|integer|exists:types,id',
             'name' => 'required|string|max:200',
             'description' => 'required|string|max:200',
             'photo' => 'nullable|image|mimes:png,jpg,jpeg,gif|max:2048',
-            'total_amount' => 'required|string|max:200',
-            'current_amount' => 'required|string|max:200',
+            'total_amount' => 'required|float|min:0',
+            'current_amount' => 'required|float|min:0',
 
             'priority' => ['nullable', 'string', Rule::in(['منخفض', 'متوسط', 'مرتفع', 'حرج'])],
             'duration_type' => ['required', 'string', Rule::in(['مؤقت', 'دائم', 'تطوعي', 'فردي'])],
@@ -38,4 +38,18 @@ class AddProjectRequest extends FormRequest
             'required_tasks' => 'required_if:duration_type,تطوعي|string|max:200',
         ];
     }
+
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            $total_amount = $this->input('total_amount');
+            $current_amount = $this->input('current_amount');
+
+            // إذا القيمتين موجودين ومقارنة الأرقام منطقية
+            if (!is_null($total_amount) && !is_null($current_amount) && $current_amount > $total_amount) {
+                $validator->errors()->add('current_amount', 'المبلغ الحالي يجب أن لا يتجاوز المبلغ الكلي.');
+            }
+        });
+    }
+
 }

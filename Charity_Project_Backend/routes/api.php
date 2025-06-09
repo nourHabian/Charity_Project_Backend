@@ -19,20 +19,23 @@ Route::post('/login', [UserController::class, 'login']);
 
 Route::post('/logout', [UserController::class, 'logout']);
 Route::put('/editpassword', [UserController::class, 'editPassword']);
-Route::get('/getUser', [UserController::class, 'GetUserInformation']);
+Route::get('/getUser', [UserController::class, 'GetUserInformation'])->middleware('auth:sanctum');
 
 
 
 Route::post('/admin/addProject', [ProjectController::class, 'addProject']);
 Route::put('/admin/editProject/{id}', [ProjectController::class, 'editProject']);
-Route::get('/getallProject', [ProjectController::class, 'getallProject']);
+Route::get('/getAllProjects', [ProjectController::class, 'getAllProjects']);
 Route::delete('/admin/deleteProject/{id}', [ProjectController::class, 'deleteProject']);
 
-Route::get('/getProjectbyvolunteeringdomain/{volunteeringdomain}', [ProjectController::class, 'getProjectbyvolunteeringdomain']);
+Route::get('/getVolunteerProjectsByType/{volunteeringDomain}', [ProjectController::class, 'getVolunteerProjectsByType']);
 
 
-Route::post('/donor/volunteerrequest', [VolunteerController::class, 'addvolunteerrequest'])->middleware('auth:sanctum');
-Route::get('/admin/getallvolunteerrequest', [VolunteerController::class, 'getallvolunteerrequest']);
+Route::post('/donor/volunteerRequest', [VolunteerController::class, 'addVolunteerRequest'])->middleware('auth:sanctum');
+Route::get('/admin/getAllVolunteerRequests', [VolunteerController::class, 'getAllVolunteerRequests']);
+
+
+Route::post('/donor/addToBalance', [UserController::class, 'addToBalance'])->middleware('auth:sanctum');
 
 /*
 

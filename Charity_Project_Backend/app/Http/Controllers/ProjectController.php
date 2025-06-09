@@ -14,12 +14,9 @@ use Illuminate\Support\Facades\Auth;
 class ProjectController extends Controller
 {
     public function addProject(AddProjectRequest $request)
-    {   
-       
+    {
         $validatedData = $request->validated();
-        // لازم شيك انو الكلفة الابتدائية يلي دخلها اصغر من رصيد الجمعية لهاد النوع
-        // تزبيط تخزين الصورة
-        // تزبيط رسائل الاشعارات
+        // تزبيط تخزين الصورة بحال ما كان مشروع تطوعي
         $project = Project::create($validatedData);
         $users = User::all();
         if ($project->duration_type == 'تطوعي') {
@@ -27,19 +24,19 @@ class ProjectController extends Controller
                 if ($user->role == 'متطوع') {
                     $notification = [
                         'user_id' => $user->id,
-                        'message' => ['ساهم في التطوع لهذا المشروع']
+                        'title' => 'فرصة تطوع جديدة بانتظارك',
+                        'message' => 'مشروع تطوعي جديد متاح الآن ' . $project->name . ' يمكنك التقديم والمساهمة في خدمة المجتمع، انضم واصنع فرقاً'
                     ];
                     Notification::create($notification);
                 }
-                
             }
-        }
-        else if ($project->priority == 'حرج') {
+        } else if ($project->priority == 'حرج') {
             foreach ($users as $user) {
                 if ($user->role == 'محتاج') continue;
                 $notification = [
                     'user_id' => $user->id,
-                    'message' => ['ساهم في التبرع لهذه الحالة الطارئة']
+                    'title' => 'نداء عاجل ، هناك مشروع بحاجة لدعمك',
+                    'message' => 'حالة عاجلة جديدة بحاجة إلى التدخل الفوري '. $project->name .' نأمل أن تكون من المبادرين لدعمها'
                 ];
                 Notification::create($notification);
             }
@@ -47,45 +44,45 @@ class ProjectController extends Controller
         if ($project->duration_type == 'فردي') {
             $notification = [
                 'user_id' => $project->user_id,
-                'message' => ['تم تنزيل حالتك على التطبيق']
+                'title' => 'تم نشر حالتك',
+                'message' => 'تم نشر حالتك في التطبيق، نأمل أن تصل المساعدة إليك قريباً بإذن الله'
             ];
             Notification::create($notification);
         }
         return response()->json($project, 201);
     }
 
-//عرض كل المشاريع 
+    //عرض كل المشاريع 
 
-    public function getallProject()
+    public function getAllProjects()
     {
 
         $project = Project::all();
         return response()->json($project, 200);
     }
 
-      //ارجاع المشاريع التطوع حسب التايب
-          public function getProjectbyvolunteeringdomain($volunteeringdomain)
-{
-    $type =Type::where('name', $volunteeringdomain)->first();
+    //ارجاع المشاريع التطوع حسب التايب
+    public function getVolunteerProjectsByType($volunteeringDomain)
+    {
+        $type = Type::where('name', $volunteeringDomain)->first();
 
-    if ($type) {
-        $projects =Project::where('type_id', $type->id)
-            ->where('duration_type', 'تطوعي')
-            ->get();
+        if ($type) {
+            $projects = Project::where('type_id', $type->id)
+                ->where('duration_type', 'تطوعي')
+                ->get();
 
-        return response()->json($projects, 200);
-    } else {
-        return response()->json(['message' => 'لا يوجد نوع بهذا الاسم'], 404);
+            return response()->json($projects, 200);
+        } else {
+            return response()->json(['message' => 'لا يوجد نوع بهذا الاسم'], 404);
+        }
     }
-}
 
 
 
     public function deleteProject($id)
     {
-
+        // تزبيط انو الحذف بصير بس بحال الcurrent amount كانت تساوي الصفر
         $project = Project::findOrFail($id);
-
         $project->delete();
         return response()->json(null, 204);
     }

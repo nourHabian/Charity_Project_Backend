@@ -12,35 +12,32 @@ class VolunteerController extends Controller
 {
 
     //التسجيل على استبيان التطوع 
-    
-    public function addvolunteerrequest(AddVolunteerRequest $request)
-{
 
-    $user_id=Auth::User()->id;
-    $validatedData = $request->validated();
-    $validatedData['user_id']=$user_id;
-    $volunteer = Volunteer::create($validatedData);
+    public function addVolunteerRequest(AddVolunteerRequest $request)
+    {
 
-    $user = User::find($validatedData['user_id']);
-    if ($user) {
-        $user->role = 'متطوع';
-        $user->save();
+        $user_id = Auth::User()->id;
+        $validatedData = $request->validated();
+        $validatedData['user_id'] = $user_id;
+        $volunteer = Volunteer::create($validatedData);
+
+        $user = User::find($validatedData['user_id']);
+        if ($user) {
+            $user->role = 'متطوع';
+            $user->save();
+        }
+
+        return response()->json($volunteer, 201);
     }
 
-    return response()->json($volunteer, 201);
-}
-
-//عرض كل استبيانات التطوع
+    //عرض كل استبيانات التطوع
 
 
-public function getallvolunteerrequest(){
-
-     
-     $volunteer_request = Volunteer::all();
-        return response()->json($volunteer_request , 200);
-
-}
+    public function getAllVolunteerRequests()
+    {
 
 
-
+        $volunteer_request = Volunteer::all();
+        return response()->json($volunteer_request, 200);
+    }
 }
