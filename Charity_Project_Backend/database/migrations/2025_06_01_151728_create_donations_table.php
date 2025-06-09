@@ -15,8 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->foreignId('project_id')->nullable()->constrained('projects')->cascadeOnDelete();
+            $table->string('recipient_number')->nullable();
             $table->enum('type', ['project_donation', 'zakat', 'monthly_donation', 'gift'])->default('project_donation');
-            $table->float('money');
+            $table->float('amount');
             $table->timestamps();
         });
     }

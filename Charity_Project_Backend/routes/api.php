@@ -36,6 +36,10 @@ Route::get('/admin/getAllVolunteerRequests', [VolunteerController::class, 'getAl
 
 
 Route::post('/donor/addToBalance', [UserController::class, 'addToBalance'])->middleware('auth:sanctum');
+Route::post('/donor/giveGift', [UserController::class, 'giveGift'])->middleware('auth:sanctum');
+Route::post('/donor/giveZakat', [UserController::class, 'giveZakat'])->middleware('auth:sanctum');
+
+
 
 /*
 
