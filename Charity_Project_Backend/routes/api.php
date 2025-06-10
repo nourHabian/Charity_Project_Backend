@@ -17,8 +17,8 @@ Route::post('/login', [UserController::class, 'login']);
 
 
 
-Route::post('/logout', [UserController::class, 'logout']);
-Route::put('/editpassword', [UserController::class, 'editPassword']);
+Route::post('/logout', [UserController::class, 'logout'])->middleware('auth:sanctum');;
+Route::put('/editpassword', [UserController::class, 'editPassword'])->middleware('auth:sanctum');;
 Route::get('/getUser', [UserController::class, 'GetUserInformation'])->middleware('auth:sanctum');
 
 
