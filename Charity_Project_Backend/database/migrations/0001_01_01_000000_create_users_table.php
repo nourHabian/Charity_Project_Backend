@@ -21,7 +21,6 @@ return new class extends Migration
             $table->enum('role', ['متبرع', 'مستفيد', 'متطوع']);
             $table->float('balance')->default(0);
             $table->bigInteger('points')->default(0);
-            $table->integer('weekly_points')->default(0);
             $table->date('beneficiary_last_order')->nullable();
             $table->enum('beneficiary_status', ['معلق', 'مقبول', 'مرفوض', 'منتهي'])->nullable(); // منتهي يعني تم توصيل الطلب
             $table->float('monthly_donation')->default(0);
