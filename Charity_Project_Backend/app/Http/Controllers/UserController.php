@@ -93,7 +93,8 @@ class UserController extends Controller
         return response()->json($user, 200);
     }
 
-    public function giveGift(Request $request) {
+    public function giveGift(Request $request)
+    {
         $validate = $request->validate([
             'phone_number' => 'required|string|min:6|max:10',
             'beneficiary_name' => 'required|string|max:40',
@@ -112,6 +113,7 @@ class UserController extends Controller
             // edit donor's balance
             $user->balance -= $request->amount;
             $user->save();
+
 
             // send beneficiary a notification
             $beneficiary_notification = [
@@ -141,13 +143,13 @@ class UserController extends Controller
             $charity->number_of_donations++;
             $charity->save();
             return response()->json(['message' => 'تم الإهداء بنجاح، شكراً لك!'], 200);
-
         } else {
             return response()->json(['message' => 'لقد حدث خطأ! يبدو أن هذا المحتاج غير مسجل لدينا في التطبيق، يمكنك دعوته للتسجيل على صفحة الويب الخاصة بنا'], 404);
         }
     }
 
-    public function giveZakat(Request $request) {
+    public function giveZakat(Request $request)
+    {
         $validate = $request->validate([
             'amount' => 'required|numeric|min:1000'
         ]);
@@ -184,5 +186,4 @@ class UserController extends Controller
         $charity->save();
         return response()->json(['message' => 'تم استلام الزكاة بنجاح'], 200);
     }
-
 }
