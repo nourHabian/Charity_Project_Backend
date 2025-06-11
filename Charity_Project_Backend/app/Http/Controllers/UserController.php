@@ -76,9 +76,8 @@ class UserController extends Controller
 
     public function GetUserInformation()
     {
-        $user_id = Auth::user()->id;
-        $userData = User::findOrFail($user_id);
-        return new UserResource($userData);
+        $user = Auth::user();
+        return response()->json($user, 200);
     }
 
     public function addToBalance(Request $request)
