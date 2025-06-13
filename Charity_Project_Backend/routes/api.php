@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\DonationController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VolunteerController;
@@ -39,8 +41,8 @@ Route::post('/donor/addToBalance', [UserController::class, 'addToBalance'])->mid
 Route::post('/donor/giveGift', [UserController::class, 'giveGift'])->middleware('auth:sanctum');
 Route::post('/donor/giveZakat', [UserController::class, 'giveZakat'])->middleware('auth:sanctum');
 
-
-
+Route::get('/notifications',[NotificationController::class, 'showAllAndMarkAsRead'])->middleware('auth:sanctum');
+Route::get('/donations/user',[DonationController::class, 'getUserDonations'])->middleware('auth:sanctum');
 /*
 
 
