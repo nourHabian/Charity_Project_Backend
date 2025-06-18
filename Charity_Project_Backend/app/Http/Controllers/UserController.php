@@ -47,9 +47,13 @@ class UserController extends Controller
         $user = User::where('email', $request->email)->firstOrFail();
         $token = $user->createToken('auth_Token')->plainTextToken;
 
-        return response()->json(['message' => 'Login successful', 'user' => $user, 'token' => $token], 200);
-    }
 
+        $unreadCount = Notification::where('user_id', $user->id)
+            ->where('is_read', false)
+            ->count();
+
+        return response()->json(['message' => 'Login successful', 'user' => $user, 'token' => $token, 'unread_count' => $unreadCount], 200);
+    }
 
     public function logout(Request $request)
     {
