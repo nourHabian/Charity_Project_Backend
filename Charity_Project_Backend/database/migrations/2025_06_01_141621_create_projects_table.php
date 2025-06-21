@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('name');
             $table->text('description');
             $table->string('photo')->nullable();
-            $table->float('total_amount');
-            $table->float('current_amount');
+            $table->float('total_amount')->nullable();
+            $table->float('current_amount')->default(0);
             $table->enum('status', ['جاري', 'معلق', 'منتهي', 'ملغى'])->default('جاري');
             $table->enum('priority', ['منخفض', 'متوسط', 'مرتفع', 'حرج'])->default('متوسط');
             $table->enum('duration_type', ['مؤقت', 'دائم', 'تطوعي', 'فردي'])->default('مؤقت');

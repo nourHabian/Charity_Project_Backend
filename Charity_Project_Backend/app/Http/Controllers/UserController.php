@@ -80,8 +80,7 @@ class UserController extends Controller
         return response()->json($user, 200);
     }
 
-    public function addToBalance(Request $request)
-    {
+    public function addToBalance(Request $request) {
         $validate = $request->validate([
             'card_number' => 'required|digits:16',
             'amount' => 'required|numeric|min:0.1'

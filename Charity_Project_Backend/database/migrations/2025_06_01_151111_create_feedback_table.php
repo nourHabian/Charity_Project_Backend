@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->text('message');
-            $table->enum('rate', [1, 2, 3, 4, 5]);
             $table->enum('status', ['معلق', 'مقبول', 'مرفوض']);
             $table->timestamps();
         });

@@ -3,8 +3,10 @@
 namespace Database\Seeders;
 
 use App\Models\Project;
+use Illuminate\Container\Attributes\Storage as AttributesStorage;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Storage;
 
 class ProjectSeeder extends Seeder
 {
@@ -13,7 +15,7 @@ class ProjectSeeder extends Seeder
       */
      public function run(): void
      {
-          $projects = [
+          $volunteer_projects = [
                [
                     'type_id' => 2,
                     'name' => 'دعم تعليم الأطفال في المناطق الفقيرة',
@@ -23,7 +25,8 @@ class ProjectSeeder extends Seeder
                     'volunteer_hours' => ' 3 ساعات أسبوعياً ',
                     'total_amount' => '10',
                     'current_amount' => '0',
-                    'duration_type' => 'تطوعي'
+                    'duration_type' => 'تطوعي',
+                    'photo' => 'charity_logo/logo.png',
 
                ],
 
@@ -37,7 +40,8 @@ class ProjectSeeder extends Seeder
                     'volunteer_hours' => '3 ساعات أسبوعياً ',
                     'total_amount' => '10',
                     'current_amount' => '0',
-                    'duration_type' => 'تطوعي'
+                    'duration_type' => 'تطوعي',
+                    'photo' => 'charity_logo/logo.png',
 
                ],
                [
@@ -50,7 +54,8 @@ class ProjectSeeder extends Seeder
                     'volunteer_hours' => '6 ساعات أسبوعياً',
                     'total_amount' => '10',
                     'current_amount' => '0',
-                    'duration_type' => 'تطوعي'
+                    'duration_type' => 'تطوعي',
+                    'photo' => 'charity_logo/logo.png',
 
                ],
                [
@@ -63,7 +68,8 @@ class ProjectSeeder extends Seeder
                     'volunteer_hours' => '4 ساعات',
                     'total_amount' => '10',
                     'current_amount' => '0',
-                    'duration_type' => 'تطوعي'
+                    'duration_type' => 'تطوعي',
+                    'photo' => 'charity_logo/logo.png',
 
                ],
                [
@@ -76,7 +82,8 @@ class ProjectSeeder extends Seeder
                     'volunteer_hours' => '4 ساعات يومياً',
                     'total_amount' => '8',
                     'current_amount' => '0',
-                    'duration_type' => 'تطوعي'
+                    'duration_type' => 'تطوعي',
+                    'photo' => 'charity_logo/logo.png',
 
                ],
                [
@@ -89,7 +96,8 @@ class ProjectSeeder extends Seeder
                     'volunteer_hours' => '3 ساعات أسبوعياً',
                     'total_amount' => '20',
                     'current_amount' => '0',
-                    'duration_type' => 'تطوعي'
+                    'duration_type' => 'تطوعي',
+                    'photo' => 'charity_logo/logo.png',
 
                ],
                [
@@ -102,7 +110,8 @@ class ProjectSeeder extends Seeder
                     'volunteer_hours' => '2 ساعات يومياً.',
                     'total_amount' => '5',
                     'current_amount' => '0',
-                    'duration_type' => 'تطوعي'
+                    'duration_type' => 'تطوعي',
+                    'photo' => 'charity_logo/logo.png',
 
                ],
                [
@@ -115,7 +124,8 @@ class ProjectSeeder extends Seeder
                     'volunteer_hours' => '5 ساعات أسبوعياً.',
                     'total_amount' => '2',
                     'current_amount' => '0',
-                    'duration_type' => 'تطوعي'
+                    'duration_type' => 'تطوعي',
+                    'photo' => 'charity_logo/logo.png',
 
                ],
                [
@@ -128,7 +138,8 @@ class ProjectSeeder extends Seeder
                     'volunteer_hours' => '3 ساعات أسبوعياً',
                     'total_amount' => '4',
                     'current_amount' => '0',
-                    'duration_type' => 'تطوعي'
+                    'duration_type' => 'تطوعي',
+                    'photo' => 'charity_logo/logo.png',
 
                ],
                [
@@ -141,7 +152,8 @@ class ProjectSeeder extends Seeder
                     'volunteer_hours' => 'ساعتين.',
                     'total_amount' => '4 ',
                     'current_amount' => '0',
-                    'duration_type' => 'تطوعي'
+                    'duration_type' => 'تطوعي',
+                    'photo' => 'charity_logo/logo.png',
 
                ],
                [
@@ -154,24 +166,284 @@ class ProjectSeeder extends Seeder
                     'volunteer_hours' => 'ساعات أسبوعياً.',
                     'total_amount' => '3',
                     'current_amount' => '0',
-                    'duration_type' => 'تطوعي'
+                    'duration_type' => 'تطوعي',
+                    'photo' => 'charity_logo/logo.png',
 
                ]
+          ];
+
+          $permanent_projects = [
+               [
+                    'type_id' => 7,
+                    'name' => 'كفالة أيتام',
+                    'description' => 'يهدف هذا المشروع إلى توفير رعاية شاملة للأطفال الأيتام، '
+                         . 'تشمل الجوانب المعيشية والتعليمية والصحية والنفسية، '
+                         . 'لضمان تنشئتهم في بيئة آمنة ومستقرة. '
+                         . 'ويسعى المشروع إلى تلبية احتياجاتهم الأساسية ومتابعتهم بشكل مستمر، '
+                         . 'بما يحقق لهم حياة كريمة ومستقبل أفضل.',
+                    'duration_type' => 'دائم',
+                    'photo' => 'permanent_project_images/project_001.png',
+               ],
+               [
+                    'type_id' => 1,
+                    'name' => 'عملية قلب مفتوح',
+                    'description' => 'يهدف هذا المشروع إلى دعم المرضى من ذوي الدخل المحدود '
+                         . 'الذين يعانون من أمراض قلبية خطيرة، '
+                         . 'من خلال تغطية تكاليف عمليات القلب المفتوح، '
+                         . 'وتوفير الرعاية الطبية اللازمة قبل وبعد الجراحة، '
+                         . 'بما يساهم في إنقاذ حياتهم وتحسين فرص شفائهم.',
+                    'duration_type' => 'دائم',
+                    'photo' => 'permanent_project_images/project_002.png',
+               ],
+               [
+                    'type_id' => 4,
+                    'name' => 'تقديم سلل غذائية',
+                    'description' => 'يهدف هذا المشروع إلى توفير سلل غذائية تحتوي على المواد الأساسية للأسر المحتاجة، '
+                         . 'بهدف دعمهم في تأمين احتياجاتهم المعيشية اليومية والتخفيف من الأعباء المادية، '
+                         . 'خصوصاً في المواسم أو الأوقات الصعبة.',
+                    'duration_type' => 'دائم',
+                    'photo' => 'permanent_project_images/project_003.png',
+               ],
+               [
+                    'type_id' => 4,
+                    'name' => 'توفير مياه شرب نظيفة',
+                    'description' => 'يهدف هذا المشروع إلى توفير مياه شرب نظيفة وصالحة للاستخدام اليومي '
+                         . 'للأسر والمجتمعات التي تعاني من نقص أو تلوث مصادر المياه، '
+                         . 'وذلك لضمان صحة وسلامة الأفراد والحد من الأمراض المرتبطة بالمياه غير النظيفة. '
+                         . 'ويسعى المشروع إلى تركيب محطات تنقية، حفر آبار، '
+                         . 'أو توزيع مياه معقمة بشكل منتظم لتحسين جودة حياة المستفيدين.',
+                    'duration_type' => 'دائم',
+                    'photo' => 'permanent_project_images/project_004.png',
+               ],
+          ];
 
 
+          $temporary_projects = [
+               [
+                    'type_id' => 1,
+                    'name' => 'رعاية صحية لمرضى السرطان',
+                    'description' => 'يهدف هذا المشروع إلى تقديم الرعاية الصحية المتكاملة لمرضى السرطان،'
+                         . ' من خلال دعم تكاليف العلاج،'
+                         . ' وتوفير الأدوية اللازمة،'
+                         . ' وتسهيل الوصول إلى الفحوصات الدورية'
+                         . ' . نسعى لمد يد العون للمرضى من ذوي الدخل المحدود،'
+                         . ' ومساندتهم في رحلتهم العلاجية،'
+                         . ' بما يضمن لهم حياة كريمة وأملاً متجدداً في الشفاء.',
+                    'photo' => 'temporary_projects_images/health_project_001.jpg',
+                    'total_amount' => 8800
+               ],
+               [
+                    'type_id' => 1,
+                    'name' => 'تأمين مستلزمات صحية',
+                    'description' => 'يهدف هذا المشروع لتأمين مستلزمات صحية ضرورية للمرضى،'
+                         . ' مثل الأدوية، وأجهزة الرعاية المنزلية،'
+                         . ' والمستلزمات الطبية الأساسية،'
+                         . ' وذلك للمساهمة في تحسين ظروفهم الصحية،'
+                         . ' وتخفيف العبء المادي عنهم وعن أسرهم،'
+                         . ' خاصةً من هم في أمسّ الحاجة إلى الدعم.',
+                    'photo' => 'temporary_projects_images/health_project_002.jpg',
+                    'total_amount' => 5600
+               ],
+               [
+                    'type_id' => 1,
+                    'name' => 'تشخيص مجاني للمحتاجين',
+                    'description' => 'يهدف هذا المشروع لتوفير خدمات تشخيص طبي مجاني للمحتاجين،'
+                         . ' من خلال تأمين الفحوصات الطبية الأساسية،'
+                         . ' وتحاليل المختبر، وصور الأشعة،'
+                         . ' وذلك بهدف الكشف المبكر عن الأمراض وتقديم التوجيه الطبي المناسب،'
+                         . ' مساهمةً في رعاية صحية عادلة وشاملة.',
+                    'photo' => 'temporary_projects_images/health_project_003.jpg',
+                    'total_amount' => 10000
+               ],
+               [
+                    'type_id' => 1,
+                    'name' => 'قوافل طبية متنقلة',
+                    'description' => 'يهدف هذا المشروع إلى توفير خدمات طبية متنقلة تشمل الكشف،'
+                         . ' التشخيص، والعلاج المجاني في المناطق النائية والقرى التي تفتقر إلى مرافق صحية مناسبة.'
+                         . ' يعمل المشروع على تخفيف معاناة السكان الذين يصعب عليهم الوصول إلى المستشفيات،'
+                         . ' من خلال تسيير سيارات طبية مجهزة بأطباء وفريق طبي متخصص.'
+                         . ' كما يساهم في رفع مستوى الوعي الصحي والوقاية من'
+                         . ' الأمراض من خلال التوعية والتثقيف المجتمعي أثناء الزيارات الدورية.',
+                    'photo' => 'temporary_projects_images/health_project_004.jpg',
+                    'total_amount' => 7400
+               ],
+               [
+                    'type_id' => 1,
+                    'name' => 'توفير أدوية مزمنة للمرضى الفقراء',
+                    'description' => 'يهدف هذا المشروع إلى توفير الأدوية الأساسية والضرورية بشكل مستمر'
+                         . ' ومجاني لمرضى الأمراض المزمنة من الفئات ذات الدخل المحدود.'
+                         . ' يسعى المشروع إلى تحسين جودة حياة المرضى من خلال'
+                         . ' ضمان حصولهم على العلاج الدوائي المنتظم،'
+                         . ' مثل أدوية السكري، الضغط، والربو، دون الحاجة للقلق بشأن التكاليف المالية.'
+                         . ' كما يساهم في تقليل المضاعفات الصحية'
+                         . ' وزيادة فرص الشفاء أو السيطرة على المرض،'
+                         . ' مما يخفف العبء عن المستشفيات والمراكز الصحية.',
+                    'photo' => 'temporary_projects_images/health_project_005.jpg',
+                    'total_amount' => 9800
+               ],
+               [
+                    'type_id' => 1,
+                    'name' => 'حملات تطعيم وقاية من الأمراض',
+                    'description' => 'يهدف هذا المشروع إلى تنظيم حملات تطعيم واسعة'
+                         . ' تستهدف الأطفال والنساء والفئات الأكثر عرضة للأمراض في المجتمعات الفقيرة والمناطق النائية.'
+                         . ' يعمل المشروع على تعزيز المناعة المجتمعية والوقاية من انتشار الأمراض المعدية'
+                         . ' من خلال توفير اللقاحات الأساسية بشكل مجاني وآمن.'
+                         . ' كما يسعى إلى توعية المجتمع بأهمية التطعيم'
+                         . ' ودوره في حماية الأفراد والعائلات من المخاطر الصحية،'
+                         . ' وتحسين مستوى الصحة العامة على المدى الطويل.',
+                    'photo' => 'temporary_projects_images/health_project_006.jpg',
+                    'total_amount' => 3500
+               ],
+               [
+                    'type_id' => 2,
+                    'name' => 'ترميم المدارس في المناطق المتضررة',
+                    'description' => 'يهدف هذا المشروع إلى ترميم المدارس في المناطق المتضررة،'
+                         . ' من خلال إعادة تأهيل المباني،'
+                         . ' وصيانة المرافق الأساسية، وتوفير بيئة تعليمية آمنة وصالحة للطلاب.'
+                         . ' نسعى من خلال هذا الجهد إلى دعم استمرار العملية التعليمية للأطفال،'
+                         . ' وتمكينهم من التعلم في ظروف كريمة تليق بحقهم في التعلم.',
+                    'photo' => 'temporary_projects_images/educational_projects_001.jpg',
+                    'total_amount' => 13850
+               ],
+               [
+                    'type_id' => 2,
+                    'name' => 'تأمين حقيبة متكاملة للطلاب',
+                    'description' => 'يهدف هذا المشروع إلى تأمين حقيبة مدرسية متكاملة للطلاب،'
+                         . ' تحتوي على جميع الأدوات والقرطاسية الأساسية التي يحتاجونها مع بداية العام الدراسي.'
+                         . ' نسعى من خلال هذا الدعم إلى تخفيف الأعباء عن الأسر المحتاجة،'
+                         . ' وتمكين أبنائهم من متابعة تعليمهم بثقة وكرامة،'
+                         . ' في بيئة تعليمية مشجعة وعادلة.',
+                    'photo' => 'temporary_projects_images/educational_projects_002.jpg',
+                    'total_amount' => 2200
+               ],
+               [
+                    'type_id' => 2,
+                    'name' => 'تسيير نقل للطلاب في المناطق النائية',
+                    'description' => 'يهدف هذا المشروع إلى تأمين وسائل نقل آمنة'
+                         . ' ومنتظمة للطلاب في المناطق النائية،'
+                         . ' لمساعدتهم على الوصول إلى مدارسهم بسهولة ودون انقطاع.'
+                         . ' نسعى من خلال هذا الدعم إلى تقليل معدلات التسرب الدراسي،'
+                         . ' وتوفير فرصة تعليم عادلة للأطفال في القرى والمناطق البعيدة،'
+                         . ' بما يضمن استمرارهم في التعلم في بيئة مستقرة ومحفزة.',
+                    'photo' => 'temporary_projects_images/educational_projects_003.jpg',
+                    'total_amount' => 3140
+               ],
+               [
+                    'type_id' => 2,
+                    'name' => 'تطوير مهارات الحاسوب واللغات',
+                    'description' => 'يهدف هذا المشروع إلى تقديم دورات تعليمية في'
+                         . ' مهارات الحاسوب الأساسية وتعلم اللغات الأجنبية،'
+                         . ' تستهدف الشباب والطلاب بشكل خاص.'
+                         . ' يسعى المشروع إلى تمكين المشاركين من استخدام التكنولوجيا'
+                         . ' بفعالية والتواصل بلغات متعددة،'
+                         . ' مما يساهم في تعزيز فرصهم التعليمية والمهنية ضمن بيئة تفاعلية ومواكبة للتطورات الحديثة.',
+                    'photo' => 'temporary_projects_images/educational_projects_004.jpg',
+                    'total_amount' => 4300
+               ],
+               [
+                    'type_id' => 2,
+                    'name' => 'مدرسة متنقلة (سنة دراسية في حافلة)',
+                    'description' => 'يهدف هذا المشروع إلى توفير التعليم للأطفال في المناطق النائية'
+                         . ' من خلال حافلة مجهزة كفصل دراسي متنقل،'
+                         . ' تقدم دروساً في المواد الأساسية بإشراف معلمين مؤهلين.'
+                         . ' يُسهم المشروع في ضمان حق التعليم وتقليل التسرب الدراسي،'
+                         . ' عبر بيئة تعليمية آمنة ومتنقلة تراعي احتياجات الأطفال في الظروف الصعبة.',
+                    'photo' => 'temporary_projects_images/educational_projects_005.jpg',
+                    'total_amount' => 3000
+               ],
+               [
+                    'type_id' => 2,
+                    'name' => 'دروس تقوية مجانية لطلاب الشهادات',
+                    'description' => 'يهدف هذا المشروع إلى تقديم دروس تقوية مجانية لطلاب الشهادات الدراسية،'
+                         . ' مثل الشهادة الإعدادية والثانوية،'
+                         . ' في المواد الأساسية التي تشكّل تحدياً لهم.'
+                         . ' يسعى المشروع إلى دعم الطلاب من الأسر ذات الدخل المحدود،'
+                         . ' ورفع مستواهم الأكاديمي من خلال دروس منتظمة يقدمها مدرسون مختصون،'
+                         . ' مما يساعدهم على تحسين نتائجهم وزيادة فرص نجاحهم في الامتحانات النهائية.',
+                    'photo' => 'temporary_projects_images/educational_projects_001.jpg',
+                    'total_amount' => 6300
+               ],
+
+
+               [
+                    'type_id' => 3,
+                    'name' => 'بناء مجمع طبي للمرضى المحتاجين',
+                    'description' => 'يسعى المشروع إلى توفير الرعاية الصحية الأساسية مثل الفحوصات الطبية،'
+                         . ' والخدمات العلاجية للمرضى المحتاجين ضمن مجمع طبي متكامل.'
+                         . ' يعمل المشروع على تحسين إمكانية الوصول إلى خدمات طبية متقدمة'
+                         . ' في مناطق تفتقر للبنية التحتية الصحية،'
+                         . ' مع التركيز على جودة الخدمة وسرعة الاستجابة لاحتياجات المرضى.',
+                    'photo' => 'temporary_projects_images/medical_complex_001.jpg',
+                    'total_amount' => 20000
+               ],
+               [
+                    'type_id' => 3,
+                    'name' => 'تأهيل كوادر طبية متخصصة',
+                    'description' => 'يهدف المشروع إلى تدريب وتأهيل كوادر طبية متخصصة في مختلف المجالات،'
+                         . ' لرفع كفاءة الخدمات الصحية وتحسين جودة الرعاية المقدمة.'
+                         . ' يشمل المشروع دورات تدريبية، وورش عمل،'
+                         . ' وبرامج تطوير مهني مستمرة لتعزيز مهارات الأطباء والممرضين.',
+                    'photo' => 'temporary_projects_images/medical_training_001.jpg',
+                    'total_amount' => 15000
+               ],
+               [
+                    'type_id' => 3,
+                    'name' => 'توفير أجهزة ومعدات طبية حديثة',
+                    'description' => 'يهدف المشروع إلى شراء وتوفير أجهزة ومعدات طبية حديثة'
+                         . ' لمراكز الرعاية الصحية والمستشفيات،'
+                         . ' بما يسهم في تحسين جودة التشخيص والعلاج.'
+                         . ' يدعم المشروع تحديث البنية التحتية الطبية والتقنية في المؤسسات الصحية،'
+                         . ' مما يساهم في رفع مستوى الرعاية الصحية المقدمة.',
+                    'photo' => 'temporary_projects_images/medical_equipment_001.jpg',
+                    'total_amount' => 18000
+               ],
+               [
+                    'type_id' => 3,
+                    'name' => 'حملات توعية صحية للمجتمعات المحلية',
+                    'description' => 'يهدف المشروع إلى تنظيم حملات توعية صحية متكاملة،'
+                         . ' تستهدف نشر المعرفة حول الوقاية من الأمراض،'
+                         . ' وأهمية الكشف المبكر، والعادات الصحية السليمة.'
+                         . ' يعمل المشروع على زيادة الوعي الصحي في المجتمعات المحلية'
+                         . ' وتحفيز الأفراد على تبني أساليب حياة صحية.',
+                    'photo' => 'temporary_projects_images/health_awareness_001.jpg',
+                    'total_amount' => 5000
+               ]
 
           ];
-          foreach ($projects as $projectData) {
-               $project = Project::create([
-                    'type_id' => $projectData['type_id'],
-                    'name' => $projectData['name'],
-                    'description' => $projectData['description'],
-                    'required_tasks' => $projectData['required_tasks'],
-                    'location' => $projectData['location'],
-                    'volunteer_hours' => $projectData['volunteer_hours'],
-                    'total_amount' => $projectData['total_amount'],
-                    'current_amount' => $projectData['current_amount'],
-                    'duration_type' => $projectData['duration_type'],
+
+          foreach ($volunteer_projects as $project) {
+               Project::create([
+                    'type_id' => $project['type_id'],
+                    'name' => $project['name'],
+                    'description' => $project['description'],
+                    'required_tasks' => $project['required_tasks'],
+                    'location' => $project['location'],
+                    'volunteer_hours' => $project['volunteer_hours'],
+                    'total_amount' => $project['total_amount'],
+                    'current_amount' => $project['current_amount'],
+                    'duration_type' => $project['duration_type'],
+                    'photo' => $project['photo'],
+               ]);
+          }
+
+          foreach ($temporary_projects as $project) {
+               Project::create([
+                    'type_id' => $project['type_id'],
+                    'name' => $project['name'],
+                    'description' => $project['description'],
+                    'total_amount' => $project['total_amount'],
+                    'photo' => $project['photo'],
+               ]);
+          }
+
+
+          foreach ($permanent_projects as $project) {
+               Project::create([
+                    'type_id' => $project['type_id'],
+                    'name' => $project['name'],
+                    'description' => $project['description'],
+                    'duration_type' => $project['duration_type'],
+                    'photo' => $project['photo'],
                ]);
           }
      }

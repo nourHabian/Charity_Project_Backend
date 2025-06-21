@@ -43,6 +43,15 @@ Route::post('/donor/giveZakat', [UserController::class, 'giveZakat'])->middlewar
 
 Route::get('/notifications',[NotificationController::class, 'showAllAndMarkAsRead'])->middleware('auth:sanctum');
 Route::get('/donations/user',[DonationController::class, 'getUserDonations'])->middleware('auth:sanctum');
+
+Route::get('/donor/home', [ProjectController::class, 'home'])->middleware('auth:sanctum');
+Route::get('/donor/projects/health', [ProjectController::class, 'healthProjects'])->middleware('auth:sanctum');
+Route::get('/donor/projects/educational', [ProjectController::class, 'educationalProjects'])->middleware('auth:sanctum');
+Route::get('/donor/projects/residential', [ProjectController::class, 'residentialProjects'])->middleware('auth:sanctum');
+Route::get('/donor/projects/nutritional', [ProjectController::class, 'nutritionalProjects'])->middleware('auth:sanctum');
+Route::get('/donor/projects/emergency', [ProjectController::class, 'emergencyProjects'])->middleware('auth:sanctum');
+
+
 /*
 
 

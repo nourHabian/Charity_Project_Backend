@@ -10,9 +10,58 @@ use App\Models\Type;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ProjectController extends Controller
 {
+    public function home() {
+        $projects = Project::where('duration_type', 'دائم')->get();
+        foreach ($projects as $project) {
+            $project['photo_url'] = asset(Storage::url($project['photo']));
+        }
+        return response()->json($projects, 200);
+    }
+
+    public function healthProjects() {
+        $projects = Project::where('type_id', 1)->where('duration_type', '!=', 'تطوعي')->get();
+        foreach ($projects as $project) {
+            $project['photo_url'] = asset(Storage::url($project['photo']));
+        }
+        return response()->json($projects, 200);
+    }
+    
+    public function educationalProjects() {
+        $projects = Project::where('type_id', 2)->where('duration_type', '!=', 'تطوعي')->get();
+        foreach ($projects as $project) {
+            $project['photo_url'] = asset(Storage::url($project['photo']));
+        }
+        return response()->json($projects, 200);
+    }
+    
+    public function residentialProjects() {
+        $projects = Project::where('type_id', 3)->where('duration_type', '!=', 'تطوعي')->get();
+        foreach ($projects as $project) {
+            $project['photo_url'] = asset(Storage::url($project['photo']));
+        }
+        return response()->json($projects, 200);
+    }
+    
+    public function nutritionalProjects() {
+        $projects = Project::where('type_id', 4)->where('duration_type', '!=', 'تطوعي')->get();
+        foreach ($projects as $project) {
+            $project['photo_url'] = asset(Storage::url($project['photo']));
+        }
+        return response()->json($projects, 200);
+    }
+
+    public function emergencyProjects() {
+        $projects = Project::where('priority', 'حرج')->where('duration_type', '!=', 'تطوعي')->get();
+        foreach ($projects as $project) {
+            $project['photo_url'] = asset(Storage::url($project['photo']));
+        }
+        return response()->json($projects, 200);
+    }
+
     public function addProject(AddProjectRequest $request)
     {
         $validatedData = $request->validated();
