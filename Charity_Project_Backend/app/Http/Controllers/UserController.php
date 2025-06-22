@@ -81,12 +81,17 @@ class UserController extends Controller
     public function GetUserInformation()
     {
         $user = Auth::user();
-        return response()->json($user, 200);
+        $notifications = Notification::where('user_id', $user->id)
+            ->where('is_read', false)->get();
+        return response()->json([
+            'user' => $user,
+            'number of unread notifications' => count($notifications)
+        ], 200);
     }
 
     public function addToBalance(Request $request) {
         $validate = $request->validate([
-            'card_number' => 'required|digits:16',
+            'card_number' => 'required|digits:4',
             'amount' => 'required|numeric|min:0.1'
         ]);
         $user = Auth::user();

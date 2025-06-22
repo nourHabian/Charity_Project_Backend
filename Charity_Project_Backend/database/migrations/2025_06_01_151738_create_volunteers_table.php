@@ -16,13 +16,6 @@ return new class extends Migration
             $table->foreignId('user_id')->nullable()->constrained('users')->cascadeOnDelete();
             $table->foreignId('project_id')->nullable()->constrained('projects')->cascadeOnDelete();
             $table->string('phone_number');
-            // $table->integer('age');
-            // $table->string('purpose_of_volunteering');
-            // $table->string('current_location');
-            // $table->integer('volunteering_hours');
-            // $table->enum('gender', ['ذكر', 'أنثى']);
-            // $table->enum('volunteering_domain', ['تعليمي', 'صحي', 'عن بعد', 'ميداني']);
-            // $table->enum('education', ['جامعي', 'ثانوي', 'دراسات عليا']);
             $table->timestamps();
         });
     }

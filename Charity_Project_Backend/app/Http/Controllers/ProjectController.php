@@ -23,41 +23,51 @@ class ProjectController extends Controller
     }
 
     public function healthProjects() {
-        $projects = Project::where('type_id', 1)->where('duration_type', '!=', 'تطوعي')->get();
+        $projects = Project::where('type_id', 1)->where('duration_type', '!=', 'تطوعي')->where('duration_type', '!=', 'دائم')->get();
         foreach ($projects as $project) {
             $project['photo_url'] = asset(Storage::url($project['photo']));
+            $percentage = ($project['current_amount'] / $project['total_amount']) * 100.0;
+            $project['percentage'] = $percentage;
         }
         return response()->json($projects, 200);
     }
     
     public function educationalProjects() {
-        $projects = Project::where('type_id', 2)->where('duration_type', '!=', 'تطوعي')->get();
+        $projects = Project::where('type_id', 2)->where('duration_type', '!=', 'تطوعي')->where('duration_type', '!=', 'دائم')->get();
         foreach ($projects as $project) {
             $project['photo_url'] = asset(Storage::url($project['photo']));
+            $percentage = ($project['current_amount'] / $project['total_amount']) * 100.0;
+            $project['percentage'] = $percentage;
         }
         return response()->json($projects, 200);
     }
     
     public function residentialProjects() {
-        $projects = Project::where('type_id', 3)->where('duration_type', '!=', 'تطوعي')->get();
+        $projects = Project::where('type_id', 3)->where('duration_type', '!=', 'تطوعي')->where('duration_type', '!=', 'دائم')->get();
         foreach ($projects as $project) {
             $project['photo_url'] = asset(Storage::url($project['photo']));
+            $percentage = ($project['current_amount'] / $project['total_amount']) * 100.0;
+            $project['percentage'] = $percentage;
         }
         return response()->json($projects, 200);
     }
     
     public function nutritionalProjects() {
-        $projects = Project::where('type_id', 4)->where('duration_type', '!=', 'تطوعي')->get();
+        $projects = Project::where('type_id', 4)->where('duration_type', '!=', 'تطوعي')->where('duration_type', '!=', 'دائم')->get();
         foreach ($projects as $project) {
             $project['photo_url'] = asset(Storage::url($project['photo']));
+            $percentage = ($project['current_amount'] / $project['total_amount']) * 100.0;
+            $project['percentage'] = $percentage;
         }
         return response()->json($projects, 200);
     }
 
     public function emergencyProjects() {
-        $projects = Project::where('priority', 'حرج')->where('duration_type', '!=', 'تطوعي')->get();
+        $projects = Project::where('priority', 'حرج')->where('duration_type', '!=', 'تطوعي')->where('duration_type', '!=', 'دائم')->get();
         foreach ($projects as $project) {
             $project['photo_url'] = asset(Storage::url($project['photo']));
+            $percentage = ($project['current_amount'] / $project['total_amount']) * 100.0;
+            $project['percentage'] = $percentage;
         }
         return response()->json($projects, 200);
     }
