@@ -16,9 +16,13 @@ class PinCodeMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public $user;
+    public $verification_code;
+    public function __construct($user, $verification_code)
     {
         //
+        $this->user = $user;
+        $this->verification_code = $verification_code;
     }
 
     /**
@@ -27,7 +31,7 @@ class PinCodeMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Pin Code Mail',
+            subject: 'رمز التحقق من جمعية Hand by Hand',
         );
     }
 
@@ -37,8 +41,12 @@ class PinCodeMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.pinCode',
-        );
+        view: 'emails.pinCode',
+        with: [
+            'user' => $this->user,
+            'verification_code' => $this->verification_code,
+        ],
+    );
     }
 
     /**

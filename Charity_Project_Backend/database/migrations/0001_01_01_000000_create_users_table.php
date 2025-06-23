@@ -16,6 +16,8 @@ return new class extends Migration
             $table->string('phone_number')->unique();
             $table->string('email')->unique();
             $table->string('password');
+            $table->string('verification_code');
+            $table->boolean('verified')->default(false);
             $table->date('date_of_birth')->nullable();
             $table->enum('gender', ['ذكر', 'أنثى'])->nullable();
             $table->enum('role', ['متبرع', 'مستفيد', 'متطوع']);
@@ -31,7 +33,6 @@ return new class extends Migration
             $table->string('current_location')->nullable();
             $table->integer('volunteering_hours')->nullable();
             $table->enum('education', ['جامعي', 'ثانوي', 'دراسات عليا'])->nullable();
-            
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
             $table->timestamps();

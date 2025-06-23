@@ -18,38 +18,82 @@ class UserController extends Controller
 
     public function register(Request $request)
     {
-        $validate = $request->validate([
-            'full_name' => 'required|string|max:40',
-            'phone_number' => 'required|string|min:6|max:10|unique:users,phone_number',
-            'email' => 'required|string|email|unique:users,email|max:40',
-            'password' => 'required|string|min:5|confirmed'
-        ]);
+        $verification_code = random_int(1000, 9999);
 
-        $user = User::create([
-            'full_name' => $request->full_name,
-            'phone_number' => $request->phone_number,
-            'email' => $request->email,
-            'password' => Hash::make($request->password)
-        ]);
-        Mail::to($user->email)->send(new PinCodeMail());
+        $exists = User::where('phone_number', $request->phone_number)
+            ->where('email', $request->email)->exists();
+
+        $user = null;
+        if (!$exists) {
+            $validate = $request->validate([
+                'full_name' => 'required|string|max:40',
+                'phone_number' => 'required|string|min:6|max:10|unique:users,phone_number',
+                'email' => 'required|string|email|unique:users,email|max:40',
+                'password' => 'required|string|min:5|confirmed'
+            ]);
+
+            $user = User::create([
+                'full_name' => $request->full_name,
+                'phone_number' => $request->phone_number,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'verification_code' => $verification_code,
+            ]);
+        } else {
+            $existed_user = User::where('phone_number', $request->phone_number)
+                ->where('email', $request->email)->firstOrFail();
+            if ($existed_user->verified) {
+                $request->validate([
+                    'full_name' => 'required|string|max:40',
+                    'phone_number' => 'required|string|min:6|max:10|unique:users,phone_number',
+                    'email' => 'required|string|email|unique:users,email|max:40',
+                    'password' => 'required|string|min:5|confirmed'
+                ]);
+            }
+            $validate = $request->validate([
+                'full_name' => 'required|string|max:40',
+                'password' => 'required|string|min:5|confirmed'
+            ]);
+
+            $existed_user->update([
+                'full_name' => $request->full_name,
+                'password' => Hash::make($request->password),
+                'verification_code' => $verification_code,
+            ]);
+            $user = $existed_user;
+        }
+
+        Mail::to($user->email)->send(new PinCodeMail($user, $verification_code));
         return response()->json(['message' => 'User Registered Successfully', 'user' => $user], 200);
+    }
+
+    public function verify_email(Request $request) {
+        $user = User::where('email', $request->email)->firstOrFail();
+        if ($request->verification_code == $user->verification_code) {
+            $user->update([
+                'verified' => true,
+            ]);
+            return response()->json(['message' => 'تم التحقق من البريد الإلكتروني بنجاح'], 200);
+        } else {
+            return response()->json(['message' => 'رمز التحقق غير صحيح، يرجى المحاولة مرة أخرى'], 401);
+        }
     }
 
 
     public function login(Request $request)
     {
         $validate = $request->validate([
-
             'email' => 'required|email|string',
             'password' => 'required|string'
-
         ]);
         if (!Auth::attempt($request->only('email', 'password')))
             return response()->json(['message' => 'invalid password or email'], 401);
 
         $user = User::where('email', $request->email)->firstOrFail();
+        if (!$user->verified) {
+            return response()->json(['message' => 'invalid password or email'], 401);
+        }
         $token = $user->createToken('auth_Token')->plainTextToken;
-
 
         $unreadCount = Notification::where('user_id', $user->id)
             ->where('is_read', false)
@@ -92,7 +136,8 @@ class UserController extends Controller
         ], 200);
     }
 
-    public function addToBalance(Request $request) {
+    public function addToBalance(Request $request)
+    {
         $validate = $request->validate([
             'card_number' => 'required|digits:4',
             'amount' => 'required|numeric|min:0.1'
