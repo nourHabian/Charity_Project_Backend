@@ -67,7 +67,8 @@ class UserController extends Controller
         return response()->json(['message' => 'User Registered Successfully', 'user' => $user], 200);
     }
 
-    public function verify_email(Request $request) {
+    public function verify_email(Request $request)
+    {
         $user = User::where('email', $request->email)->firstOrFail();
         if ($request->verification_code == $user->verification_code) {
             $user->update([
@@ -78,7 +79,6 @@ class UserController extends Controller
             return response()->json(['message' => 'رمز التحقق غير صحيح، يرجى المحاولة مرة أخرى'], 401);
         }
     }
-
 
     public function login(Request $request)
     {
@@ -107,7 +107,6 @@ class UserController extends Controller
         $request->user()->currentAccessToken()->delete();
         return response()->json(['message' => 'Logout successful']);
     }
-
 
     public function editPassword(Request $request)
     {
@@ -153,7 +152,7 @@ class UserController extends Controller
         $validate = $request->validate([
             'phone_number' => 'required|string|min:6|max:10',
             'beneficiary_name' => 'required|string|max:40',
-            'amount' => 'required|numeric|min:0.1'
+            'amount' => 'required|numeric|min:1'
         ]);
         $user = Auth::user();
         // search the beneficiary
@@ -206,7 +205,8 @@ class UserController extends Controller
     public function giveZakat(Request $request)
     {
         $validate = $request->validate([
-            'amount' => 'required|numeric|min:1000'
+            'amount' => 'required|numeric|min:1',
+            'type' => 'required|string'
         ]);
         $user = Auth::user();
         if ($user->balance < $request->amount) {
@@ -218,7 +218,7 @@ class UserController extends Controller
         $notification = [
             'user_id' => $user->id,
             'title' => 'تم استلام زكاتك',
-            'message' => 'تم استلام زكاتك وسيتم إيصالها إلى مستحقيها في أقرب وقت ممكن، جزاك الله خيراً. '
+            'message' => 'تم استلام زكاتك وسيتم إيصالها إلى مستحقيها في أقرب وقت ممكن، جزاك الله خيراً🙏🏻. '
         ];
         Notification::create($notification);
 
@@ -231,14 +231,46 @@ class UserController extends Controller
         Donation::create($history);
 
         // give points
-        $user->points += $request->amount / 1000;
+        $user->points += $request->amount;
         $user->save();
 
         // add money to somewhere
         $charity = Charity::findOrFail(1);
-        $charity->health_projects_balance += $request->amount;
+        if ($request->type == 'صحي') {
+            $charity->health_projects_balance += $request->amount;
+        } else if ($request->type == 'تعليمي') {
+            $charity->educational_projects_balance += $request->amount;
+        } else if ($request->type == 'سكني') {
+            $charity->housing_projects_balance += $request->amount;
+        } else if ($request->type == 'غذائي') {
+            $charity->nutritional_projects_balance += $request->amount;
+        } else {
+            return response()->json(['message' => 'error has occurred'], 401);
+        }
+        
         $charity->number_of_donations++;
         $charity->save();
         return response()->json(['message' => 'تم استلام الزكاة بنجاح'], 200);
+    }
+
+    public function monthlyDonation(Request $request) 
+    {
+        $validate = $request->validate([
+            'amount' => 'numeric|min:1.00|required'
+        ]);
+        $user = Auth::User();
+        $user->update([
+            'monthly_donation' => $request->amount
+        ]);
+        return response()->json(['message' => 'تم تفعيل التبرع الشهري بنجاح، سيتم اقتطاع ' . $request->amount . '$ من حسابك في بداية كل شهر، جزاك الله خيراً🙏🏻'], 200);
+    }
+
+    public function cancelMonthlyDonation() 
+    {
+        $user = Auth::User();
+        $user->update([
+            'monthly_donation' => 0,
+        ]);
+        return response()->json(['message' => 'تم إلغاء التبرع الشهري بنجاح'], 200);
     }
 }

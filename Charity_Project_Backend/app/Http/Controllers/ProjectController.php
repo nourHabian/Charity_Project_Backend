@@ -14,7 +14,8 @@ use Illuminate\Support\Facades\Storage;
 
 class ProjectController extends Controller
 {
-    public function home() {
+    public function home()
+    {
         $projects = Project::where('duration_type', 'دائم')->get();
         foreach ($projects as $project) {
             $project['photo_url'] = asset(Storage::url($project['photo']));
@@ -22,7 +23,8 @@ class ProjectController extends Controller
         return response()->json($projects, 200);
     }
 
-    public function healthProjects() {
+    public function healthProjects()
+    {
         $projects = Project::where('type_id', 1)->where('duration_type', '!=', 'تطوعي')->where('duration_type', '!=', 'دائم')->get();
         foreach ($projects as $project) {
             $project['photo_url'] = asset(Storage::url($project['photo']));
@@ -31,8 +33,9 @@ class ProjectController extends Controller
         }
         return response()->json($projects, 200);
     }
-    
-    public function educationalProjects() {
+
+    public function educationalProjects()
+    {
         $projects = Project::where('type_id', 2)->where('duration_type', '!=', 'تطوعي')->where('duration_type', '!=', 'دائم')->get();
         foreach ($projects as $project) {
             $project['photo_url'] = asset(Storage::url($project['photo']));
@@ -41,8 +44,9 @@ class ProjectController extends Controller
         }
         return response()->json($projects, 200);
     }
-    
-    public function residentialProjects() {
+
+    public function residentialProjects()
+    {
         $projects = Project::where('type_id', 3)->where('duration_type', '!=', 'تطوعي')->where('duration_type', '!=', 'دائم')->get();
         foreach ($projects as $project) {
             $project['photo_url'] = asset(Storage::url($project['photo']));
@@ -51,8 +55,9 @@ class ProjectController extends Controller
         }
         return response()->json($projects, 200);
     }
-    
-    public function nutritionalProjects() {
+
+    public function nutritionalProjects()
+    {
         $projects = Project::where('type_id', 4)->where('duration_type', '!=', 'تطوعي')->where('duration_type', '!=', 'دائم')->get();
         foreach ($projects as $project) {
             $project['photo_url'] = asset(Storage::url($project['photo']));
@@ -62,7 +67,8 @@ class ProjectController extends Controller
         return response()->json($projects, 200);
     }
 
-    public function emergencyProjects() {
+    public function emergencyProjects()
+    {
         $projects = Project::where('priority', 'حرج')->where('duration_type', '!=', 'تطوعي')->where('duration_type', '!=', 'دائم')->get();
         foreach ($projects as $project) {
             $project['photo_url'] = asset(Storage::url($project['photo']));
@@ -95,7 +101,7 @@ class ProjectController extends Controller
                 $notification = [
                     'user_id' => $user->id,
                     'title' => 'نداء عاجل ، هناك مشروع بحاجة لدعمك',
-                    'message' => 'حالة عاجلة جديدة بحاجة إلى التدخل الفوري '. $project->name .' نأمل أن تكون من المبادرين لدعمها'
+                    'message' => 'حالة عاجلة جديدة بحاجة إلى التدخل الفوري ' . $project->name . ' نأمل أن تكون من المبادرين لدعمها'
                 ];
                 Notification::create($notification);
             }
