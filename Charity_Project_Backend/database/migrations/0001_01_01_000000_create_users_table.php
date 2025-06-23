@@ -27,10 +27,10 @@ return new class extends Migration
             $table->boolean('ban')->default(false);
             $table->enum('volunteer_status', ['معلق', 'مقبول', 'مرفوض'])->nullable();
             $table->boolean('is_working')->default(false);
-            $table->string('purpose_of_volunteering');
-            $table->string('current_location');
-            $table->integer('volunteering_hours');
-            $table->enum('education', ['جامعي', 'ثانوي', 'دراسات عليا']);
+            $table->string('purpose_of_volunteering')->nullable();
+            $table->string('current_location')->nullable();
+            $table->integer('volunteering_hours')->nullable();
+            $table->enum('education', ['جامعي', 'ثانوي', 'دراسات عليا'])->nullable();
             
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();

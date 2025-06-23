@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\UserResource;
+use App\Mail\PinCodeMail;
 use App\Models\Charity;
 use App\Models\Donation;
 use App\Models\Notification;
@@ -10,6 +11,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
 {
@@ -29,6 +31,7 @@ class UserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password)
         ]);
+        Mail::to($user->email)->send(new PinCodeMail());
         return response()->json(['message' => 'User Registered Successfully', 'user' => $user], 200);
     }
 
