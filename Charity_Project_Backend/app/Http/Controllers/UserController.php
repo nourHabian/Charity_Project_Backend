@@ -7,6 +7,7 @@ use App\Mail\PinCodeMail;
 use App\Models\Charity;
 use App\Models\Donation;
 use App\Models\Notification;
+use App\Models\Project;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -231,7 +232,7 @@ class UserController extends Controller
         Donation::create($history);
 
         // give points
-        $user->points += $request->amount;
+        $user->points += floor(5 * log(1 + $request->amount));
         $user->save();
 
         // add money to somewhere
@@ -251,6 +252,75 @@ class UserController extends Controller
         $charity->number_of_donations++;
         $charity->save();
         return response()->json(['message' => 'تم استلام الزكاة بنجاح'], 200);
+    }
+
+    public function donateToProject($id, Request $request)
+    {
+        $validate = $request->validate([
+            'amount' => 'required|numeric|min:1',
+        ]);
+        $amount = $request->amount;
+        $project = Project::findOrFail($id);
+        
+        $user = Auth::User();
+        if ($amount > $user->balance) {
+            return response()->json(['message' => 'ليس لديك رصيد كافٍ لإتمام هذه العملية، الرجاء شحن المحفظة وإعادة المحاولة.'], 401);
+        }
+        $user->balance -= $amount;
+        $user->points += floor(5 * log(1 + $amount));
+        $user->save();
+
+        // add to donation history
+        $remaining = $project->total_amount - $project->current_amount;
+        $history = [
+            'user_id' => $user->id,
+            'project_id' => $project->id,
+            'type' => 'project_donation',
+            'amount' => min($amount, $remaining),
+        ];
+        Donation::create($history);
+
+        // add money and check if it's completed and if donation is bigger than required
+        if ($project->duration_type === 'دائم') {
+            return response()->json(['message' => 'تم استلام تبرعك بنجاح، جزاك الله خيراً.'], 200);
+        }
+        $project->current_amount = min($project->current_amount + $amount, $project->total_amount);
+        // check if project is completed
+        if ($remaining <= $amount) {
+            // check if donor donated more than the project need to finish
+            if ($remaining < $amount) {
+                $user->balance += $amount - $remaining;
+                $user->save();
+            }
+            // change project status to finished
+            $project->status = 'منتهي';
+
+            // if this project belongs to a beneficiary
+            if ($project->duration_type === 'فردي') {
+                $beneficiary = $project->user;
+                // send notification to the beneficiary that his project has finished
+                $notification = [
+                    'user_id' => $beneficiary->id,
+                    'title' => 'تم تمويل حالتك بالكامل',
+                    'message' => 'تم تغطية حالتك بالكامل، وسيتم التواصل معك بأقرب وقت لتوصيل التبرعات، نسأل الله أن ييسر لك الأمور ويجزي المتبرعين خيراً.'
+                ];
+                Notification::create($notification);
+            }
+
+            // send notifications to all participated donors in this project
+            $donors = $project->donations()->with('user')->get()->pluck('user')->unique('id');
+            foreach ($donors as $donor) {
+                $donor = User::findOrFail($donor->id);
+                $notification = [
+                    'user_id' => $donor->id,
+                    'title' => 'تطورات جديدة في مشروع ' . $project->name,
+                    'message' => 'بفضل الله ثم بفضلك وبفضل باقي المتبرعين، تم إتمام ' . $project->name . 'بالكامل، شكراً لدعمك المستمر🙏🏻',
+                ];
+                Notification::create($notification);
+            }
+        }
+        $project->save();
+        return response()->json(['message' => 'تم استلام تبرعك بنجاح، جزاك الله خيراً'], 200);
     }
 
     public function monthlyDonation(Request $request) 

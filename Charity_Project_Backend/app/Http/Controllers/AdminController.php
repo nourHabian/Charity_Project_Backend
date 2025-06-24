@@ -24,7 +24,7 @@ class AdminController extends Controller
                 if ($user->monthly_donation <= $user->balance) {
                     // edit balance and get points
                     $user->balance -= $user->monthly_donation;
-                    $user->points += $user->monthly_donation;
+                    $user->points += floor(5 * log(1 + $user->monthly_donation));
                     $user->last_monthly_donation = Carbon::today();
                     $user->save();
 

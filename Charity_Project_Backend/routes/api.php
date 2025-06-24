@@ -33,6 +33,7 @@ Route::post('/donor/volunteerRequest', [VolunteerController::class, 'addVoluntee
 Route::post('/donor/addToBalance', [UserController::class, 'addToBalance'])->middleware('auth:sanctum');
 Route::post('/donor/giveGift', [UserController::class, 'giveGift'])->middleware('auth:sanctum');
 Route::post('/donor/giveZakat', [UserController::class, 'giveZakat'])->middleware('auth:sanctum');
+Route::post('/donor/donateToProject/{id}', [UserController::class, 'donateToProject'])->middleware('auth:sanctum');
 
 Route::get('/notifications',[NotificationController::class, 'showAllAndMarkAsRead'])->middleware('auth:sanctum');
 Route::get('/donations/user',[DonationController::class, 'getUserDonations'])->middleware('auth:sanctum');
@@ -53,7 +54,7 @@ Route::get('/admin/doAllMonthlyDonations', [AdminController::class, 'monthlyDona
 
 Route::get('/admin/getAllVolunteerRequests', [VolunteerController::class, 'getAllVolunteerRequests']);
 Route::post('/admin/addProject', [ProjectController::class, 'addProject']);
-Route::put('/admin/editProject/{id}', [ProjectController::class, 'editProject']);
+// Route::put('/admin/editProject/{id}', [ProjectController::class, 'editProject']);
 Route::delete('/admin/deleteProject/{id}', [ProjectController::class, 'deleteProject']);
 /*
 
