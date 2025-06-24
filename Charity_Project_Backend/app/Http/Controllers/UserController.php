@@ -329,21 +329,34 @@ class UserController extends Controller
             'amount' => 'numeric|min:1.00|required'
         ]);
         $user = Auth::User();
+        $pre_donation = $user->monthly_donation;
         $user->update([
             'monthly_donation' => $request->amount
         ]);
-        $notification = [
-            'user_id' => $user->id,
-            'title' => 'التبرع الشهري',
-            'message' => 'تم تفعيل خاصية التبرع الشهري بنجاح، سيتم اقتطاع ' . $request->amount . '$ من محفظتك في بداية كل شهر، جزاك الله خيراً🙏🏻'
-        ];
+        $notification = null;
+        if ($pre_donation == 0) {
+            $notification = [
+                'user_id' => $user->id,
+                'title' => 'التبرع الشهري',
+                'message' => 'تم تفعيل خاصية التبرع الشهري بنجاح، سيتم اقتطاع ' . $request->amount . '$ من محفظتك في بداية كل شهر، جزاك الله خيراً🙏🏻'
+            ];
+        } else {
+            $notification = [
+                'user_id' => $user->id,
+                'title' => 'التبرع الشهري',
+                'message' => 'تم تعديل المبلغ المدفوع لخاصية التبرع الشهري بنجاح، سيتم اقتطاع ' . $request->amount . '$ من محفظتك في بداية كل شهر، جزاك الله خيراً🙏🏻'
+            ];
+        }
         Notification::create($notification);
-        return response()->json(['message' => 'تم التفعيل بنجاح'], 200);
+        return response()->json(['message' => 'تمت العملية بنجاح'], 200);
     }
 
     public function cancelMonthlyDonation() 
     {
         $user = Auth::User();
+        if ($user->monthly_donation == 0) {
+            return response()->json(['message' => 'الميزة غير مفعلة حالياً'], 200);
+        }
         $user->update([
             'monthly_donation' => 0,
         ]);
