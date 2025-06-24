@@ -14,7 +14,7 @@ class DonationController extends Controller
     {
         $user = Auth::user();
 
-        $donations = Donation::with(['project:id,name,type'])
+        $donations = Donation::with(['project:id,name'])
             ->where('user_id', $user->id)
             ->orderBy('created_at', 'desc')
             ->get();
