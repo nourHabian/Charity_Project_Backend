@@ -333,22 +333,23 @@ class UserController extends Controller
         $user->update([
             'monthly_donation' => $request->amount
         ]);
-        $notification = null;
         if ($pre_donation == 0) {
             $notification = [
                 'user_id' => $user->id,
                 'title' => 'التبرع الشهري',
                 'message' => 'تم تفعيل خاصية التبرع الشهري بنجاح، سيتم اقتطاع ' . $request->amount . '$ من محفظتك في بداية كل شهر، جزاك الله خيراً🙏🏻'
             ];
+            Notification::create($notification);
+            return response()->json(['message' => 'تم تفعيل التبرع الشهري بنجاح'], 200);
         } else {
             $notification = [
                 'user_id' => $user->id,
                 'title' => 'التبرع الشهري',
                 'message' => 'تم تعديل المبلغ المدفوع لخاصية التبرع الشهري بنجاح، سيتم اقتطاع ' . $request->amount . '$ من محفظتك في بداية كل شهر، جزاك الله خيراً🙏🏻'
             ];
+            Notification::create($notification);
+            return response()->json(['message' => 'تم تعديل مبلغ التبرع الشهري بنجاح'], 200);
         }
-        Notification::create($notification);
-        return response()->json(['message' => 'تمت العملية بنجاح'], 200);
     }
 
     public function cancelMonthlyDonation() 
