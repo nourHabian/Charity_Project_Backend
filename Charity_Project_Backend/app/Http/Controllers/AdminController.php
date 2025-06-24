@@ -15,7 +15,7 @@ class AdminController extends Controller
     public function monthlyDonations()
     {
         // اذا اليوم اول الشهر بس كمان لازم شيك انو اخر مرة سحبت من العالم كان الشهر الماضي
-        if (Carbon::now()->day === 23) { 
+        if (Carbon::now()->day === 1) { 
             $users = User::where('monthly_donation', '!=', 0)->get();
             foreach ($users as $user) {
                 if ($user->last_monthly_donation != null && Carbon::today()->isSameDay($user->last_monthly_donation)) {

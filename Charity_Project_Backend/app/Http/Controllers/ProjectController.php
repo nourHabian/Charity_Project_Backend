@@ -78,6 +78,7 @@ class ProjectController extends Controller
         return response()->json($projects, 200);
     }
 
+    // لازم يتعدل عليه انو احتمال ينسحب من رصيد الجمعية قيمة وقت يضيف مشروع
     public function addProject(AddProjectRequest $request)
     {
         $validatedData = $request->validated();

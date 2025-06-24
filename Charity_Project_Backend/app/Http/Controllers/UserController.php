@@ -332,7 +332,13 @@ class UserController extends Controller
         $user->update([
             'monthly_donation' => $request->amount
         ]);
-        return response()->json(['message' => 'تم تفعيل التبرع الشهري بنجاح، سيتم اقتطاع ' . $request->amount . '$ من حسابك في بداية كل شهر، جزاك الله خيراً🙏🏻'], 200);
+        $notification = [
+            'user_id' => $user->id,
+            'title' => 'التبرع الشهري',
+            'message' => 'تم تفعيل خاصية التبرع الشهري بنجاح، سيتم اقتطاع ' . $request->amount . '$ من محفظتك في بداية كل شهر، جزاك الله خيراً🙏🏻'
+        ];
+        Notification::create($notification);
+        return response()->json(['message' => 'تم التفعيل بنجاح'], 200);
     }
 
     public function cancelMonthlyDonation() 
@@ -341,6 +347,12 @@ class UserController extends Controller
         $user->update([
             'monthly_donation' => 0,
         ]);
+        $notification = [
+            'user_id' => $user->id,
+            'title' => 'التبرع الشهري',
+            'message' => 'تم إلغاء ميزة التبرع الشهري بنجاح، يمكنك إعادة تفعيل الميزة في أي وقت ليبقى خيرك مستمراً ويصل عطاؤك لمن يستحق🙏🏻'
+        ];
+        Notification::create($notification);
         return response()->json(['message' => 'تم إلغاء التبرع الشهري بنجاح'], 200);
     }
 }
