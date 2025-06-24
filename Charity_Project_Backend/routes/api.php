@@ -35,7 +35,7 @@ Route::post('/donor/giveGift', [UserController::class, 'giveGift'])->middleware(
 Route::post('/donor/giveZakat', [UserController::class, 'giveZakat'])->middleware('auth:sanctum');
 Route::post('/donor/donateToProject/{id}', [UserController::class, 'donateToProject'])->middleware('auth:sanctum');
 
-Route::get('/notifications',[NotificationController::class, 'showAllAndMarkAsRead'])->middleware('auth:sanctum');
+Route::post('/notifications',[NotificationController::class, 'showAllAndMarkAsRead'])->middleware('auth:sanctum');
 Route::get('/donations/user',[DonationController::class, 'getUserDonations'])->middleware('auth:sanctum');
 
 Route::get('/donor/home', [ProjectController::class, 'home'])->middleware('auth:sanctum');
@@ -46,10 +46,10 @@ Route::get('/donor/projects/nutritional', [ProjectController::class, 'nutritiona
 Route::get('/donor/projects/emergency', [ProjectController::class, 'emergencyProjects'])->middleware('auth:sanctum');
 
 Route::post('/donor/monthlyDonation', [UserController::class, 'monthlyDonation'])->middleware('auth:sanctum');
-Route::get('/donor/cancelMonthlyDonation', [UserController::class, 'cancelMonthlyDonation'])->middleware('auth:sanctum');
+Route::put('/donor/cancelMonthlyDonation', [UserController::class, 'cancelMonthlyDonation'])->middleware('auth:sanctum');
 
 
-Route::get('/admin/doAllMonthlyDonations', [AdminController::class, 'monthlyDonations']);
+Route::post('/admin/doAllMonthlyDonations', [AdminController::class, 'monthlyDonations']);
 
 
 Route::get('/admin/getAllVolunteerRequests', [VolunteerController::class, 'getAllVolunteerRequests']);
