@@ -15,7 +15,7 @@ class AdminController extends Controller
     public function monthlyDonations()
     {
         // اذا اليوم اول الشهر بس كمان لازم شيك انو اخر مرة سحبت من العالم كان الشهر الماضي
-        if (Carbon::now()->day === 1) { 
+        if (Carbon::now()->day === 25) {
             $users = User::where('monthly_donation', '!=', 0)->get();
             foreach ($users as $user) {
                 if ($user->last_monthly_donation != null && Carbon::today()->isSameDay($user->last_monthly_donation)) {
@@ -31,7 +31,7 @@ class AdminController extends Controller
                     // notification that the monthly donation is done
                     $notification = [
                         'user_id' => $user->id,
-                        'title' => 'التبرع الشهري', 
+                        'title' => 'التبرع الشهري',
                         'message' => 'تم تنفيذ التبرع الشهري بنجاح، نشكرك على التزامك المستمر بالعطاء'
                     ];
                     Notification::create($notification);
@@ -53,7 +53,7 @@ class AdminController extends Controller
                     // notification that he doesn't have enough money
                     $notification = [
                         'user_id' => $user->id,
-                        'title' => 'التبرع الشهري', 
+                        'title' => 'التبرع الشهري',
                         'message' => 'تعذر تنفيذ التبرع الشهري لهذا الشهر بسبب عدم توافر رصيد كافي في محفظتك. يرجى إعادة الشحن لضمان استمرارية الدعم.'
                     ];
                     Notification::create($notification);
@@ -66,7 +66,7 @@ class AdminController extends Controller
                 // send notification to try monthly donation
                 $notification = [
                     'user_id' => $user->id,
-                    'title' => 'التبرع الشهري', 
+                    'title' => 'التبرع الشهري',
                     'message' => 'فعّل ميزة التبرع الشهري واجعل عطاءك مستمراً، في حال التفعيل سيتم سحب المبلغ الذي تحدده تلقائياً من محفظتك مع بداية كل شهر لدعم المحتاجين، بادر بتفعيلها الآن!'
                 ];
                 Notification::create($notification);

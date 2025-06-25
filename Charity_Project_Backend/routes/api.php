@@ -6,6 +6,8 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VolunteerController;
+use App\Http\Controllers\FavouriteController;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,9 +23,10 @@ Route::post('/logout', [UserController::class, 'logout'])->middleware('auth:sanc
 Route::put('/editpassword', [UserController::class, 'editPassword'])->middleware('auth:sanctum');;
 Route::get('/getUser', [UserController::class, 'GetUserInformation'])->middleware('auth:sanctum');
 
-
-
-Route::get('/getAllProjects', [ProjectController::class, 'getAllProjects']);
+Route::post('/favourite', [FavouriteController::class, 'addToFavourite'])->middleware('auth:sanctum');
+Route::delete('/favourite', [FavouriteController::class, 'removeFromFavourite'])->middleware('auth:sanctum');
+Route::get('/favourite', [FavouriteController::class, 'getFavouriteProjects'])->middleware('auth:sanctum');
+Route::get('/favourite/search', [FavouriteController::class, 'searchFavourite'])->middleware('auth:sanctum');
 
 Route::get('/getVolunteerProjectsByType/{volunteeringDomain}', [ProjectController::class, 'getVolunteerProjectsByType']);
 
@@ -35,8 +38,8 @@ Route::post('/donor/giveGift', [UserController::class, 'giveGift'])->middleware(
 Route::post('/donor/giveZakat', [UserController::class, 'giveZakat'])->middleware('auth:sanctum');
 Route::post('/donor/donateToProject/{id}', [UserController::class, 'donateToProject'])->middleware('auth:sanctum');
 
-Route::post('/notifications',[NotificationController::class, 'showAllAndMarkAsRead'])->middleware('auth:sanctum');
-Route::get('/donations/user',[DonationController::class, 'getUserDonations'])->middleware('auth:sanctum');
+Route::post('/notifications', [NotificationController::class, 'showAllAndMarkAsRead'])->middleware('auth:sanctum');
+Route::get('/donations/user', [DonationController::class, 'getUserDonations'])->middleware('auth:sanctum');
 
 Route::get('/donor/home', [ProjectController::class, 'home'])->middleware('auth:sanctum');
 Route::get('/donor/projects/health', [ProjectController::class, 'healthProjects'])->middleware('auth:sanctum');
@@ -58,7 +61,10 @@ Route::post('/admin/addProject', [ProjectController::class, 'addProject']);
 Route::delete('/admin/deleteProject/{id}', [ProjectController::class, 'deleteProject']);
 /*
 
-
+Route::post('/favourite/{projectId}', [FavouriteController::class, 'addToFavourite'])->middleware('auth:sanctum');
+Route::delete('/favourite/{projectId}', [FavouriteController::class, 'removeFromFavourite'])->middleware('auth:sanctum');
+Route::get('/favourite', [FavouriteController::class, 'getFavouriteProjects'])->middleware('auth:sanctum');
+Route::get('/favourite/search', [FavouriteController::class, 'searchFavourite'])->middleware('auth:sanctum');
 
 Route::get('/donor/randomProjects', [ProjectController::class, 'getRandom'])->middleware('auth:sanctum');
 CRUD for projects
