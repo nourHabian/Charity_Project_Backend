@@ -17,8 +17,9 @@ Route::get('/user', function (Request $request) {
 Route::post('/register', [UserController::class, 'register']);
 Route::post('/verifyEmail', [UserController::class, 'verify_email']);
 Route::post('/login', [UserController::class, 'login']);
-Route::post('/logout', [UserController::class, 'logout'])->middleware('auth:sanctum');;
-Route::put('/editpassword', [UserController::class, 'editPassword'])->middleware('auth:sanctum');;
+Route::post('/admin/login', [AdminController::class, 'loginAdmin']);
+Route::post('/logout', [UserController::class, 'logout'])->middleware('auth:sanctum');
+Route::put('/editpassword', [UserController::class, 'editPassword'])->middleware('auth:sanctum');
 Route::get('/getUser', [UserController::class, 'GetUserInformation'])->middleware('auth:sanctum');
 
 
@@ -53,7 +54,7 @@ Route::post('/admin/doAllMonthlyDonations', [AdminController::class, 'monthlyDon
 
 
 Route::get('/admin/getAllVolunteerRequests', [VolunteerController::class, 'getAllVolunteerRequests']);
-Route::post('/admin/addProject', [ProjectController::class, 'addProject']);
+Route::post('/admin/addProject', [ProjectController::class, 'addProject'])->middleware('isAdmin');
 // Route::put('/admin/editProject/{id}', [ProjectController::class, 'editProject']);
 Route::delete('/admin/deleteProject/{id}', [ProjectController::class, 'deleteProject']);
 /*
