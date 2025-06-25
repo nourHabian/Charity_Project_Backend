@@ -2,16 +2,45 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Admin;
 use App\Models\Charity;
 use App\Models\Donation;
 use App\Models\Notification;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
-    //
+    
+    //تسجيل دخول الادمن
+     public function loginAdmin(Request $request)
+{
+    $credentials = $request->validate([
+        'email'    => ['required', 'email'],
+        'password' => ['required'],
+    ]);
+
+    $admin = Admin::where('email', $credentials['email'])->first();
+
+    if (!$admin || $credentials['password'] !== $admin->password) {
+        return response()->json([
+            'message' => 'Invalid email or password',
+        ], 401);
+    }
+
+    $token = $admin->createToken('admin_token')->plainTextToken;
+
+    return response()->json([
+        'message' => 'Admin login successful',
+        'admin'   => $admin,
+        'token'   => $token,
+    ]);
+}
+
+
+
     public function monthlyDonations()
     {
         // اذا اليوم اول الشهر بس كمان لازم شيك انو اخر مرة سحبت من العالم كان الشهر الماضي
@@ -75,4 +104,8 @@ class AdminController extends Controller
         }
         return response()->json(['message' => 'today is not the first of the month'], 401);
     }
+
+
+   
 }
+
