@@ -40,6 +40,7 @@ Route::get('/getTopDonors', [UserController::class, 'getDonorsByPoints'])->middl
 
 
 Route::post('/donor/volunteerRequest', [VolunteerController::class, 'addVolunteerRequest'])->middleware('auth:sanctum');
+Route::post('/volunteer/volunteerInProject/{id}', [UserController::class, 'volunteerInProject'])->middleware('auth:sanctum');
 
 Route::post('/donor/addToBalance', [UserController::class, 'addToBalance'])->middleware('auth:sanctum');
 Route::post('/donor/giveGift', [UserController::class, 'giveGift'])->middleware('auth:sanctum');

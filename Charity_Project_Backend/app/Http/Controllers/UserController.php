@@ -9,6 +9,7 @@ use App\Models\Donation;
 use App\Models\Notification;
 use App\Models\Project;
 use App\Models\User;
+use App\Models\Volunteer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -370,11 +371,45 @@ class UserController extends Controller
         return response()->json(['message' => 'تم إلغاء التبرع الشهري بنجاح'], 200);
     }
 
+    public function volunteerInProject($id)
+    {
+        $user = Auth::User();
+        $project = Project::findOrFail($id);
+        if ($project->duration_type != 'تطوعي') {
+            return response()->json(['message' => 'إن هذا المشروع ليس مشروعاً تطوعياً'], 401);
+        }
+        if ($user->volunteer_status === 'معلق') {
+            return response()->json(['message' => 'لا يزال طلب التطوع خاصتك قيد الدراسة، يمكنك البدء بالتطوع عندما يتم قبول طلبك'], 401);
+        }
+        if ($user->volunteer_status === 'مرفوض') {
+            return response()->json(['message' => 'تم رفض طلب تطوعك في الجمعية لأسباب متعلقة بسياسة الجمعية، لمتابعة التفاصيل أو الاعتراض، يُرجى التواصل مع إدارة التطبيق على صفحة الفيسبوك الخاصة بالجمعية'], 401);
+        }
+        if ($user->role != 'متطوع') {
+            return response()->json(['message' => 'لا يمكنك التطوع في هذا المشروع، للمساهمة في نشر الخير يمكنك التسجيل كمتطوع في جمعيتنا عن طريق تعبئة استبيان التطوع الخاص بنا'], 401);
+        }
+        if ($user->ban) {
+            return response()->json(['message' => 'تم إيقاف تطوعك في الجمعية بسبب مخالفات في تنفيذ المهام التطوعية، لمتابعة التفاصيل أو الاعتراض، يُرجى التواصل مع إدارة التطبيق على صفحة الفيسبوك الخاصة بالجمعية'], 401);
+        }
+        if ($user->is_working) {
+            return response()->json(['message' => 'لا يمكنك التطوع في مشروعين بنفس الوقت'], 401);
+        }
+        if ($project->current_amount == $project->total_amount) {
+            return response()->json(['message' => 'إن العدد مكتمل في هذا المشروع، يمكنك البحث عن فرصة تطوعية أخرى'], 401);
+        }
+        $project->current_amount++;
+        $project->save();
+        $user->is_working = true;
+        $user->save();
+
+        $volunteer = [
+            'user_id' => $user->id,
+            'project_id' => $project->id,
+        ];
+        Volunteer::create($volunteer);
+        return response()->json(['message' => 'تمت العملية بنجاح، أنت الآن متطوع في هذا المشروع'], 200);
+    }
 
     //ابرز المحسنين 
-
-
-
     public function getDonorsByPoints()
     {
         $users = User::whereIn('role', ['متبرع', 'متطوع'])

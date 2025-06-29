@@ -27,21 +27,14 @@ class VolunteerController extends Controller
         $validatedData['user_id'] = $user_id;
 
         $volunteer = Volunteer::create($validatedData);
-
-
-
         return response()->json($volunteer, 201);
     }
 
     
 
     //عرض كل استبيانات التطوع
-
-
     public function getAllVolunteerRequests()
     {
-
-
         $volunteer_request = Volunteer::all();
         return response()->json($volunteer_request, 200);
     }
