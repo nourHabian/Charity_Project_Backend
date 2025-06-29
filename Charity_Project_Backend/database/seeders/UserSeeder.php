@@ -47,7 +47,10 @@ class UserSeeder extends Seeder
           'points'=>80
         ]);
 
-
+         
+         
+        
+ 
         
 
          User::create([
@@ -58,6 +61,7 @@ class UserSeeder extends Seeder
             'verification_code' => '1111',
             'verified' => true,
             'role' => 'مستفيد',
+
         ]);
 
 

@@ -371,21 +371,20 @@ class UserController extends Controller
     }
 
 
-    //ابرز المحسنين 
+//ابرز المحسنين 
 
 
-    public function getDonorsByPoints()
-    {
-        $users = User::whereIn('role', ['متبرع', 'متطوع'])
-            ->orderByDesc('points')
-            ->get(['full_name', 'points']);
 
-        $top_ten = array();
-        for ($i = 0; $i < min(sizeof($users), 10); $i++) {
-            $top_ten[] = $users[$i];
-        }
-        return response()->json([
-            'top donors' => $top_ten
-        ], 200);
-    }
+public function getDonorsByPoints()
+{
+    $users = User::whereIn('role', ['متبرع', 'متطوع'])
+        ->orderByDesc('points')
+        ->take(10) 
+        ->get(['full_name', 'points']);
+
+    return response()->json([
+        'top_donors' => $users 
+    ], 200);
+}
+
 }
