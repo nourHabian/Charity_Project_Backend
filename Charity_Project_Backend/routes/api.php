@@ -7,7 +7,7 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VolunteerController;
 use App\Http\Controllers\FavouriteController;
-
+use App\Http\Controllers\FeedbackController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -32,6 +32,13 @@ Route::get('/favourite/search', [FavouriteController::class, 'searchFavourite'])
 Route::get('/getVolunteerProjectsByType/{volunteeringDomain}', [ProjectController::class, 'getVolunteerProjectsByType']);
 
 
+Route::get('/getAcceptedFeedbacks', [FeedbackController::class, 'getAcceptedFeedbacks']);
+
+Route::get('/getTopDonors', [UserController::class, 'getDonorsByPoints']);
+
+
+
+
 Route::post('/donor/volunteerRequest', [VolunteerController::class, 'addVolunteerRequest'])->middleware('auth:sanctum');
 
 Route::post('/donor/addToBalance', [UserController::class, 'addToBalance'])->middleware('auth:sanctum');
@@ -51,6 +58,7 @@ Route::get('/donor/projects/emergency', [ProjectController::class, 'emergencyPro
 
 Route::post('/donor/monthlyDonation', [UserController::class, 'monthlyDonation'])->middleware('auth:sanctum');
 Route::put('/donor/cancelMonthlyDonation', [UserController::class, 'cancelMonthlyDonation'])->middleware('auth:sanctum');
+
 
 
 Route::post('/admin/doAllMonthlyDonations', [AdminController::class, 'monthlyDonations']);

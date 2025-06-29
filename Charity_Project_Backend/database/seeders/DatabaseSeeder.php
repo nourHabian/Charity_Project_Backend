@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             ProjectSeeder::class,
             CharitySeeder::class,
             UserSeeder::class,
+            FeedbackSeeder::class,
         ]);
     }
 }

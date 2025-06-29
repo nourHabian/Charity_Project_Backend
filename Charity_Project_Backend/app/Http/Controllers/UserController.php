@@ -369,4 +369,23 @@ class UserController extends Controller
         Notification::create($notification);
         return response()->json(['message' => 'تم إلغاء التبرع الشهري بنجاح'], 200);
     }
+
+
+//ابرز المحسنين 
+
+
+public function getDonorsByPoints()
+{
+    $users = User::whereIn('role', ['متبرع', 'متطوع'])
+        ->orderByDesc('points')
+        ->get(['full_name', 'points']);
+
+    return response()->json([
+        'top donner' => $users
+    ], 200);
 }
+
+}
+
+
+
