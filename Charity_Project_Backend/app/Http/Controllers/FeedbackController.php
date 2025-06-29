@@ -10,15 +10,12 @@ class FeedbackController extends Controller
 {
 
 
-public function getAcceptedFeedbacks()
-{
- 
-    $feedbacks = Feedback::where('status', 'مقبول')->get();
-    return response()->json([
-        'Feedbacks' => FeedbackResource::collection($feedbacks)
-    ], 200);
-}
+    public function getAcceptedFeedbacks()
+    {
 
-
-
+        $feedbacks = Feedback::where('status', 'مقبول')->get();
+        return response()->json([
+            'Feedbacks' => FeedbackResource::collection($feedbacks)
+        ], 200);
+    }
 }

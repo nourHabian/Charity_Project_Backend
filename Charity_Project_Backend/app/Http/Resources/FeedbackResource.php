@@ -13,11 +13,12 @@ class FeedbackResource extends JsonResource
      * @return array<string, mixed>
      */
     public function toArray(Request $request): array
-    { return[
-       'id' => $this->id,
+    {
+        return [
+            'id' => $this->id,
             'user_id' => $this->user_id,
             'message' => $this->message,
             'date' =>  $this->created_at->format('Y/m/d'),
-    ];
+        ];
     }
 }

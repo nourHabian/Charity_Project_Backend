@@ -32,9 +32,9 @@ Route::get('/favourite/search', [FavouriteController::class, 'searchFavourite'])
 Route::get('/getVolunteerProjectsByType/{volunteeringDomain}', [ProjectController::class, 'getVolunteerProjectsByType']);
 
 
-Route::get('/getAcceptedFeedbacks', [FeedbackController::class, 'getAcceptedFeedbacks']);
+Route::get('/getAcceptedFeedbacks', [FeedbackController::class, 'getAcceptedFeedbacks'])->middleware('auth:sanctum');
 
-Route::get('/getTopDonors', [UserController::class, 'getDonorsByPoints']);
+Route::get('/getTopDonors', [UserController::class, 'getDonorsByPoints'])->middleware('auth:sanctum');
 
 
 

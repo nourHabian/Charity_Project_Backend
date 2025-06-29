@@ -248,7 +248,7 @@ class UserController extends Controller
         } else {
             return response()->json(['message' => 'error has occurred'], 401);
         }
-        
+
         $charity->number_of_donations++;
         $charity->save();
         return response()->json(['message' => 'تم استلام الزكاة بنجاح'], 200);
@@ -261,7 +261,7 @@ class UserController extends Controller
         ]);
         $amount = $request->amount;
         $project = Project::findOrFail($id);
-        
+
         $user = Auth::User();
         if ($amount > $user->balance) {
             return response()->json(['message' => 'ليس لديك رصيد كافٍ لإتمام هذه العملية، الرجاء شحن المحفظة وإعادة المحاولة.'], 401);
@@ -323,7 +323,7 @@ class UserController extends Controller
         return response()->json(['message' => 'تم استلام تبرعك بنجاح، جزاك الله خيراً'], 200);
     }
 
-    public function monthlyDonation(Request $request) 
+    public function monthlyDonation(Request $request)
     {
         $validate = $request->validate([
             'amount' => 'numeric|min:1.00|required'
@@ -352,7 +352,7 @@ class UserController extends Controller
         }
     }
 
-    public function cancelMonthlyDonation() 
+    public function cancelMonthlyDonation()
     {
         $user = Auth::User();
         if ($user->monthly_donation == 0) {
@@ -371,21 +371,21 @@ class UserController extends Controller
     }
 
 
-//ابرز المحسنين 
+    //ابرز المحسنين 
 
 
-public function getDonorsByPoints()
-{
-    $users = User::whereIn('role', ['متبرع', 'متطوع'])
-        ->orderByDesc('points')
-        ->get(['full_name', 'points']);
+    public function getDonorsByPoints()
+    {
+        $users = User::whereIn('role', ['متبرع', 'متطوع'])
+            ->orderByDesc('points')
+            ->get(['full_name', 'points']);
 
-    return response()->json([
-        'top donner' => $users
-    ], 200);
+        $top_ten = array();
+        for ($i = 0; $i < min(sizeof($users), 10); $i++) {
+            $top_ten[] = $users[$i];
+        }
+        return response()->json([
+            'top donors' => $top_ten
+        ], 200);
+    }
 }
-
-}
-
-
-
