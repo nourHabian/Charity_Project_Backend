@@ -32,7 +32,7 @@ class UserSeeder extends Seeder
             'password' => Hash::make(12345678),
             'verification_code' => '1111',
             'verified' => true,
-            'role' => 'متطوع',
+            'role' => 'متبرع',
               'points'=>88
         ]);
 

@@ -14,12 +14,14 @@ return new class extends Migration
             $table->id();
             $table->string('full_name');
             $table->string('phone_number')->unique();
+             $table->string('contact_number')->nullable();
             $table->string('email')->unique();
             $table->string('password');
             $table->string('verification_code');
             $table->boolean('verified')->default(false);
             $table->date('date_of_birth')->nullable();
             $table->enum('gender', ['ذكر', 'أنثى'])->nullable();
+            $table->integer('age')->nullable();
             $table->enum('role', ['متبرع', 'مستفيد', 'متطوع']);
             $table->float('balance')->default(0);
             $table->bigInteger('points')->default(0);
@@ -29,6 +31,7 @@ return new class extends Migration
             $table->date('last_monthly_donation')->nullable();
             $table->boolean('ban')->default(false);
             $table->enum('volunteer_status', ['معلق', 'مقبول', 'مرفوض'])->nullable();
+            $table->enum('volunteering_domain', ['صحي', 'تعليمي', 'عن بعد','ميداني'])->nullable();
             $table->boolean('is_working')->default(false);
             $table->string('purpose_of_volunteering')->nullable();
             $table->string('current_location')->nullable();

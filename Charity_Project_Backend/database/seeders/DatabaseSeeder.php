@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             CharitySeeder::class,
             UserSeeder::class,
             FeedbackSeeder::class,
+            AdminSeeder::class,
         ]);
     }
 }

@@ -15,15 +15,7 @@ class AddVolunteerRequest extends FormRequest
         return true;
     }
 
-/*
 
-       $table->integer('age');
-            $table->string('purpose_of_volunteering');
-            $table->string('current_location');
-            $table->integer('volunteering_hours');
-             $table->enum('gender', ['ذكر', 'أنثى']);
-             $table->enum('volunteering_domain', ['تعليمي', 'صحي','عن بعد','ميداني']);
-               $table->enum('education', ['جامعي', 'ثانوي']);
     /**
      * Get the validation rules that apply to the request.
      *
@@ -34,7 +26,7 @@ class AddVolunteerRequest extends FormRequest
         return [
             'user_id' => 'nullable|integer|exists:users,id',
             'project_id' => 'nullable|integer|exists:users,id',
-            'phone_number'=>'required|string|min:10',
+            'contact_number'=>'required|string|min:10',
             'age'=>'required|integer|max:50',
             'purpose_of_volunteering'=>'required|string',
             'current_location'=>'required|string',

@@ -14,8 +14,10 @@ use Illuminate\Support\Facades\Hash;
 class AdminController extends Controller
 {
     
-    //تسجيل دخول الادمن
-     public function loginAdmin(Request $request)
+      
+
+
+public function loginAdmin(Request $request)
 {
     $credentials = $request->validate([
         'email'    => ['required', 'email'],
@@ -24,7 +26,8 @@ class AdminController extends Controller
 
     $admin = Admin::where('email', $credentials['email'])->first();
 
-    if (!$admin || $credentials['password'] !== $admin->password) {
+    
+    if (!$admin || !Hash::check($credentials['password'], $admin->password)) {
         return response()->json([
             'message' => 'Invalid email or password',
         ], 401);
@@ -38,6 +41,7 @@ class AdminController extends Controller
         'token'   => $token,
     ]);
 }
+
 
 
 

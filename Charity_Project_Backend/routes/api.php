@@ -65,7 +65,7 @@ Route::put('/donor/cancelMonthlyDonation', [UserController::class, 'cancelMonthl
 Route::post('/admin/doAllMonthlyDonations', [AdminController::class, 'monthlyDonations']);
 
 
-Route::get('/admin/getAllVolunteerRequests', [VolunteerController::class, 'getAllVolunteerRequests']);
+Route::get('/admin/getAllVolunteerRequests', [VolunteerController::class, 'getAllVolunteerRequests'])->middleware('isAdmin');;
 Route::post('/admin/addProject', [ProjectController::class, 'addProject'])->middleware('isAdmin');
 // Route::put('/admin/editProject/{id}', [ProjectController::class, 'editProject']);
 Route::delete('/admin/deleteProject/{id}', [ProjectController::class, 'deleteProject']);
