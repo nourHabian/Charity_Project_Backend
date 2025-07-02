@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class FavouriteController extends Controller
 {
@@ -26,11 +27,25 @@ class FavouriteController extends Controller
         return response()->json(['message' => 'تمت إزالة المشروع من قائمة التبرع لاحقاً'], 200);
     }
 
-    public function getFavouriteProjects()
-    {
-        $projects = Auth::user()->favouriteProjects()->get();
-        return response()->json($projects, 200);
-    }
+    public function getFavouriteProjects() 
+{
+    $projects = Auth::user()->favouriteProjects()->get()->map(function ($project) {
+    return [
+        'id' => $project->id,
+        'name' => $project->name,
+        'description' => $project->description,
+        'photo_url' => $project->photo ? asset(Storage::url($project->photo)) : null,
+        'total_amount' => $project->total_amount,
+        'current_amount' => $project->current_amount,
+        'status' => $project->status,
+        'priority' => $project->priority,
+        'duration_type' => $project->duration_type,
+        'location' => $project->location,
+    ];
+});
+return response()->json($projects, 200);
+}
+
 
     public function searchFavourite(Request $request)
     {
