@@ -31,8 +31,8 @@ class DonationController extends Controller
                 'amount' => $donation->amount,
                 'type' => $donation->type,
                 'recipient_number' => $donation->recipient_number,
-                'recipient_name' => $recipient?->full_name,  // اسم المستفيد
-                'created_at' => $donation->created_at,
+                'recipient_name' => $recipient?->full_name,  
+                'created_at' => $donation->created_at->toDateString(),
                 'project_name' => optional($donation->project)->name,
                 'project_type' => optional($donation->project)->type,
             ];
