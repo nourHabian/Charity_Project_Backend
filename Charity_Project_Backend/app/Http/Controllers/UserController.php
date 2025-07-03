@@ -327,12 +327,14 @@ class UserController extends Controller
     public function monthlyDonation(Request $request)
     {
         $validate = $request->validate([
-            'amount' => 'numeric|min:1.00|required'
+            'amount' => 'required|numeric|min:1',
+            'type' => 'required|string'
         ]);
         $user = Auth::User();
         $pre_donation = $user->monthly_donation;
         $user->update([
-            'monthly_donation' => $request->amount
+            'monthly_donation' => $request->amount,
+            'monthly_donation_type' => $request->type
         ]);
         if ($pre_donation == 0) {
             $notification = [
@@ -346,10 +348,10 @@ class UserController extends Controller
             $notification = [
                 'user_id' => $user->id,
                 'title' => 'التبرع الشهري',
-                'message' => 'تم تعديل المبلغ المدفوع لخاصية التبرع الشهري بنجاح، سيتم اقتطاع ' . $request->amount . '$ من محفظتك في بداية كل شهر، جزاك الله خيراً🙏🏻'
+                'message' => 'تم التعديل على خاصية التبرع الشهري بنجاح، سيتم اقتطاع ' . $request->amount . '$ من محفظتك في بداية كل شهر، جزاك الله خيراً🙏🏻'
             ];
             Notification::create($notification);
-            return response()->json(['message' => 'تم تعديل مبلغ التبرع الشهري بنجاح'], 200);
+            return response()->json(['message' => 'تم التعديل على خاصية التبرع الشهري بنجاح'], 200);
         }
     }
 
