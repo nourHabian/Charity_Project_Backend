@@ -76,13 +76,13 @@ class AdminController extends Controller
                     Donation::create($history);
 
                     // add money to somewhere
-                    if ($user->monthly_donation_type == 'صحي') {
+                    if ($user->monthly_donation_type === 'صحي') {
                         $charity->health_projects_balance += $user->monthly_donation;
-                    } else if ($user->monthly_donation_type == 'تعليمي') {
+                    } else if ($user->monthly_donation_type === 'تعليمي') {
                         $charity->educational_projects_balance += $user->monthly_donation;
-                    } else if ($user->monthly_donation_type == 'سكني') {
+                    } else if ($user->monthly_donation_type === 'سكني') {
                         $charity->housing_projects_balance += $user->monthly_donation;
-                    } else if ($user->monthly_donation_type == 'غذائي') {
+                    } else if ($user->monthly_donation_type === 'غذائي') {
                         $charity->nutritional_projects_balance += $user->monthly_donation;
                     } else {
                         return response()->json(['message' => 'error has occurred'], 401);

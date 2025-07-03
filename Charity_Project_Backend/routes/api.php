@@ -116,11 +116,17 @@ Route::post('/admin/login', [AdminController::class, 'loginAdmin']);
 
 Route::middleware('isAdmin')->group(function () {
 
+    // projects management
+    Route::post('/admin/addCharityProject', [ProjectController::class, 'addCharityProject']);
+    Route::post('/admin/addBeneficiaryProject', [ProjectController::class, 'addBeneficiaryProject']);
+    Route::post('/admin/addVolunteerProject', [ProjectController::class, 'addVolunteerProject']);
     Route::post('/admin/doAllMonthlyDonations', [AdminController::class, 'monthlyDonations']);
-    Route::get('/admin/getAllVolunteerRequests', [VolunteerController::class, 'getAllVolunteerRequests']);
-    // Route::post('/admin/addProject', [ProjectController::class, 'addProject']);
-    // Route::put('/admin/editProject/{id}', [ProjectController::class, 'editProject']);
     Route::delete('/admin/deleteProject/{id}', [ProjectController::class, 'deleteProject']);
+
+
+
+    Route::get('/admin/getAllVolunteerRequests', [VolunteerController::class, 'getAllVolunteerRequests']);
+    // Route::put('/admin/editProject/{id}', [ProjectController::class, 'editProject']);
 });
 
 
@@ -144,8 +150,8 @@ Route::middleware('isAdmin')->group(function () {
 
 
 **** قسم نور:
-- حذف مشروع
-- اضافة مشروع (جمعية، تطوع، تبرع)
+- حذف مشروع (DONE)
+- اضافة مشروع (جمعية، تطوع، تبرع) (DONE)
 - التبرع لاحد المشاريع (تبرع الان)
 - قبول طلب تطوع
 - رفض طلب تطوع
@@ -157,7 +163,7 @@ Route::middleware('isAdmin')->group(function () {
 - قبول فيدباك
 - رفض فيدباك
 - حظر محتاج بسبب فيدباك
-- رفرش الادمن (خالصة)
+- رفرش الادمن (DONE)
 
 
 ******************** محتاج ***********************
