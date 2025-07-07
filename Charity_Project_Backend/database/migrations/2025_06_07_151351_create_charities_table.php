@@ -19,6 +19,7 @@ return new class extends Migration
             $table->float('educational_projects_balance')->default(0);
             $table->float('nutritional_projects_balance')->default(0);
             $table->float('housing_projects_balance')->default(0);
+            $table->date('last_monthly_donation')->nullable();
             $table->timestamps();
         });
     }
