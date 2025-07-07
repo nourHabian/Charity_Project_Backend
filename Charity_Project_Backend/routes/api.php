@@ -89,6 +89,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/donor/projects/emergency', [ProjectController::class, 'emergencyProjects']);
     // view volunteer projects filtered by domain
     Route::get('/getVolunteerProjectsByType/{volunteeringDomain}', [ProjectController::class, 'getVolunteerProjectsByType']);
+    // view completed projects
+    Route::get('/projects/completed', [ProjectController::class, 'getCompletedProjects']);
+
 
 
     // ***** VIEWING APP INFORMATION AND PERSONAL HISTORY *****

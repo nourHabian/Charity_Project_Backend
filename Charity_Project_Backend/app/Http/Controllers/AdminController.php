@@ -14,9 +14,6 @@ use Illuminate\Support\Facades\Hash;
 class AdminController extends Controller
 {
     
-      
-
-
 public function loginAdmin(Request $request)
 {
     $credentials = $request->validate([
@@ -41,8 +38,6 @@ public function loginAdmin(Request $request)
         'token'   => $token,
     ]);
 }
-
-
 
 
     public function monthlyDonations()
@@ -108,8 +103,6 @@ public function loginAdmin(Request $request)
         }
         return response()->json(['message' => 'today is not the first of the month'], 401);
     }
-
-
    
 }
 

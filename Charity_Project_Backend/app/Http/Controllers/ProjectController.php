@@ -26,22 +26,36 @@ class ProjectController extends Controller
 
     public function healthProjects()
     {
-        $projects = Project::where('type_id', 1)->where('duration_type', '!=', 'تطوعي')->where('duration_type', '!=', 'دائم')->get();
+        $projects = Project::where('type_id', 1)->where('duration_type', '!=', 'تطوعي')->where('duration_type', '!=', 'دائم') ->where('status', '!=', 'منتهي') ->get();
         foreach ($projects as $project) {
             $project['photo_url'] = asset(Storage::url($project['photo']));
             $percentage = ($project['current_amount'] / $project['total_amount']) * 100.0;
+             if ($percentage >= 100 && $project->status !== 'منتهي') {
+            $project->status = 'منتهي';
+            $project->save();
+            continue;
+            }
             $project['percentage'] = $percentage;
             $project['type'] = Type::findOrFail($project->type_id)->name;
         }
+        //  $projects = $projects->filter(function ($project) {
+        //     return $project->status !== 'منتهي';
+        //     })->values();
+
         return response()->json($projects, 200);
     }
 
     public function educationalProjects()
     {
-        $projects = Project::where('type_id', 2)->where('duration_type', '!=', 'تطوعي')->where('duration_type', '!=', 'دائم')->get();
+        $projects = Project::where('type_id', 2)->where('duration_type', '!=', 'تطوعي')->where('duration_type', '!=', 'دائم')->where('status', '!=', 'منتهي')->get();
         foreach ($projects as $project) {
             $project['photo_url'] = asset(Storage::url($project['photo']));
             $percentage = ($project['current_amount'] / $project['total_amount']) * 100.0;
+             if ($percentage >= 100 && $project->status !== 'منتهي') {
+            $project->status = 'منتهي';
+            $project->save();
+            continue;
+            }
             $project['percentage'] = $percentage;
             $project['type'] = Type::findOrFail($project->type_id)->name;
         }
@@ -50,10 +64,15 @@ class ProjectController extends Controller
 
     public function residentialProjects()
     {
-        $projects = Project::where('type_id', 3)->where('duration_type', '!=', 'تطوعي')->where('duration_type', '!=', 'دائم')->get();
+        $projects = Project::where('type_id', 3)->where('duration_type', '!=', 'تطوعي')->where('duration_type', '!=', 'دائم')->where('status', '!=', 'منتهي')->get();
         foreach ($projects as $project) {
             $project['photo_url'] = asset(Storage::url($project['photo']));
             $percentage = ($project['current_amount'] / $project['total_amount']) * 100.0;
+             if ($percentage >= 100 && $project->status !== 'منتهي') {
+            $project->status = 'منتهي';
+            $project->save();
+            continue; 
+            }
             $project['percentage'] = $percentage;
             $project['type'] = Type::findOrFail($project->type_id)->name;
         }
@@ -62,10 +81,15 @@ class ProjectController extends Controller
 
     public function nutritionalProjects()
     {
-        $projects = Project::where('type_id', 4)->where('duration_type', '!=', 'تطوعي')->where('duration_type', '!=', 'دائم')->get();
+        $projects = Project::where('type_id', 4)->where('duration_type', '!=', 'تطوعي')->where('duration_type', '!=', 'دائم')->where('status', '!=', 'منتهي')->get();
         foreach ($projects as $project) {
             $project['photo_url'] = asset(Storage::url($project['photo']));
             $percentage = ($project['current_amount'] / $project['total_amount']) * 100.0;
+             if ($percentage >= 100 && $project->status !== 'منتهي') {
+            $project->status = 'منتهي';
+            $project->save();
+            continue; 
+            }
             $project['percentage'] = $percentage;
             $project['type'] = Type::findOrFail($project->type_id)->name;
         }
@@ -74,10 +98,15 @@ class ProjectController extends Controller
 
     public function emergencyProjects()
     {
-        $projects = Project::where('priority', 'حرج')->where('duration_type', '!=', 'تطوعي')->where('duration_type', '!=', 'دائم')->get();
+        $projects = Project::where('priority', 'حرج')->where('duration_type', '!=', 'تطوعي')->where('duration_type', '!=', 'دائم')->where('status', '!=', 'منتهي')->get();
         foreach ($projects as $project) {
             $project['photo_url'] = asset(Storage::url($project['photo']));
             $percentage = ($project['current_amount'] / $project['total_amount']) * 100.0;
+             if ($percentage >= 100 && $project->status !== 'منتهي') {
+            $project->status = 'منتهي';
+            $project->save();
+            continue; 
+            }
             $project['percentage'] = $percentage;
             $project['type'] = Type::findOrFail($project->type_id)->name;
         }
@@ -132,6 +161,27 @@ class ProjectController extends Controller
         $project = Project::all();
         return response()->json($project, 200);
     }
+
+    public function getCompletedProjects()
+{
+    $projects = Project::where('status', 'منتهي')
+        ->where('duration_type', '!=', 'تطوعي')
+        ->get();
+
+     $formattedProjects = $projects->map(function ($project) {
+        return [
+            'name' => $project->name,
+            'description' => $project->description,
+            'type' => Type::findOrFail($project->type_id)->name,
+            'photo_url' => asset(Storage::url($project->photo)),
+            'total_amount' => $project->total_amount,
+        ];
+    });
+
+
+    return response()->json($formattedProjects, 200);
+}
+
 
     //ارجاع المشاريع التطوع حسب التايب
     public function getVolunteerProjectsByType($volunteeringDomain)
