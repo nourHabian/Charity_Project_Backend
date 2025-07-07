@@ -225,6 +225,7 @@ class ProjectSeeder extends Seeder
                          . ' ومساندتهم في رحلتهم العلاجية،'
                          . ' بما يضمن لهم حياة كريمة وأملاً متجدداً في الشفاء.',
                     'photo' => 'temporary_projects_images/health_project_001.jpg',
+                    'priority' => 'حرج',
                     'total_amount' => 8800
                ],
                [
@@ -287,6 +288,7 @@ class ProjectSeeder extends Seeder
                          . ' ودوره في حماية الأفراد والعائلات من المخاطر الصحية،'
                          . ' وتحسين مستوى الصحة العامة على المدى الطويل.',
                     'photo' => 'temporary_projects_images/health_project_006.jpg',
+                    'priority' => 'حرج',
                     'total_amount' => 3500
                ],
                [
@@ -441,6 +443,36 @@ class ProjectSeeder extends Seeder
                     'photo' => 'temporary_projects_images/nutritional_project_002.png',
                     'total_amount' => 6700
                ],
+               [
+                    'type_id' => 7,
+                    'name' => 'دعم حلقات تحفيظ القرآن',
+                    'description' => 'يهدف هذا المشروع إلى دعم حلقات تحفيظ القرآن الكريم، ' .
+                         'من خلال توفير الاحتياجات التعليمية والمادية للحلقات، ' .
+                         'وتأمين بيئة مناسبة للحفظ والمراجعة، وتشجيع الطلاب على حفظ كتاب الله وتدبر معانيه. ' .
+                         'نسعى إلى تعزيز القيم الإسلامية في نفوس النشء، ' .
+                         'والمساهمة في بناء جيلٍ واعٍ متمسك بدينه وأخلاقه.',
+                    'photo' => 'temporary_projects_images/religion_project_001.png',
+                    'total_amount' => 4350
+               ],
+               [
+                    'type_id' => 7,
+                    'name' => 'تأمين المصاحف والكتب الشرعية',
+                    'description' => 'يهدف هذا المشروع إلى توفير المصاحف والكتب الإسلامية المعتمدة وتوزيعها على المساجد، ' .
+                         'المراكز التعليمية، حلقات التحفيظ، والمدارس الشرعية في المناطق المحتاجة. ' .
+                         'يشمل المشروع طباعة وتوزيع نسخ من القرآن الكريم بأحجام مختلفة، ' .
+                         'تأمين كتب التفسير، الحديث، الفقه، والسيرة النبوية.',
+                    'photo' => 'temporary_projects_images/religion_project_002.png',
+                    'total_amount' => 2900
+               ],
+               [
+                    'type_id' => 7,
+                    'name' => 'كفالة طالب علم شرعي',
+                    'description' => 'يهدف هذا المشروع إلى دعم طلاب العلم الشرعي الغير قادرين على تحمّل نفقات دراستهم، ' .
+                         'وذلك من خلال تقديم كفالات مالية شهرية تُعينهم على التفرّغ لطلب العلم، ' .
+                         'وتغطي احتياجاتهم الأساسية من سكن، غذاء، ومستلزمات دراسية.',
+                    'photo' => 'temporary_projects_images/religion_project_003.png',
+                    'total_amount' => 68300
+               ],
 
 
           ];
@@ -461,11 +493,15 @@ class ProjectSeeder extends Seeder
           }
 
           foreach ($temporary_projects as $project) {
+               if (!array_key_exists('priority', $project)) {
+                    $project['priority'] = 'متوسط';
+               }
                Project::create([
                     'type_id' => $project['type_id'],
                     'name' => $project['name'],
                     'description' => $project['description'],
                     'total_amount' => $project['total_amount'],
+                    'priority' => $project['priority'],
                     'photo' => $project['photo'],
                ]);
           }
