@@ -40,8 +40,8 @@ class AddCharityProjectRequest extends FormRequest
             $current_amount = $this->input('current_amount');
 
             // تحقق من شرط المبلغ المدفوع لا يتجاوز المبلغ المستهدف
-            if (!is_null($total_amount) && !is_null($current_amount) && $current_amount > $total_amount) {
-                $validator->errors()->add('current_amount', 'المبلغ المدفوع من رصيد الجمعية يجب أن لا يتجاوز المبلغ المستهدف.');
+            if (!is_null($total_amount) && !is_null($current_amount) && $current_amount >= $total_amount) {
+                $validator->errors()->add('current_amount', ' المبلغ المدفوع من رصيد الجمعية يجب أن لا يتجاوز المبلغ المستهدف ولا أن يساويه.');
             }
         });
     }

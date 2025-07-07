@@ -30,15 +30,10 @@ class ProjectController extends Controller
 
     public function healthProjects()
     {
-        $projects = Project::where('type_id', 1)->where('duration_type', '!=', 'تطوعي')->where('duration_type', '!=', 'دائم') ->where('status', '!=', 'منتهي') ->get();
+        $projects = Project::where('type_id', 1)->where('duration_type', '!=', 'تطوعي')->where('duration_type', '!=', 'دائم')->where('status', '!=', 'منتهي')->get();
         foreach ($projects as $project) {
             $project['photo_url'] = asset(Storage::url($project['photo']));
             $percentage = ($project['current_amount'] / $project['total_amount']) * 100.0;
-             if ($percentage >= 100 && $project->status !== 'منتهي') {
-            $project->status = 'منتهي';
-            $project->save();
-            continue;
-            }
             $project['percentage'] = $percentage;
             $project['type'] = Type::findOrFail($project->type_id)->name;
         }
@@ -55,11 +50,6 @@ class ProjectController extends Controller
         foreach ($projects as $project) {
             $project['photo_url'] = asset(Storage::url($project['photo']));
             $percentage = ($project['current_amount'] / $project['total_amount']) * 100.0;
-             if ($percentage >= 100 && $project->status !== 'منتهي') {
-            $project->status = 'منتهي';
-            $project->save();
-            continue;
-            }
             $project['percentage'] = $percentage;
             $project['type'] = Type::findOrFail($project->type_id)->name;
         }
@@ -72,11 +62,6 @@ class ProjectController extends Controller
         foreach ($projects as $project) {
             $project['photo_url'] = asset(Storage::url($project['photo']));
             $percentage = ($project['current_amount'] / $project['total_amount']) * 100.0;
-             if ($percentage >= 100 && $project->status !== 'منتهي') {
-            $project->status = 'منتهي';
-            $project->save();
-            continue; 
-            }
             $project['percentage'] = $percentage;
             $project['type'] = Type::findOrFail($project->type_id)->name;
         }
@@ -89,11 +74,6 @@ class ProjectController extends Controller
         foreach ($projects as $project) {
             $project['photo_url'] = asset(Storage::url($project['photo']));
             $percentage = ($project['current_amount'] / $project['total_amount']) * 100.0;
-             if ($percentage >= 100 && $project->status !== 'منتهي') {
-            $project->status = 'منتهي';
-            $project->save();
-            continue; 
-            }
             $project['percentage'] = $percentage;
             $project['type'] = Type::findOrFail($project->type_id)->name;
         }
@@ -102,7 +82,7 @@ class ProjectController extends Controller
 
     public function religionProjects()
     {
-        $projects = Project::where('type_id', 7)->where('duration_type', '!=', 'تطوعي')->where('duration_type', '!=', 'دائم')->get();
+        $projects = Project::where('type_id', 7)->where('duration_type', '!=', 'تطوعي')->where('duration_type', '!=', 'دائم')->where('status', '!=', 'منتهي')->get();
         foreach ($projects as $project) {
             $project['photo_url'] = asset(Storage::url($project['photo']));
             $percentage = ($project['current_amount'] / $project['total_amount']) * 100.0;
@@ -118,11 +98,6 @@ class ProjectController extends Controller
         foreach ($projects as $project) {
             $project['photo_url'] = asset(Storage::url($project['photo']));
             $percentage = ($project['current_amount'] / $project['total_amount']) * 100.0;
-             if ($percentage >= 100 && $project->status !== 'منتهي') {
-            $project->status = 'منتهي';
-            $project->save();
-            continue; 
-            }
             $project['percentage'] = $percentage;
             $project['type'] = Type::findOrFail($project->type_id)->name;
         }
@@ -263,7 +238,8 @@ class ProjectController extends Controller
         return response()->json($project, 201);
     }
 
-    public function addVolunteerProject(AddVolunteerProjectRequest $request) {
+    public function addVolunteerProject(AddVolunteerProjectRequest $request)
+    {
         $validatedData = $request->validated();
         $validatedData['photo'] = 'charity_logo/logo.png';
 
@@ -277,7 +253,7 @@ class ProjectController extends Controller
 
         // create project
         $project = Project::create($validatedData);
-        
+
         // send notification to volunteers
         $users = User::all();
         foreach ($users as $user) {
@@ -293,7 +269,6 @@ class ProjectController extends Controller
         }
         return response()->json($project, 201);
     }
-
 
     public function deleteProject($id)
     {
