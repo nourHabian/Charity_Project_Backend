@@ -85,6 +85,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/donor/projects/residential', [ProjectController::class, 'residentialProjects']);
     // view nutritional projects
     Route::get('/donor/projects/nutritional', [ProjectController::class, 'nutritionalProjects']);
+    // view religion projects
+    Route::get('/donor/projects/religion', [ProjectController::class, 'religionProjects']);
     // view emergency projects
     Route::get('/donor/projects/emergency', [ProjectController::class, 'emergencyProjects']);
     // view volunteer projects filtered by domain

@@ -22,32 +22,27 @@ class UserController extends Controller
     {
         $verification_code = random_int(1000, 9999);
 
-        $exists = User::where('phone_number', $request->phone_number)
-            ->where('email', $request->email)->exists();
+        $exists = User::where('email', $request->email)->exists();
 
         $user = null;
         if (!$exists) {
             $validate = $request->validate([
                 'full_name' => 'required|string|max:40',
-                'phone_number' => 'required|string|min:6|max:10|unique:users,phone_number',
                 'email' => 'required|string|email|unique:users,email|max:40',
                 'password' => 'required|string|min:5|confirmed'
             ]);
 
             $user = User::create([
                 'full_name' => $request->full_name,
-                'phone_number' => $request->phone_number,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'verification_code' => $verification_code,
             ]);
         } else {
-            $existed_user = User::where('phone_number', $request->phone_number)
-                ->where('email', $request->email)->firstOrFail();
+            $existed_user = User::where('email', $request->email)->firstOrFail();
             if ($existed_user->verified) {
                 $request->validate([
                     'full_name' => 'required|string|max:40',
-                    'phone_number' => 'required|string|min:6|max:10|unique:users,phone_number',
                     'email' => 'required|string|email|unique:users,email|max:40',
                     'password' => 'required|string|min:5|confirmed'
                 ]);

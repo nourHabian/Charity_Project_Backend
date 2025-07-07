@@ -20,7 +20,7 @@ class TypeSeeder extends Seeder
             ['name' => 'غذائي'],
             ['name' => 'ميداني'],
             ['name' => 'عن بعد'],
-            ['name' => 'عام'],
+            ['name' => 'ديني'],
         ];
 
         foreach($types as $type) {
