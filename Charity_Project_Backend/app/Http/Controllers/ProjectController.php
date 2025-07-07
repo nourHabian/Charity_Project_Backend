@@ -102,10 +102,15 @@ class ProjectController extends Controller
 
     public function religionProjects()
     {
-        $projects = Project::where('type_id', 7)->where('duration_type', '!=', 'تطوعي')->where('duration_type', '!=', 'دائم')->get();
+        $projects = Project::where('type_id', 7)->where('duration_type', '!=', 'تطوعي')->where('duration_type', '!=', 'دائم')->where('status', '!=', 'منتهي')->get();
         foreach ($projects as $project) {
             $project['photo_url'] = asset(Storage::url($project['photo']));
             $percentage = ($project['current_amount'] / $project['total_amount']) * 100.0;
+            if ($percentage >= 100 && $project->status !== 'منتهي') {
+            $project->status = 'منتهي';
+            $project->save();
+            continue; 
+            }
             $project['percentage'] = $percentage;
             $project['type'] = Type::findOrFail($project->type_id)->name;
         }
