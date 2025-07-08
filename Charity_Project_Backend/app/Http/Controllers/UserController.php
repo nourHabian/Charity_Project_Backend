@@ -160,7 +160,7 @@ class UserController extends Controller
         // search the beneficiary
         $beneficiary = User::where('phone_number', $request->phone_number)->first();
         // check if this user does exist and is a beneficiary
-        if ($beneficiary && $beneficiary->role == 'مستفيد') {
+        if ($beneficiary && $beneficiary->role == 'مستفيد' && !$beneficiary->ban) {
             // check if there's enough money in wallet
             if ($request->amount > $user->balance) {
                 return response()->json(['message' => 'لا يوجد لديك رصيد كافي للقيام بهذه العملية، الرجاء شحن المحفظة والمحاولة مرة أخرى'], 422);
@@ -190,7 +190,8 @@ class UserController extends Controller
                 'user_id' => $user->id,
                 'type' => 'gift',
                 'amount' => $request->amount,
-                'recipient_number' => $request->phone_number
+                'recipient_number' => $request->phone_number,
+                'recipient_name' => $request->beneficiary_name
             ];
             Donation::create($history);
 

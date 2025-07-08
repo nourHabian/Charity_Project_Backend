@@ -6,6 +6,7 @@ use App\Models\Admin;
 use App\Models\BeneficiaryRequest;
 use App\Models\Charity;
 use App\Models\Donation;
+use App\Models\Feedback;
 use App\Models\Notification;
 use App\Models\Project;
 use App\Models\Type;
@@ -16,7 +17,8 @@ use GuzzleHttp\Handler\Proxy;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-
+use Mockery\Matcher\Not;
+use PHPUnit\Framework\TestStatus\Notice;
 
 use function PHPUnit\Framework\isNull;
 
@@ -472,5 +474,74 @@ class AdminController extends Controller
         $beneficiary->ban = false;
         $beneficiary->save();
         return response()->json(['message' => 'تم فك حظر هذا المحتاج بنجاح'], 200);
+    }
+
+    public function giftDelivered(Request $request)
+    {
+        $validate = $request->validate([
+            'id' => 'required|exists:donations,id'
+        ]);
+        $id = $request->id;
+        $donation = Donation::find($id);
+        if ($donation->type !== 'هدية') {
+            return response()->json(['message' => 'حدث خطأ، لم يتم العثور على هذه الهدية'], 400);
+        }
+        if ($donation->delivered) {
+            return response()->json(['message' => 'تم تسليم هذه الهدية سابقاً'], 400);
+        }
+        $donor = $donation->user;
+        $beneficiary = User::where('phone_number', $donation->recipient_number)->first();
+
+        $donor_notification = [
+            'user_id' => $donor->id,
+            'title' => 'تم تسليم الهدية',
+            'message' => 'تم تسليم هديتك إلى ' . $donation->recipient_name . ' بنجاح هذا اليوم، شكراً لمساعدتك التي كانت سبباً في رسم البسمة اليوم🙏🏻'
+        ];
+
+        $beneficiary_notification = [
+            'user_id' => $beneficiary->id,
+            'title' => 'تم تسليم الهدية',
+            'message' => 'تم تسليم هديتك إليك اليوم بنجاح، نأمل أن تكون سبباً في رسم البسمة على  وجهك✨'
+        ];
+
+        Notification::create($donor_notification);
+        Notification::create($beneficiary_notification);
+
+        $donation->delivered = true;
+        $donation->save();
+
+        return response()->json(['message' => 'تم تعديل حالة الهدية إلى (تم التسليم) بنجاح'], 200);
+    }
+
+    public function acceptFeedback(Request $request)
+    {
+        $validate = $request->validate([
+            'id' => 'required|exists:feedback,id'
+        ]);
+        $id = $request->id;
+        $feedback = Feedback::find($id);
+        if ($feedback->status !== 'معلق') {
+            return response()->json(['message' => 'لا يمكنك قبول التعليق إن لم يكن معلقاً'], 400);
+        }
+        $feedback->status = 'مقبول';
+        $feedback->save();
+
+        return response()->json(['message' => 'تم قبول هذا التعليق وسيتم عرضه في التطبيق للمتبرعين'], 200);
+    }
+
+    public function rejectFeedback(Request $request)
+    {
+        $validate = $request->validate([
+            'id' => 'required|exists:feedback,id'
+        ]);
+        $id = $request->id;
+        $feedback = Feedback::find($id);
+        if ($feedback->status !== 'معلق') {
+            return response()->json(['message' => 'لا يمكنك رفض التعليق إن لم يكن معلقاً'], 400);
+        }
+        $feedback->status = 'مرفوض';
+        $feedback->save();
+
+        return response()->json(['message' => 'تم رفض هذا التعليق بنجاح'], 200);
     }
 }

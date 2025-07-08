@@ -149,6 +149,11 @@ Route::middleware('isAdmin')->group(function () {
     Route::post('/admin/unblockBeneficiary', [AdminController::class, 'unblockBeneficiary']);
 
 
+    Route::post('/admin/giftDelivered', [AdminController::class, 'giftDelivered']);
+    Route::post('/admin/acceptFeedback', [AdminController::class, 'acceptFeedback']);
+    Route::post('/admin/rejectFeedback', [AdminController::class, 'rejectFeedback']);
+
+
 
     // Route::put('/admin/editProject/{id}', [ProjectController::class, 'editProject']);
 });
@@ -186,10 +191,10 @@ Route::middleware('isAdmin')->group(function () {
 - رفض طلب احتياج (DONE)
 - حظر محتاج (DONE)
 - فك حظر محتاج (DONE)
-- زر تم التسليم تبع الهدية
-- قبول فيدباك
-- رفض فيدباك
-- حظر محتاج بسبب فيدباك
+- زر تم التسليم تبع الهدية (DONE)
+- قبول فيدباك (DONE)
+- رفض فيدباك (DONE)
+- حظر محتاج بسبب فيدباك (UNKNOWN)
 - رفرش الادمن (DONE)
 
 
