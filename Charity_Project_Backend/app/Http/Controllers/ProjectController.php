@@ -23,7 +23,7 @@ class ProjectController extends Controller
         $projects = Project::where('duration_type', 'دائم')->get();
         foreach ($projects as $project) {
             $project['photo_url'] = asset(Storage::url($project['photo']));
-            $project['type'] = Type::findOrFail($project->type_id)->name;
+            $project['type'] = $project->type_id->name;
         }
         return response()->json($projects, 200);
     }
@@ -35,7 +35,7 @@ class ProjectController extends Controller
             $project['photo_url'] = asset(Storage::url($project['photo']));
             $percentage = ($project['current_amount'] / $project['total_amount']) * 100.0;
             $project['percentage'] = $percentage;
-            $project['type'] = Type::findOrFail($project->type_id)->name;
+            $project['type'] = $project->type_id->name;
         }
         //  $projects = $projects->filter(function ($project) {
         //     return $project->status !== 'منتهي';
@@ -51,7 +51,7 @@ class ProjectController extends Controller
             $project['photo_url'] = asset(Storage::url($project['photo']));
             $percentage = ($project['current_amount'] / $project['total_amount']) * 100.0;
             $project['percentage'] = $percentage;
-            $project['type'] = Type::findOrFail($project->type_id)->name;
+            $project['type'] = $project->type_id->name;
         }
         return response()->json($projects, 200);
     }
@@ -63,7 +63,7 @@ class ProjectController extends Controller
             $project['photo_url'] = asset(Storage::url($project['photo']));
             $percentage = ($project['current_amount'] / $project['total_amount']) * 100.0;
             $project['percentage'] = $percentage;
-            $project['type'] = Type::findOrFail($project->type_id)->name;
+            $project['type'] = $project->type_id->name;
         }
         return response()->json($projects, 200);
     }
@@ -75,7 +75,7 @@ class ProjectController extends Controller
             $project['photo_url'] = asset(Storage::url($project['photo']));
             $percentage = ($project['current_amount'] / $project['total_amount']) * 100.0;
             $project['percentage'] = $percentage;
-            $project['type'] = Type::findOrFail($project->type_id)->name;
+            $project['type'] = $project->type_id->name;
         }
         return response()->json($projects, 200);
     }
@@ -87,7 +87,7 @@ class ProjectController extends Controller
             $project['photo_url'] = asset(Storage::url($project['photo']));
             $percentage = ($project['current_amount'] / $project['total_amount']) * 100.0;
             $project['percentage'] = $percentage;
-            $project['type'] = Type::findOrFail($project->type_id)->name;
+            $project['type'] = $project->type_id->name;
         }
         return response()->json($projects, 200);
     }
@@ -99,12 +99,12 @@ class ProjectController extends Controller
             $project['photo_url'] = asset(Storage::url($project['photo']));
             $percentage = ($project['current_amount'] / $project['total_amount']) * 100.0;
             $project['percentage'] = $percentage;
-            $project['type'] = Type::findOrFail($project->type_id)->name;
+            $project['type'] = $project->type->name;
         }
         return response()->json($projects, 200);
     }
 
-    
+
     public function getCompletedProjects()
     {
         $projects = Project::where('status', 'منتهي')
@@ -115,7 +115,7 @@ class ProjectController extends Controller
             return [
                 'name' => $project->name,
                 'description' => $project->description,
-                'type' => Type::findOrFail($project->type_id)->name,
+                'type' => $project->type->name,
                 'photo_url' => asset(Storage::url($project->photo)),
                 'total_amount' => $project->total_amount,
             ];
@@ -137,25 +137,28 @@ class ProjectController extends Controller
 
         // update charity balance
         $charity = Charity::findOrFail(1);
-        $is_enough = true;
-        if ($type->name === 'صحي') {
-            $charity->health_projects_balance -= $validatedData['current_amount'];
-            if ($charity->health_projects_balance < 0) $is_enough = false;
-        } else if ($type->name === 'تعليمي') {
-            $charity->educational_projects_balance -= $validatedData['current_amount'];
-            if ($charity->educational_projects_balance < 0) $is_enough = false;
-        } else if ($type->name === 'سكني') {
-            $charity->housing_projects_balance -= $validatedData['current_amount'];
-            if ($charity->housing_projects_balance < 0) $is_enough = false;
-        } else if ($type->name === 'غذائي') {
-            $charity->nutritional_projects_balance -= $validatedData['current_amount'];
-            if ($charity->nutritional_projects_balance < 0) $is_enough = false;
-        } else {
+
+        $balanceMap = [
+            'صحي' => 'health_projects_balance',
+            'تعليمي' => 'educational_projects_balance',
+            'سكني' => 'housing_projects_balance',
+            'غذائي' => 'nutritional_projects_balance',
+            'ديني' => 'religious_projects_balance',
+        ];
+
+        $typeName = $type->name;
+
+        if (!isset($balanceMap[$typeName])) {
             return response()->json(['message' => 'error has occurred'], 400);
         }
-        if (!$is_enough) {
+
+        $column = $balanceMap[$typeName];
+
+        if ($charity->$column < $validatedData['current_amount']) {
             return response()->json(['message' => 'لا يوجد رصيد كافي في رصيد الجمعية للمساهمة في هذا المشروع'], 400);
         }
+
+        $charity->$column -= $validatedData['current_amount'];
         $charity->save();
 
         // save the photo
@@ -199,25 +202,28 @@ class ProjectController extends Controller
 
         // update charity balance
         $charity = Charity::findOrFail(1);
-        $is_enough = true;
-        if ($type->name === 'صحي') {
-            $charity->health_projects_balance -= $validatedData['current_amount'];
-            if ($charity->health_projects_balance < 0) $is_enough = false;
-        } else if ($type->name === 'تعليمي') {
-            $charity->educational_projects_balance -= $validatedData['current_amount'];
-            if ($charity->educational_projects_balance < 0) $is_enough = false;
-        } else if ($type->name === 'سكني') {
-            $charity->housing_projects_balance -= $validatedData['current_amount'];
-            if ($charity->housing_projects_balance < 0) $is_enough = false;
-        } else if ($type->name === 'غذائي') {
-            $charity->nutritional_projects_balance -= $validatedData['current_amount'];
-            if ($charity->nutritional_projects_balance < 0) $is_enough = false;
-        } else {
+
+        $balanceMap = [
+            'صحي' => 'health_projects_balance',
+            'تعليمي' => 'educational_projects_balance',
+            'سكني' => 'housing_projects_balance',
+            'غذائي' => 'nutritional_projects_balance',
+            'ديني' => 'religious_projects_balance',
+        ];
+
+        $typeName = $type->name;
+
+        if (!isset($balanceMap[$typeName])) {
             return response()->json(['message' => 'error has occurred'], 400);
         }
-        if (!$is_enough) {
+
+        $column = $balanceMap[$typeName];
+
+        if ($charity->$column < $validatedData['current_amount']) {
             return response()->json(['message' => 'لا يوجد رصيد كافي في رصيد الجمعية للمساهمة في هذا المشروع'], 400);
         }
+
+        $charity->$column -= $validatedData['current_amount'];
         $charity->save();
 
         // save the photo

@@ -10,8 +10,6 @@ use Illuminate\Support\Facades\Auth;
 
 class VolunteerController extends Controller
 {
-
-
     // التسجيل على استبيان التطوع
     public function addVolunteerRequest(AddVolunteerRequest $request)
     {
@@ -45,10 +43,6 @@ class VolunteerController extends Controller
         return response()->json($volunteerInfo, 201);
     }
 
-
-
-
-
     public function getAllVolunteerRequests()
     {
         $admin = Auth::guard('admin')->user();
@@ -74,4 +68,6 @@ class VolunteerController extends Controller
 
         return response()->json($volunteerRequests, 200);
     }
+
+    
 }
