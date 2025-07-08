@@ -11,8 +11,6 @@ use Illuminate\Support\Facades\Auth;
 
 class VolunteerController extends Controller
 {
-
-
     // التسجيل على استبيان التطوع
     public function addVolunteerRequest(AddVolunteerRequest $request)
     {
@@ -32,15 +30,14 @@ class VolunteerController extends Controller
         $volunteerInfo = $user->only([
             'full_name',
             'phone_number',
-             'age',
+            'age',
             'volunteer_status',
-           'place_of_residence',
+            'place_of_residence',
             'gender',
             'your_last_educational_qualification',
             'your_studying_domain',
             'volunteering_hours',
             'purpose_of_volunteering',
-
         ]);
         $notification = [
             'user_id' => $user->id,
@@ -52,10 +49,6 @@ class VolunteerController extends Controller
         return response()->json($volunteerInfo
 , 201);
     }
-
-
-
-
 
     public function getAllVolunteerRequests()
     {

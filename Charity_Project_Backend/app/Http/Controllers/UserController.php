@@ -91,9 +91,9 @@ class UserController extends Controller
             return response()->json(['message' => 'invalid password or email'], 401);
         }
 
-       if ($user->role === 'مستفيد') {
-    return response()->json(['message' => 'غير مسموح للمستفيدين بتسجيل الدخول'], 403);
- }
+        if ($user->role === 'مستفيد') {
+            return response()->json(['message' => 'غير مسموح للمستفيدين بتسجيل الدخول'], 403);
+        }
 
         $token = $user->createToken('auth_Token')->plainTextToken;
 
@@ -238,18 +238,21 @@ class UserController extends Controller
 
         // add money to somewhere
         $charity = Charity::findOrFail(1);
-        if ($request->type == 'صحي') {
-            $charity->health_projects_balance += $request->amount;
-        } else if ($request->type == 'تعليمي') {
-            $charity->educational_projects_balance += $request->amount;
-        } else if ($request->type == 'سكني') {
-            $charity->housing_projects_balance += $request->amount;
-        } else if ($request->type == 'غذائي') {
-            $charity->nutritional_projects_balance += $request->amount;
-        } else {
-            return response()->json(['message' => 'error has occurred'], 401);
+
+        $balanceMap = [
+            'صحي' => 'health_projects_balance',
+            'تعليمي' => 'educational_projects_balance',
+            'سكني' => 'housing_projects_balance',
+            'غذائي' => 'nutritional_projects_balance',
+            'ديني' => 'religious_projects_balance',
+        ];
+
+        if (!isset($balanceMap[$request->type])) {
+            return response()->json(['message' => 'لا يوجد نوع بهذا الاسم'], 400);
         }
 
+        $column = $balanceMap[$request->type];
+        $charity->$column += $request->amount;
         $charity->number_of_donations++;
         $charity->save();
         return response()->json(['message' => 'تم استلام الزكاة بنجاح'], 200);
@@ -351,7 +354,6 @@ class UserController extends Controller
         ];
         Notification::create($notification);
         return response()->json(['message' => 'تم تفعيل التبرع الشهري بنجاح'], 200);
-        
     }
 
     public function cancelMonthlyDonation()

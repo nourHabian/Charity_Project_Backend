@@ -125,10 +125,12 @@ Route::middleware('isAdmin')->group(function () {
     Route::post('/admin/addCharityProject', [ProjectController::class, 'addCharityProject']);
     Route::post('/admin/addBeneficiaryProject', [ProjectController::class, 'addBeneficiaryProject']);
     Route::post('/admin/addVolunteerProject', [ProjectController::class, 'addVolunteerProject']);
-    Route::post('/admin/doAllMonthlyDonations', [AdminController::class, 'monthlyDonations']);
     Route::delete('/admin/deleteProject', [ProjectController::class, 'deleteProject']);
 
 
+    // donation management
+    Route::post('/admin/doAllMonthlyDonations', [AdminController::class, 'monthlyDonations']);
+    Route::post('/admin/donateToProject', [AdminController::class, 'donateToProject']);
 
     Route::get('/admin/getAllVolunteerRequests', [VolunteerController::class, 'getAllVolunteerRequests']);
     // Route::put('/admin/editProject/{id}', [ProjectController::class, 'editProject']);
@@ -157,7 +159,7 @@ Route::middleware('isAdmin')->group(function () {
 **** قسم نور:
 - حذف مشروع (DONE)
 - اضافة مشروع (جمعية، تطوع، تبرع) (DONE)
-- التبرع لاحد المشاريع (تبرع الان)
+- التبرع لاحد المشاريع (تبرع الان) (DONE)
 - قبول طلب تطوع
 - رفض طلب تطوع
 - حظر متطوع بشرط يكون مقبول قبل
