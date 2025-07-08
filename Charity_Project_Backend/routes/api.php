@@ -132,7 +132,15 @@ Route::middleware('isAdmin')->group(function () {
     Route::post('/admin/doAllMonthlyDonations', [AdminController::class, 'monthlyDonations']);
     Route::post('/admin/donateToProject', [AdminController::class, 'donateToProject']);
 
+    // volunteer management
     Route::get('/admin/getAllVolunteerRequests', [VolunteerController::class, 'getAllVolunteerRequests']);
+
+    Route::post('/admin/approveVolunteerRequest', [AdminController::class, 'approveVolunteerRequest']);
+    Route::post('/admin/rejectVolunteerRequest', [AdminController::class, 'rejectVolunteerRequest']);
+    Route::post('/admin/banVolunteer', [AdminController::class, 'banVolunteer']);
+    Route::post('/admin/unblockVolunteer', [AdminController::class, 'unblockVolunteer']);
+    Route::post('/admin/markVolunteerProjectAsCompleted', [AdminController::class, 'markVolunteerProjectAsCompleted']);
+
     // Route::put('/admin/editProject/{id}', [ProjectController::class, 'editProject']);
 });
 
@@ -160,12 +168,15 @@ Route::middleware('isAdmin')->group(function () {
 - حذف مشروع (DONE)
 - اضافة مشروع (جمعية، تطوع، تبرع) (DONE)
 - التبرع لاحد المشاريع (تبرع الان) (DONE)
-- قبول طلب تطوع
-- رفض طلب تطوع
-- حظر متطوع بشرط يكون مقبول قبل
-- قبول محتاج
-- رفض محتاج
+- قبول طلب تطوع (DONE)
+- رفض طلب تطوع (DONE)
+- حظر متطوع بشرط يكون مقبول قبل (DONE)
+- فك حظر متطوع (DONE)
+- تعيين مشروع تطوعي على أنه منجز (DONE)
+- قبول طلب احتياج
+- رفض طلب احتياج
 - حظر محتاج
+- فك حظر محتاج
 - زر تم التسليم تبع الهدية
 - قبول فيدباك
 - رفض فيدباك

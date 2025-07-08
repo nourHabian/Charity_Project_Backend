@@ -9,10 +9,14 @@ use App\Models\Notification;
 use App\Models\Project;
 use App\Models\Type;
 use App\Models\User;
+use App\Models\Volunteer;
 use Carbon\Carbon;
+use GuzzleHttp\Handler\Proxy;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+
+use function PHPUnit\Framework\isNull;
 
 class AdminController extends Controller
 {
@@ -124,13 +128,14 @@ class AdminController extends Controller
         $admin = Auth::guard('admin')->user();
         $validate = $request->validate([
             'amount' => 'required|numeric|min:1',
+            'id' => 'required|exists:projects,id'
         ]);
         $id = $request->id;
         $amount = $request->amount;
         $project = Project::findOrFail($id);
         $charity = Charity::findOrFail(1);
 
-        if ($project->status !== 'جاري' || $project->duration_type === 'دائم') {
+        if ($project->status !== 'جاري' || $project->duration_type === 'دائم' || $project->duration_type === 'تطوعي') {
             return response()->json(['message' => 'لا يمكن التبرع لهذا المشروع'], 400);
         }
         $project_type = $project->type->name;
@@ -156,7 +161,7 @@ class AdminController extends Controller
         $remaining = $project->total_amount - $project->current_amount;
         $charity->$column -= min($amount, $remaining);
         $charity->save();
-    
+
         $project->current_amount = min($project->current_amount + $amount, $project->total_amount);
         // check if project is completed
         if ($project->current_amount == $project->total_amount) {
@@ -190,7 +195,187 @@ class AdminController extends Controller
         return response()->json(['message' => 'تم التبرع لهذا المشروع بنجاح وسحب مبلغ ' . min($amount, $remaining) . '$ من رصيد الجمعية'], 200);
     }
 
-    public function approveVolunteerRequest(Request $request) {
-        
+    public function approveVolunteerRequest(Request $request)
+    {
+        $validate = $request->validate([
+            'phone_number' => 'required|string|exists:users,phone_number',
+        ]);
+        $admin = Auth::guard('admin')->user();
+        // رقم الشخص يلي قدم على طلب التطوع
+        $phone_number = $request->phone_number;
+        $user = User::where('phone_number', $phone_number)->first();
+        // في غلط بالرقم ف المستخدم مو موجود
+        if (is_null($user)) {
+            return response()->json(['message' => 'رقم المستخدم خاطئ'], 400);
+        }
+        // مالو باعت استبيان تطوع
+        if (is_null($user->volunteer_status)) {
+            return response()->json(['message' => 'هذا المستخدم ليس مسجلاً كمتطوع'], 400);
+        }
+        // هو بالاصل مقبول او مرفوض
+        if ($user->volunteer_status !== 'معلق') {
+            return response()->json(['message' => 'لا يمكنك قبول الطلب إن لم يكن معلقاً'], 400);
+        }
+        // قبول الطلب
+        $user->volunteer_status = 'مقبول';
+        $user->role = 'متطوع';
+        $user->save();
+
+        $notification = [
+            'user_id' => $user->id,
+            'title' => 'تحديث على طلب التطوع',
+            'message' => 'تم قبول طلب تطوعكم معنا في الجمعية بنجاح! نتطلع قدماً لعملكم معنا✨'
+        ];
+        Notification::create($notification);
+
+        return response()->json(['message' => 'تم قبول هذا المتطوع بنجاح'], 200);
     }
+
+    public function rejectVolunteerRequest(Request $request)
+    {
+        $validate = $request->validate([
+            'phone_number' => 'required|string|exists:users,phone_number',
+        ]);
+        $admin = Auth::guard('admin')->user();
+        // رقم الشخص يلي قدم على طلب التطوع
+        $phone_number = $request->phone_number;
+        $user = User::where('phone_number', $phone_number)->first();
+        // في غلط بالرقم ف المستخدم مو موجود
+        if (is_null($user)) {
+            return response()->json(['message' => 'رقم المستخدم خاطئ'], 400);
+        }
+        // مالو باعت استبيان تطوع
+        if (is_null($user->volunteer_status)) {
+            return response()->json(['message' => 'هذا المستخدم ليس مسجلاً كمتطوع'], 400);
+        }
+        // هو بالاصل مقبول او مرفوض
+        if ($user->volunteer_status !== 'معلق') {
+            return response()->json(['message' => 'لا يمكنك رفض الطلب إن لم يكن معلقاً'], 400);
+        }
+        // رفض الطلب
+        $user->volunteer_status = null;
+        $user->role = 'متبرع';
+        $user->save();
+
+        $notification = [
+            'user_id' => $user->id,
+            'title' => 'تحديث على طلب التطوع',
+            'message' => 'شكراً على طلبك للتطوع معنا. نعتذر، لم يتم قبول طلبك. نقدّر اهتمامك ونتمنى لك التوفيق.'
+        ];
+        Notification::create($notification);
+
+        return response()->json(['message' => 'تم رفض هذا الطلب بنجاح'], 200);
+    }
+
+    public function banVolunteer(Request $request)
+    {
+        $validate = $request->validate([
+            'phone_number' => 'required|string|exists:users,phone_number',
+        ]);
+        $admin = Auth::guard('admin')->user();
+        // رقم الشخص يلي قدم على طلب التطوع
+        $phone_number = $request->phone_number;
+        $user = User::where('phone_number', $phone_number)->first();
+        // في غلط بالرقم ف المستخدم مو موجود
+        if (is_null($user)) {
+            return response()->json(['message' => 'رقم المستخدم خاطئ'], 400);
+        }
+        // مالو باعت استبيان تطوع
+        if (is_null($user->volunteer_status)) {
+            return response()->json(['message' => 'هذا المستخدم ليس مسجلاً كمتطوع'], 400);
+        }
+        // اذا كان حاظرو من قبل
+        if ($user->ban) {
+            return response()->json(['message' => 'لقد قمت بحظر هذا المتطوع من قبل'], 400);
+        }
+        // مالو مقبول
+        if ($user->volunteer_status !== 'مقبول') {
+            return response()->json(['message' => 'لا يمكنك حظر المتطوع إن لم يكن مقبولاً بعد'], 400);
+        }
+        // حظر المتطوع
+        $user->volunteer_status = 'مرفوض';
+        $user->role = 'متبرع';
+        $user->ban = true;
+        $user->is_working = false;
+        $user->save();
+
+        $notification = [
+            'user_id' => $user->id,
+            'title' => 'تحديث على حالة التطوع',
+            'message' => 'تم إيقاف تطوعك في الجمعية بسبب مخالفات في تنفيذ المهام التطوعية، لمتابعة التفاصيل أو الاعتراض، يُرجى التواصل مع إدارة التطبيق على صفحة الفيسبوك الخاصة بالجمعية'
+        ];
+        Notification::create($notification);
+
+        // احتمال يكون حاليا عم يشتغل بشي مشروع _ حاليا ماحعدل شي بهي الحالة
+
+        return response()->json(['message' => 'تم حظر هذا المتطوع بنجاح'], 200);
+    }
+
+    public function unblockVolunteer(Request $request)
+    {
+        $validate = $request->validate([
+            'phone_number' => 'required|string|exists:users,phone_number',
+        ]);
+        $admin = Auth::guard('admin')->user();
+        // رقم الشخص يلي قدم على طلب التطوع
+        $phone_number = $request->phone_number;
+        $user = User::where('phone_number', $phone_number)->first();
+        // في غلط بالرقم ف المستخدم مو موجود
+        if (is_null($user)) {
+            return response()->json(['message' => 'رقم المستخدم خاطئ'], 400);
+        }
+        // مالو باعت استبيان تطوع
+        if (is_null($user->volunteer_status)) {
+            return response()->json(['message' => 'هذا المستخدم ليس مسجلاً كمتطوع'], 400);
+        }
+        // اذا كان مو محظور
+        if (!$user->ban) {
+            return response()->json(['message' => 'هذا المتطوع غير محظور'], 400);
+        }
+        // فك حظر المتطوع
+        $user->volunteer_status = 'مقبول';
+        $user->role = 'متطوع';
+        $user->ban = false;
+        $user->save();
+
+        $notification = [
+            'user_id' => $user->id,
+            'title' => 'تحديث على حالة التطوع',
+            'message' => 'تم فك حظر التطوع الخاص بك، نتطلع لعودتك إلى العمل معنا✨'
+        ];
+        Notification::create($notification);
+
+        return response()->json(['message' => 'تم فك الحظر عن هذا المتطوع بنجاح'], 200);
+    }
+
+    public function markVolunteerProjectAsCompleted(Request $request)
+    {
+        $validate = $request->validate([
+            'id' => 'required|exists:projects,id'
+        ]);
+        $id = $request->id;
+        $project = Project::Find($id);
+        if ($project->duration_type !== 'تطوعي') {
+            return response()->json(['message' => 'هذا المشروع ليس مشروعاً تطوعياً'], 400);
+        }
+        if ($project->status === 'منتهي') {
+            return response()->json(['message' => 'تم تحديد هذا المشروع كمنتهي مسبقاً'], 400);
+        }
+        $volunteers = $project->volunteers;
+        foreach ($volunteers as $volunteer) {
+            $volunteer->is_working = false;
+            $notification = [
+                'user_id' => $volunteer->id,
+                'title' => 'انتهاء مشروع التطوع',
+                'message' => 'انتهى مشروع التطوع ' . $project->name . ' الذي كنت مشاركاً به، شكراً لعطائك🙏🏻'
+            ];
+            Notification::create($notification);
+            $volunteer->save();
+        }
+        $project->status = 'منتهي';
+        $project->save();
+        return response()->json(['message' => 'تم تغيير حالة هذا المشروع إلى مشروع منتهي'], 200);
+    }
+
+    
 }

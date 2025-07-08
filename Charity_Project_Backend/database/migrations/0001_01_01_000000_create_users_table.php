@@ -30,7 +30,6 @@ return new class extends Migration
             $table->enum('monthly_donation_type', ['صحي', 'تعليمي', 'سكني', 'غذائي'])->default('صحي');
             $table->boolean('ban')->default(false);
             $table->enum('volunteer_status', ['معلق', 'مقبول', 'مرفوض'])->nullable();
-            $table->enum('volunteering_domain', ['صحي', 'تعليمي', 'عن بعد','ميداني'])->nullable();
             $table->boolean('is_working')->default(false);
             $table->string('purpose_of_volunteering')->nullable();
             $table->string('place_of_residence')->nullable();

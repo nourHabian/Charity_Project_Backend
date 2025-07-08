@@ -18,7 +18,7 @@ class VolunteerController extends Controller
         if ($user->volunteer_status !== null) {
             return response()->json([
                 'message' => 'لقد قمت بالتسجيل على استبيان التطوع مسبقًا ولا يمكنك التسجيل مرة أخرى.'
-            ], 400);
+            ], 409);
         }
 
         $validatedData = $request->validated();
@@ -54,15 +54,15 @@ class VolunteerController extends Controller
         $volunteerRequests = User::whereNotNull('volunteer_status')->get([
             'id',
             'full_name',
-            'contact_number',
+            'phone_number',
             'volunteer_status',
             'volunteering_domain',
             'purpose_of_volunteering',
-            'current_location',
+            'place_of_residence',
             'gender',
             'age',
             'volunteering_hours',
-            'education'
+            'your_last_educational_qualification'
         ]);
 
         return response()->json($volunteerRequests, 200);

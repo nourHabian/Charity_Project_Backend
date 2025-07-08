@@ -262,18 +262,19 @@ class UserController extends Controller
     {
         $validate = $request->validate([
             'amount' => 'required|numeric|min:1',
+            'id' => 'required|exists:projects,id'
         ]);
         $id = $request->id;
         $amount = $request->amount;
         $project = Project::findOrFail($id);
 
         if ($project->status !== 'جاري') {
-            return response()->json(['message' => 'لا يمكن التبرع لهذا المشروع'], 401);
+            return response()->json(['message' => 'لا يمكن التبرع لهذا المشروع'], 400);
         }
 
         $user = Auth::User();
         if ($amount > $user->balance) {
-            return response()->json(['message' => 'ليس لديك رصيد كافٍ لإتمام هذه العملية، الرجاء شحن المحفظة وإعادة المحاولة.'], 401);
+            return response()->json(['message' => 'ليس لديك رصيد كافٍ لإتمام هذه العملية، الرجاء شحن المحفظة وإعادة المحاولة.'], 400);
         }
         $user->balance -= $amount;
         $user->points += floor(5 * log(1 + $amount));
@@ -291,6 +292,8 @@ class UserController extends Controller
 
         // add money and check if it's completed and if donation is bigger than required
         if ($project->duration_type === 'دائم') {
+            $project->current_amount += $amount;
+            $project->save();
             return response()->json(['message' => 'تم استلام تبرعك بنجاح، جزاك الله خيراً.'], 200);
         }
         $project->current_amount = min($project->current_amount + $amount, $project->total_amount);
@@ -341,7 +344,7 @@ class UserController extends Controller
         $user = Auth::User();
         $pre_donation = $user->monthly_donation;
         if ($pre_donation != 0) {
-            return response()->json(['message' => 'إن هذه الميزة مفعلة لديك سابقاً، إذا كنت تريد تعديل المبلغ أو نوع التبرع، يمكنك إلغاء الميزة أولاً ثم إعادة تفعيلها من جديد'], 401);
+            return response()->json(['message' => 'إن هذه الميزة مفعلة لديك سابقاً، إذا كنت تريد تعديل المبلغ أو نوع التبرع، يمكنك إلغاء الميزة أولاً ثم إعادة تفعيلها من جديد'], 400);
         }
         $user->update([
             'monthly_donation' => $request->amount,
@@ -377,28 +380,34 @@ class UserController extends Controller
     public function volunteerInProject(Request $request)
     {
         $user = Auth::User();
+        $validate = $request->validate([
+            'id' => 'required|exists:projects,id'
+        ]);
         $id = $request->id;
         $project = Project::findOrFail($id);
         if ($project->duration_type != 'تطوعي') {
-            return response()->json(['message' => 'إن هذا المشروع ليس مشروعاً تطوعياً'], 401);
+            return response()->json(['message' => 'إن هذا المشروع ليس مشروعاً تطوعياً'], 400);
         }
         if ($user->volunteer_status === 'معلق') {
-            return response()->json(['message' => 'لا يزال طلب التطوع خاصتك قيد الدراسة، يمكنك البدء بالتطوع عندما يتم قبول طلبك'], 401);
+            return response()->json(['message' => 'لا يزال طلب التطوع خاصتك قيد الدراسة، يمكنك البدء بالتطوع عندما يتم قبول طلبك'], 400);
         }
         if ($user->volunteer_status === 'مرفوض') {
-            return response()->json(['message' => 'تم رفض طلب تطوعك في الجمعية لأسباب متعلقة بسياسة الجمعية، لمتابعة التفاصيل أو الاعتراض، يُرجى التواصل مع إدارة التطبيق على صفحة الفيسبوك الخاصة بالجمعية'], 401);
+            return response()->json(['message' => 'تم رفض طلب تطوعك في الجمعية لأسباب متعلقة بسياسة الجمعية، لمتابعة التفاصيل أو الاعتراض، يُرجى التواصل مع إدارة التطبيق على صفحة الفيسبوك الخاصة بالجمعية'], 400);
         }
         if ($user->role != 'متطوع') {
-            return response()->json(['message' => 'لا يمكنك التطوع في هذا المشروع، للمساهمة في نشر الخير يمكنك التسجيل كمتطوع في جمعيتنا عن طريق تعبئة استبيان التطوع الخاص بنا'], 401);
+            return response()->json(['message' => 'لا يمكنك التطوع في هذا المشروع، للمساهمة في نشر الخير يمكنك التسجيل كمتطوع في جمعيتنا عن طريق تعبئة استبيان التطوع الخاص بنا'], 400);
         }
         if ($user->ban) {
-            return response()->json(['message' => 'تم إيقاف تطوعك في الجمعية بسبب مخالفات في تنفيذ المهام التطوعية، لمتابعة التفاصيل أو الاعتراض، يُرجى التواصل مع إدارة التطبيق على صفحة الفيسبوك الخاصة بالجمعية'], 401);
+            return response()->json(['message' => 'تم إيقاف تطوعك في الجمعية بسبب مخالفات في تنفيذ المهام التطوعية، لمتابعة التفاصيل أو الاعتراض، يُرجى التواصل مع إدارة التطبيق على صفحة الفيسبوك الخاصة بالجمعية'], 400);
         }
         if ($user->is_working) {
-            return response()->json(['message' => 'لا يمكنك التطوع في مشروعين بنفس الوقت'], 401);
+            return response()->json(['message' => 'لا يمكنك التطوع في مشروعين بنفس الوقت'], 400);
+        }
+        if ($project->status === 'منتهي') {
+            return response()->json(['message' => 'إن هذا المشروع التطوعي منتهي'], 400);
         }
         if ($project->current_amount == $project->total_amount) {
-            return response()->json(['message' => 'إن العدد مكتمل في هذا المشروع، يمكنك البحث عن فرصة تطوعية أخرى'], 401);
+            return response()->json(['message' => 'إن العدد مكتمل في هذا المشروع، يمكنك البحث عن فرصة تطوعية أخرى'], 400);
         }
         $project->current_amount++;
         $project->save();
