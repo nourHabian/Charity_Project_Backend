@@ -86,11 +86,6 @@ class ProjectController extends Controller
         foreach ($projects as $project) {
             $project['photo_url'] = asset(Storage::url($project['photo']));
             $percentage = ($project['current_amount'] / $project['total_amount']) * 100.0;
-            if ($percentage >= 100 && $project->status !== 'منتهي') {
-            $project->status = 'منتهي';
-            $project->save();
-            continue; 
-            }
             $project['percentage'] = $percentage;
             $project['type'] = Type::findOrFail($project->type_id)->name;
         }
@@ -108,6 +103,27 @@ class ProjectController extends Controller
         }
         return response()->json($projects, 200);
     }
+
+    
+    public function getCompletedProjects()
+    {
+        $projects = Project::where('status', 'منتهي')
+            ->where('duration_type', '!=', 'تطوعي')
+            ->get();
+
+        $formattedProjects = $projects->map(function ($project) {
+            return [
+                'name' => $project->name,
+                'description' => $project->description,
+                'type' => Type::findOrFail($project->type_id)->name,
+                'photo_url' => asset(Storage::url($project->photo)),
+                'total_amount' => $project->total_amount,
+            ];
+        });
+
+        return response()->json($formattedProjects, 200);
+    }
+
 
 
     // لازم يتعدل عليه انو احتمال ينسحب من رصيد الجمعية قيمة وقت يضيف مشروع
