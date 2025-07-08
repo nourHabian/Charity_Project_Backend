@@ -20,6 +20,7 @@ public function up(): void
             $table->string('recipient_name')->nullable();
             $table->enum('type', ['project_donation', 'zakat', 'monthly_donation', 'gift'])->default('project_donation');
             $table->float('amount');
+            $table->boolean('delivered')->default(false);
             $table->timestamps();
         });
     }

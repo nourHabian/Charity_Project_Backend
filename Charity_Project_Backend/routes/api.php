@@ -37,7 +37,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // get donor's information
     Route::get('/getUser', [UserController::class, 'GetUserInformation']);
 
-   
+
     // ****** DONATE LATER LIST ******
 
     // add a project to donate later list
@@ -78,7 +78,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // deactivate monthly donation
     Route::put('/donor/cancelMonthlyDonation', [UserController::class, 'cancelMonthlyDonation']);
 
-  
+
     // ****** PROJECTS VIEWING ******
 
     // view permanent projects
@@ -112,9 +112,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/notifications', [NotificationController::class, 'showAllAndMarkAsRead']);
     // view donation history
     Route::get('/donations/user', [DonationController::class, 'getUserDonations']);
-    
-
-}); 
+});
 
   // ******************************** Beneficiry APIS ********************************
 
@@ -145,6 +143,9 @@ Route::post('/admin/login', [AdminController::class, 'loginAdmin']);
 
 Route::middleware('isAdmin')->group(function () {
 
+    Route::post('/admin/logout', [AdminController::class, 'logoutAdmin']);
+
+
     // projects management
     Route::post('/admin/addCharityProject', [ProjectController::class, 'addCharityProject']);
     Route::post('/admin/addBeneficiaryProject', [ProjectController::class, 'addBeneficiaryProject']);
@@ -156,7 +157,28 @@ Route::middleware('isAdmin')->group(function () {
     Route::post('/admin/doAllMonthlyDonations', [AdminController::class, 'monthlyDonations']);
     Route::post('/admin/donateToProject', [AdminController::class, 'donateToProject']);
 
+    // volunteer management
     Route::get('/admin/getAllVolunteerRequests', [VolunteerController::class, 'getAllVolunteerRequests']);
+
+    Route::post('/admin/approveVolunteerRequest', [AdminController::class, 'approveVolunteerRequest']);
+    Route::post('/admin/rejectVolunteerRequest', [AdminController::class, 'rejectVolunteerRequest']);
+    Route::post('/admin/banVolunteer', [AdminController::class, 'banVolunteer']);
+    Route::post('/admin/unblockVolunteer', [AdminController::class, 'unblockVolunteer']);
+    Route::post('/admin/markVolunteerProjectAsCompleted', [AdminController::class, 'markVolunteerProjectAsCompleted']);
+
+    // beneficiary management
+    Route::post('/admin/acceptBeneficiaryRequest', [AdminController::class, 'acceptBeneficiaryRequest']);
+    Route::post('/admin/rejectBeneficiaryRequest', [AdminController::class, 'rejectBeneficiaryRequest']);
+    Route::post('/admin/banBeneficiary', [AdminController::class, 'banBeneficiary']);
+    Route::post('/admin/unblockBeneficiary', [AdminController::class, 'unblockBeneficiary']);
+
+
+    Route::post('/admin/giftDelivered', [AdminController::class, 'giftDelivered']);
+    Route::post('/admin/acceptFeedback', [AdminController::class, 'acceptFeedback']);
+    Route::post('/admin/rejectFeedback', [AdminController::class, 'rejectFeedback']);
+
+
+
     // Route::put('/admin/editProject/{id}', [ProjectController::class, 'editProject']);
 });
 
@@ -184,16 +206,19 @@ Route::middleware('isAdmin')->group(function () {
 - حذف مشروع (DONE)
 - اضافة مشروع (جمعية، تطوع، تبرع) (DONE)
 - التبرع لاحد المشاريع (تبرع الان) (DONE)
-- قبول طلب تطوع
-- رفض طلب تطوع
-- حظر متطوع بشرط يكون مقبول قبل
-- قبول محتاج
-- رفض محتاج
-- حظر محتاج
-- زر تم التسليم تبع الهدية
-- قبول فيدباك
-- رفض فيدباك
-- حظر محتاج بسبب فيدباك
+- قبول طلب تطوع (DONE)
+- رفض طلب تطوع (DONE)
+- حظر متطوع بشرط يكون مقبول قبل (DONE)
+- فك حظر متطوع (DONE)
+- تعيين مشروع تطوعي على أنه منجز (DONE)
+- قبول طلب احتياج (DONE)
+- رفض طلب احتياج (DONE)
+- حظر محتاج (DONE)
+- فك حظر محتاج (DONE)
+- زر تم التسليم تبع الهدية (DONE)
+- قبول فيدباك (DONE)
+- رفض فيدباك (DONE)
+- حظر محتاج بسبب فيدباك (UNKNOWN)
 - رفرش الادمن (DONE)
 
 

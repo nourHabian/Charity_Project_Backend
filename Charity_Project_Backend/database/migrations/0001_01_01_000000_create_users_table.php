@@ -27,10 +27,9 @@ return new class extends Migration
             $table->date('beneficiary_last_order')->nullable();
             $table->enum('beneficiary_status', ['معلق', 'مقبول', 'مرفوض', 'منتهي'])->nullable(); // منتهي يعني تم توصيل الطلب
             $table->float('monthly_donation')->default(0);
-            $table->enum('monthly_donation_type', ['صحي', 'تعليمي', 'سكني', 'غذائي'])->default('صحي');
+            $table->enum('monthly_donation_type', ['صحي', 'تعليمي', 'سكني', 'غذائي', 'ديني'])->default('صحي');
             $table->boolean('ban')->default(false);
             $table->enum('volunteer_status', ['معلق', 'مقبول', 'مرفوض'])->nullable();
-            $table->enum('volunteering_domain', ['صحي', 'تعليمي', 'عن بعد','ميداني'])->nullable();
             $table->boolean('is_working')->default(false);
             $table->string('purpose_of_volunteering')->nullable();
             $table->string('place_of_residence')->nullable();

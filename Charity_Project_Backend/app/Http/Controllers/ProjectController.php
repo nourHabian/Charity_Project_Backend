@@ -23,7 +23,7 @@ class ProjectController extends Controller
         $projects = Project::where('duration_type', 'دائم')->get();
         foreach ($projects as $project) {
             $project['photo_url'] = asset(Storage::url($project['photo']));
-            $project['type'] = $project->type_id->name;
+            $project['type'] = $project->type->name;
         }
         return response()->json($projects, 200);
     }
@@ -35,7 +35,7 @@ class ProjectController extends Controller
             $project['photo_url'] = asset(Storage::url($project['photo']));
             $percentage = ($project['current_amount'] / $project['total_amount']) * 100.0;
             $project['percentage'] = $percentage;
-            $project['type'] = $project->type_id->name;
+            $project['type'] = $project->type->name;
         }
         //  $projects = $projects->filter(function ($project) {
         //     return $project->status !== 'منتهي';
@@ -51,7 +51,7 @@ class ProjectController extends Controller
             $project['photo_url'] = asset(Storage::url($project['photo']));
             $percentage = ($project['current_amount'] / $project['total_amount']) * 100.0;
             $project['percentage'] = $percentage;
-            $project['type'] = $project->type_id->name;
+            $project['type'] = $project->type->name;
         }
         return response()->json($projects, 200);
     }
@@ -63,7 +63,7 @@ class ProjectController extends Controller
             $project['photo_url'] = asset(Storage::url($project['photo']));
             $percentage = ($project['current_amount'] / $project['total_amount']) * 100.0;
             $project['percentage'] = $percentage;
-            $project['type'] = $project->type_id->name;
+            $project['type'] = $project->type->name;
         }
         return response()->json($projects, 200);
     }
@@ -75,7 +75,7 @@ class ProjectController extends Controller
             $project['photo_url'] = asset(Storage::url($project['photo']));
             $percentage = ($project['current_amount'] / $project['total_amount']) * 100.0;
             $project['percentage'] = $percentage;
-            $project['type'] = $project->type_id->name;
+            $project['type'] = $project->type->name;
         }
         return response()->json($projects, 200);
     }
@@ -87,7 +87,7 @@ class ProjectController extends Controller
             $project['photo_url'] = asset(Storage::url($project['photo']));
             $percentage = ($project['current_amount'] / $project['total_amount']) * 100.0;
             $project['percentage'] = $percentage;
-            $project['type'] = $project->type_id->name;
+            $project['type'] = $project->type->name;
         }
         return response()->json($projects, 200);
     }
@@ -198,6 +198,9 @@ class ProjectController extends Controller
         $beneficiary = User::where('phone_number', $validatedData['phone_number'])->first();
         if ($beneficiary->role !== 'مستفيد') {
             return response()->json(['message' => 'لا يوجد مستفيد مسجل في الجمعية بهذا الرقم'], 400);
+        }
+        if ($beneficiary->ban) {
+            return response()->json(['message' => 'لا يمكنك إنشاء مشروع لهذا المحتاج لأنه محظور حالياً، إن كنت تعتقد أنه قد حصل خطأ ما يمكنك فك الحظر عنه'], 400);
         }
 
         // update charity balance
@@ -315,7 +318,7 @@ class ProjectController extends Controller
 
         if ($type) {
             $projects = Project::where('type_id', $type->id)
-                ->where('duration_type', 'تطوعي')
+                ->where('duration_type', 'تطوعي')->whereColumn('current_amount', '<', 'total_amount') 
                 ->get();
 
             return response()->json($projects, 200);
