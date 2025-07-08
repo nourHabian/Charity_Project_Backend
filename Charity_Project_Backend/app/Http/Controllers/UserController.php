@@ -37,6 +37,7 @@ class UserController extends Controller
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'verification_code' => $verification_code,
+                'role' =>'متبرع'
             ]);
         } else {
             $existed_user = User::where('email', $request->email)->firstOrFail();

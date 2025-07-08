@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('feedback', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->string('user_name');
             $table->text('message');
             $table->enum('status', ['معلق', 'مقبول', 'مرفوض']);
             $table->timestamps();
