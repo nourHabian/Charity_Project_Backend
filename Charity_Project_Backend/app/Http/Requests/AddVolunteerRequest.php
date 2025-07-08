@@ -26,16 +26,22 @@ class AddVolunteerRequest extends FormRequest
         return [
             'user_id' => 'nullable|integer|exists:users,id',
             'project_id' => 'nullable|integer|exists:users,id',
-            'contact_number'=>'required|string|min:10',
+            'phone_number'=>'required|string|min:10',
             'age'=>'required|integer|max:50',
-            'purpose_of_volunteering'=>'required|string',
-            'current_location'=>'required|string',
-            'volunteering_hours'=>'required|integer|',
-            'gender'=>['required','string',Rule::in(['ذكر','أنثى'])],
-            'volunteering_domain'=>['required','string',Rule::in(['ميداني','عن بعد','صحي','تعليمي'])],
-            'education'=>['required' , 'string',Rule::in(['جامعي','ثانوي','دراسات عليا'])],
+            'place_of_residence'=>'required|string',
+             'gender'=>['required','string',Rule::in(['ذكر','أنثى'])],
+             'your_last_educational_qualification'=>['required' , 'string',Rule::in(['معهد متوسط /دبلوم', 'طالب جامعي', ' بكالوريوس','ماجستير'])],
+              'your_studying_domain'=>'required|string',
+             'volunteering_hours'=>'required|integer|',
+             'purpose_of_volunteering'=>'required|string',
+            
 
             
+           
+           
+           
+            
         ];
-    }
+    
+}
 }

@@ -17,7 +17,7 @@ class UserSeeder extends Seeder
         User::create([
             'full_name' => 'tuka',
             'email' => 'tukaaalesh8@gmail.com',
-            'phone_number' => '0999999999',
+            
             'password' => Hash::make(12345678),
             'verification_code' => '1111',
             'verified' => true,
@@ -28,7 +28,7 @@ class UserSeeder extends Seeder
         User::create([
             'full_name' => 'noor',
             'email' => 'noor@gmail.com',
-            'phone_number' => '0999999990',
+            
             'password' => Hash::make(12345678),
             'verification_code' => '1111',
             'verified' => true,
@@ -39,7 +39,7 @@ class UserSeeder extends Seeder
          User::create([
             'full_name' => 'lana',
             'email' => 'lana@gmail.com',
-            'phone_number' => '0999999991',
+            
             'password' => Hash::make(12345678),
             'verification_code' => '1111',
             'verified' => true,
@@ -56,7 +56,7 @@ class UserSeeder extends Seeder
          User::create([
             'full_name' => 'hala',
             'email' => 'hala@gmail.com',
-            'phone_number' => '0937485780',
+            
             'password' => Hash::make(12345678),
             'verification_code' => '1111',
             'verified' => true,
@@ -68,7 +68,7 @@ class UserSeeder extends Seeder
         User::create([
             'full_name' => 'heba',
             'email' => 'heba@gmail.com',
-            'phone_number' => '0937485781',
+            
             'password' => Hash::make(12345678),
             'verification_code' => '1111',
             'verified' => true,

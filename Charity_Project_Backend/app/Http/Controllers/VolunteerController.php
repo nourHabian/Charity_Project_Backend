@@ -30,16 +30,15 @@ class VolunteerController extends Controller
 
         $volunteerInfo = $user->only([
             'full_name',
-            'contact_number',
-
+            'phone_number',
+             'age',
             'volunteer_status',
-            'purpose_of_volunteering',
-            'current_location',
-            'volunteering_domain',
+           'place_of_residence',
             'gender',
-            'age',
+            'your_last_educational_qualification',
+            'your_studying_domain',
             'volunteering_hours',
-            'education',
+            'purpose_of_volunteering',
 
         ]);
 

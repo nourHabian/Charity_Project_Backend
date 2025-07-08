@@ -14,7 +14,6 @@ return new class extends Migration
             $table->id();
             $table->string('full_name');
             $table->string('phone_number')->nullable()->unique();
-             $table->string('contact_number')->nullable();
             $table->string('email')->unique();
             $table->string('password');
             $table->string('verification_code');
@@ -34,9 +33,10 @@ return new class extends Migration
             $table->enum('volunteering_domain', ['صحي', 'تعليمي', 'عن بعد','ميداني'])->nullable();
             $table->boolean('is_working')->default(false);
             $table->string('purpose_of_volunteering')->nullable();
-            $table->string('current_location')->nullable();
+            $table->string('place_of_residence')->nullable();
             $table->integer('volunteering_hours')->nullable();
-            $table->enum('education', ['جامعي', 'ثانوي', 'دراسات عليا'])->nullable();
+            $table->enum('your_last_educational_qualification', ['معهد متوسط /دبلوم ', 'طالب جامعي', ' بكالوريوس','ماجستير'])->nullable();
+            $table->string('your_studying_domain')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
             $table->timestamps();
