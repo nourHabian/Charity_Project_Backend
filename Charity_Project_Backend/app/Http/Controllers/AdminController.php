@@ -87,7 +87,7 @@ public function loginAdmin(Request $request)
                     } else if ($user->monthly_donation_type === 'غذائي') {
                         $charity->nutritional_projects_balance += $user->monthly_donation;
                     } else {
-                        return response()->json(['message' => 'error has occurred'], 401);
+                        return response()->json(['message' => 'error has occurred'], 400);
                     }
 
                     $charity->number_of_donations++;
@@ -116,7 +116,7 @@ public function loginAdmin(Request $request)
             }
             return response()->json(['message' => 'monthly donation has been payed for users who activated it, and notifications has been sent to users who did not activate it yet'], 200);
         }
-        return response()->json(['message' => 'today is not the first of the month'], 401);
+        return response()->json(['message' => 'today is not the first of the month'], 400);
     }
 
 
