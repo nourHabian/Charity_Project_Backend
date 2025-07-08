@@ -250,13 +250,18 @@ class UserController extends Controller
         return response()->json(['message' => 'تم استلام الزكاة بنجاح'], 200);
     }
 
-    public function donateToProject($id, Request $request)
+    public function donateToProject(Request $request)
     {
         $validate = $request->validate([
             'amount' => 'required|numeric|min:1',
         ]);
+        $id = $request->id;
         $amount = $request->amount;
         $project = Project::findOrFail($id);
+
+        if ($project->status !== 'جاري') {
+            return response()->json(['message' => 'لا يمكن التبرع لهذا المشروع'], 401);
+        }
 
         $user = Auth::User();
         if ($amount > $user->balance) {
@@ -362,9 +367,10 @@ class UserController extends Controller
         return response()->json(['message' => 'تم إلغاء التبرع الشهري بنجاح'], 200);
     }
 
-    public function volunteerInProject($id)
+    public function volunteerInProject(Request $request)
     {
         $user = Auth::User();
+        $id = $request->id;
         $project = Project::findOrFail($id);
         if ($project->duration_type != 'تطوعي') {
             return response()->json(['message' => 'إن هذا المشروع ليس مشروعاً تطوعياً'], 401);

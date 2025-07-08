@@ -54,7 +54,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // submit a volunteer form
     Route::post('/donor/volunteerRequest', [VolunteerController::class, 'addVolunteerRequest']);
     // volunteer in a project
-    Route::post('/volunteer/volunteerInProject/{id}', [UserController::class, 'volunteerInProject']);
+    Route::post('/volunteer/volunteerInProject', [UserController::class, 'volunteerInProject']);
 
 
     // ****** FINANCIAL TRANSACTIONS ******
@@ -66,7 +66,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // give zakat
     Route::post('/donor/giveZakat', [UserController::class, 'giveZakat']);
     // donate to a project
-    Route::post('/donor/donateToProject/{id}', [UserController::class, 'donateToProject']);
+    Route::post('/donor/donateToProject', [UserController::class, 'donateToProject']);
     // activate monthly donation
     Route::post('/donor/monthlyDonation', [UserController::class, 'monthlyDonation']);
     // deactivate monthly donation
@@ -126,7 +126,7 @@ Route::middleware('isAdmin')->group(function () {
     Route::post('/admin/addBeneficiaryProject', [ProjectController::class, 'addBeneficiaryProject']);
     Route::post('/admin/addVolunteerProject', [ProjectController::class, 'addVolunteerProject']);
     Route::post('/admin/doAllMonthlyDonations', [AdminController::class, 'monthlyDonations']);
-    Route::delete('/admin/deleteProject/{id}', [ProjectController::class, 'deleteProject']);
+    Route::delete('/admin/deleteProject', [ProjectController::class, 'deleteProject']);
 
 
 

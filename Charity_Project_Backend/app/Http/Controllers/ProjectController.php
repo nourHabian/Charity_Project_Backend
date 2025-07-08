@@ -275,8 +275,9 @@ class ProjectController extends Controller
         return response()->json($project, 201);
     }
 
-    public function deleteProject($id)
+    public function deleteProject(Request $request)
     {
+        $id = $request->id;
         $project = Project::findOrFail($id);
         if ($project->current_amount != 0) {
             return response()->json(['message' => 'لا يمكن حذف هذا المشروع بسبب وجود تبرعات سابقة فيه.'], 401);
