@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Admin;
+use App\Models\BeneficiaryRequest;
 use App\Models\Charity;
 use App\Models\Donation;
 use App\Models\Notification;
@@ -45,18 +46,16 @@ class AdminController extends Controller
         ]);
     }
 
+    public function logoutAdmin(Request $request)
+    {
+        $admin = Auth::guard('admin')->user();
 
+        if ($admin && $admin->currentAccessToken()) {
+            $admin->currentAccessToken()->delete();
+        }
 
-     public function logoutAdmin(Request $request)
-{
-    $admin = Auth::guard('admin')->user();
-
-    if ($admin && $admin->currentAccessToken()) {
-        $admin->currentAccessToken()->delete();
+        return response()->json(['message' => 'Admin Logout successful']);
     }
-
-    return response()->json(['message' => 'Admin Logout successful']);
-}
 
     public function monthlyDonations()
     {
@@ -139,7 +138,6 @@ class AdminController extends Controller
 
     public function donateToProject(Request $request)
     {
-        $admin = Auth::guard('admin')->user();
         $validate = $request->validate([
             'amount' => 'required|numeric|min:1',
             'id' => 'required|exists:projects,id'
@@ -214,7 +212,6 @@ class AdminController extends Controller
         $validate = $request->validate([
             'phone_number' => 'required|string|exists:users,phone_number',
         ]);
-        $admin = Auth::guard('admin')->user();
         // رقم الشخص يلي قدم على طلب التطوع
         $phone_number = $request->phone_number;
         $user = User::where('phone_number', $phone_number)->first();
@@ -250,7 +247,6 @@ class AdminController extends Controller
         $validate = $request->validate([
             'phone_number' => 'required|string|exists:users,phone_number',
         ]);
-        $admin = Auth::guard('admin')->user();
         // رقم الشخص يلي قدم على طلب التطوع
         $phone_number = $request->phone_number;
         $user = User::where('phone_number', $phone_number)->first();
@@ -286,7 +282,6 @@ class AdminController extends Controller
         $validate = $request->validate([
             'phone_number' => 'required|string|exists:users,phone_number',
         ]);
-        $admin = Auth::guard('admin')->user();
         // رقم الشخص يلي قدم على طلب التطوع
         $phone_number = $request->phone_number;
         $user = User::where('phone_number', $phone_number)->first();
@@ -330,7 +325,6 @@ class AdminController extends Controller
         $validate = $request->validate([
             'phone_number' => 'required|string|exists:users,phone_number',
         ]);
-        $admin = Auth::guard('admin')->user();
         // رقم الشخص يلي قدم على طلب التطوع
         $phone_number = $request->phone_number;
         $user = User::where('phone_number', $phone_number)->first();
@@ -391,5 +385,92 @@ class AdminController extends Controller
         return response()->json(['message' => 'تم تغيير حالة هذا المشروع إلى مشروع منتهي'], 200);
     }
 
-    
+    public function acceptBeneficiaryRequest(Request $request)
+    {
+        $validate = $request->validate([
+            'id' => 'required|exists:beneficiary_requests,id'
+        ]);
+        $id = $request->id;
+        $beneficiary_request = BeneficiaryRequest::find($id);
+        $beneficiary = $beneficiary_request->user;
+        // هو بالاصل مقبول او مرفوض
+        if ($beneficiary_request->status !== 'معلق') {
+            return response()->json(['message' => 'لا يمكنك قبول الطلب إن لم يكن معلقاً'], 400);
+        }
+        // قبول الطلب
+        $beneficiary_request->status = 'مقبول';
+        $beneficiary_request->save();
+
+        $notification = [
+            'user_id' => $beneficiary->id,
+            'title' => 'تحديث على حالة طلبك',
+            'message' => 'تم قبول طلب المساعدة الخاص بك، سيتم جمع التبرعات لحالتك بأقرب وقت وسنوافيك بالتفاصيل قريباً✨'
+        ];
+        Notification::create($notification);
+    }
+
+    public function rejectBeneficiaryRequest(Request $request)
+    {
+        $validate = $request->validate([
+            'id' => 'required|exists:beneficiary_requests,id'
+        ]);
+        $id = $request->id;
+        $beneficiary_request = BeneficiaryRequest::find($id);
+        $beneficiary = $beneficiary_request->user;
+        // هو بالاصل مقبول او مرفوض
+        if ($beneficiary_request->status !== 'معلق') {
+            return response()->json(['message' => 'لا يمكنك رفض الطلب إن لم يكن معلقاً'], 400);
+        }
+        // رفض الطلب
+        $beneficiary_request->status = 'مرفوض';
+        $beneficiary_request->save();
+
+        $notification = [
+            'user_id' => $beneficiary->id,
+            'title' => 'تحديث على حالة طلبك',
+            'message' => 'نعتذر، تم رفض الطلب الخاص بك لأسباب تتعلق بمدى مصداقية المعلومات والوثائق المدخلة.'
+        ];
+        Notification::create($notification);
+    }
+
+    public function banBeneficiary(Request $request)
+    {
+        $validate = $request->validate([
+            'phone_number' => 'required|string|exists:users,phone_number'
+        ]);
+        $beneficiary = User::where('phone_number', $request->phone_number)->first();
+        if ($beneficiary->role !== 'مستفيد') {
+            return response()->json(['message' => 'لا يوجد مستفيد بهذا الرقم'], 400);
+        }
+        if ($beneficiary->ban) {
+            return response()->json(['message' => 'تم حظر هذا المحتاج سابقاً'], 400);
+        }
+        // اذا المحتاج عندو مشروع جاري حاليا مارح خلي الادمن يحظرو ليخلص المشروع
+        $project = Project::where('user_id', $beneficiary->id)
+            ->where('status', 'جاري')
+            ->get();
+        if (!$project->isEmpty()) {
+            return response()->json(['message' => 'لا يمكنك حظر المستخدم بسبب وجود مشروع باسمه، الرجاء الانتظار إلى حين اكتمال المشروع ثم المحاولة بعدها.'], 400);
+        }
+        $beneficiary->ban = true;
+        $beneficiary->save();
+        return response()->json(['message' => 'تم حظر هذا المحتاج بنجاح'], 200);
+    }
+
+    public function unblockBeneficiary(Request $request)
+    {
+        $validate = $request->validate([
+            'phone_number' => 'required|string|exists:users,phone_number'
+        ]);
+        $beneficiary = User::where('phone_number', $request->phone_number)->first();
+        if ($beneficiary->role !== 'مستفيد') {
+            return response()->json(['message' => 'لا يوجد مستفيد بهذا الرقم'], 400);
+        }
+        if (!$beneficiary->ban) {
+            return response()->json(['message' => 'هذا المحتاج غير محظور'], 400);
+        }
+        $beneficiary->ban = false;
+        $beneficiary->save();
+        return response()->json(['message' => 'تم فك حظر هذا المحتاج بنجاح'], 200);
+    }
 }

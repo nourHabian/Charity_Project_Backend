@@ -36,7 +36,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // get donor's information
     Route::get('/getUser', [UserController::class, 'GetUserInformation']);
 
-   
+
     // ****** DONATE LATER LIST ******
 
     // add a project to donate later list
@@ -72,7 +72,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // deactivate monthly donation
     Route::put('/donor/cancelMonthlyDonation', [UserController::class, 'cancelMonthlyDonation']);
 
-  
+
     // ****** PROJECTS VIEWING ******
 
     // view permanent projects
@@ -106,9 +106,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/notifications', [NotificationController::class, 'showAllAndMarkAsRead']);
     // view donation history
     Route::get('/donations/user', [DonationController::class, 'getUserDonations']);
-    
-
-}); 
+});
 
 
 
@@ -121,7 +119,7 @@ Route::post('/admin/login', [AdminController::class, 'loginAdmin']);
 
 Route::middleware('isAdmin')->group(function () {
 
-Route::post('/admin/logout', [AdminController::class, 'logoutAdmin']);
+    Route::post('/admin/logout', [AdminController::class, 'logoutAdmin']);
 
 
     // projects management
@@ -143,6 +141,14 @@ Route::post('/admin/logout', [AdminController::class, 'logoutAdmin']);
     Route::post('/admin/banVolunteer', [AdminController::class, 'banVolunteer']);
     Route::post('/admin/unblockVolunteer', [AdminController::class, 'unblockVolunteer']);
     Route::post('/admin/markVolunteerProjectAsCompleted', [AdminController::class, 'markVolunteerProjectAsCompleted']);
+
+    // beneficiary management
+    Route::post('/admin/acceptBeneficiaryRequest', [AdminController::class, 'acceptBeneficiaryRequest']);
+    Route::post('/admin/rejectBeneficiaryRequest', [AdminController::class, 'rejectBeneficiaryRequest']);
+    Route::post('/admin/banBeneficiary', [AdminController::class, 'banBeneficiary']);
+    Route::post('/admin/unblockBeneficiary', [AdminController::class, 'unblockBeneficiary']);
+
+
 
     // Route::put('/admin/editProject/{id}', [ProjectController::class, 'editProject']);
 });
@@ -176,10 +182,10 @@ Route::post('/admin/logout', [AdminController::class, 'logoutAdmin']);
 - حظر متطوع بشرط يكون مقبول قبل (DONE)
 - فك حظر متطوع (DONE)
 - تعيين مشروع تطوعي على أنه منجز (DONE)
-- قبول طلب احتياج
-- رفض طلب احتياج
-- حظر محتاج
-- فك حظر محتاج
+- قبول طلب احتياج (DONE)
+- رفض طلب احتياج (DONE)
+- حظر محتاج (DONE)
+- فك حظر محتاج (DONE)
 - زر تم التسليم تبع الهدية
 - قبول فيدباك
 - رفض فيدباك

@@ -199,6 +199,9 @@ class ProjectController extends Controller
         if ($beneficiary->role !== 'مستفيد') {
             return response()->json(['message' => 'لا يوجد مستفيد مسجل في الجمعية بهذا الرقم'], 400);
         }
+        if ($beneficiary->ban) {
+            return response()->json(['message' => 'لا يمكنك إنشاء مشروع لهذا المحتاج لأنه محظور حالياً، إن كنت تعتقد أنه قد حصل خطأ ما يمكنك فك الحظر عنه'], 400);
+        }
 
         // update charity balance
         $charity = Charity::findOrFail(1);
