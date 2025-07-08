@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
+
 class AdminController extends Controller
 {
     public function loginAdmin(Request $request)
@@ -39,6 +40,19 @@ class AdminController extends Controller
             'token'   => $token,
         ]);
     }
+
+
+
+     public function logoutAdmin(Request $request)
+{
+    $admin = Auth::guard('admin')->user();
+
+    if ($admin && $admin->currentAccessToken()) {
+        $admin->currentAccessToken()->delete();
+    }
+
+    return response()->json(['message' => 'Admin Logout successful']);
+}
 
     public function monthlyDonations()
     {
