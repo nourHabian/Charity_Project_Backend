@@ -91,9 +91,9 @@ class UserController extends Controller
             return response()->json(['message' => 'invalid password or email'], 401);
         }
 
-       if ($user->role === 'مستفيد') {
-    return response()->json(['message' => 'غير مسموح للمستفيدين بتسجيل الدخول'], 403);
- }
+        if ($user->role === 'مستفيد') {
+            return response()->json(['message' => 'غير مسموح للمستفيدين بتسجيل الدخول'], 403);
+        }
 
         $token = $user->createToken('auth_Token')->plainTextToken;
 

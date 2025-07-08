@@ -29,15 +29,14 @@ class VolunteerController extends Controller
         $volunteerInfo = $user->only([
             'full_name',
             'phone_number',
-             'age',
+            'age',
             'volunteer_status',
-           'place_of_residence',
+            'place_of_residence',
             'gender',
             'your_last_educational_qualification',
             'your_studying_domain',
             'volunteering_hours',
             'purpose_of_volunteering',
-
         ]);
 
         return response()->json($volunteerInfo, 201);
@@ -68,6 +67,4 @@ class VolunteerController extends Controller
 
         return response()->json($volunteerRequests, 200);
     }
-
-    
 }

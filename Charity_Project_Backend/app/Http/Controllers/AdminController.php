@@ -189,4 +189,8 @@ class AdminController extends Controller
         $project->save();
         return response()->json(['message' => 'تم التبرع لهذا المشروع بنجاح وسحب مبلغ ' . min($amount, $remaining) . '$ من رصيد الجمعية'], 200);
     }
+
+    public function approveVolunteerRequest(Request $request) {
+        
+    }
 }

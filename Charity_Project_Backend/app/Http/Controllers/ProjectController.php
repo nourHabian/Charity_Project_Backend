@@ -23,7 +23,7 @@ class ProjectController extends Controller
         $projects = Project::where('duration_type', 'دائم')->get();
         foreach ($projects as $project) {
             $project['photo_url'] = asset(Storage::url($project['photo']));
-            $project['type'] = $project->type_id->name;
+            $project['type'] = $project->type->name;
         }
         return response()->json($projects, 200);
     }
@@ -35,7 +35,7 @@ class ProjectController extends Controller
             $project['photo_url'] = asset(Storage::url($project['photo']));
             $percentage = ($project['current_amount'] / $project['total_amount']) * 100.0;
             $project['percentage'] = $percentage;
-            $project['type'] = $project->type_id->name;
+            $project['type'] = $project->type->name;
         }
         //  $projects = $projects->filter(function ($project) {
         //     return $project->status !== 'منتهي';
@@ -51,7 +51,7 @@ class ProjectController extends Controller
             $project['photo_url'] = asset(Storage::url($project['photo']));
             $percentage = ($project['current_amount'] / $project['total_amount']) * 100.0;
             $project['percentage'] = $percentage;
-            $project['type'] = $project->type_id->name;
+            $project['type'] = $project->type->name;
         }
         return response()->json($projects, 200);
     }
@@ -63,7 +63,7 @@ class ProjectController extends Controller
             $project['photo_url'] = asset(Storage::url($project['photo']));
             $percentage = ($project['current_amount'] / $project['total_amount']) * 100.0;
             $project['percentage'] = $percentage;
-            $project['type'] = $project->type_id->name;
+            $project['type'] = $project->type->name;
         }
         return response()->json($projects, 200);
     }
@@ -75,7 +75,7 @@ class ProjectController extends Controller
             $project['photo_url'] = asset(Storage::url($project['photo']));
             $percentage = ($project['current_amount'] / $project['total_amount']) * 100.0;
             $project['percentage'] = $percentage;
-            $project['type'] = $project->type_id->name;
+            $project['type'] = $project->type->name;
         }
         return response()->json($projects, 200);
     }
@@ -87,7 +87,7 @@ class ProjectController extends Controller
             $project['photo_url'] = asset(Storage::url($project['photo']));
             $percentage = ($project['current_amount'] / $project['total_amount']) * 100.0;
             $project['percentage'] = $percentage;
-            $project['type'] = $project->type_id->name;
+            $project['type'] = $project->type->name;
         }
         return response()->json($projects, 200);
     }
