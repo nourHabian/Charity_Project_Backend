@@ -151,10 +151,10 @@ class ProjectController extends Controller
             $charity->nutritional_projects_balance -= $validatedData['current_amount'];
             if ($charity->nutritional_projects_balance < 0) $is_enough = false;
         } else {
-            return response()->json(['message' => 'error has occurred'], 401);
+            return response()->json(['message' => 'error has occurred'], 400);
         }
         if (!$is_enough) {
-            return response()->json(['message' => 'لا يوجد رصيد كافي في رصيد الجمعية للمساهمة في هذا المشروع'], 401);
+            return response()->json(['message' => 'لا يوجد رصيد كافي في رصيد الجمعية للمساهمة في هذا المشروع'], 400);
         }
         $charity->save();
 
@@ -194,7 +194,7 @@ class ProjectController extends Controller
 
         $beneficiary = User::where('phone_number', $validatedData['phone_number'])->first();
         if ($beneficiary->role !== 'مستفيد') {
-            return response()->json(['message' => 'لا يوجد مستفيد مسجل في الجمعية بهذا الرقم'], 401);
+            return response()->json(['message' => 'لا يوجد مستفيد مسجل في الجمعية بهذا الرقم'], 400);
         }
 
         // update charity balance
@@ -213,10 +213,10 @@ class ProjectController extends Controller
             $charity->nutritional_projects_balance -= $validatedData['current_amount'];
             if ($charity->nutritional_projects_balance < 0) $is_enough = false;
         } else {
-            return response()->json(['message' => 'error has occurred'], 401);
+            return response()->json(['message' => 'error has occurred'], 400);
         }
         if (!$is_enough) {
-            return response()->json(['message' => 'لا يوجد رصيد كافي في رصيد الجمعية للمساهمة في هذا المشروع'], 401);
+            return response()->json(['message' => 'لا يوجد رصيد كافي في رصيد الجمعية للمساهمة في هذا المشروع'], 400);
         }
         $charity->save();
 
@@ -296,7 +296,7 @@ class ProjectController extends Controller
         $id = $request->id;
         $project = Project::findOrFail($id);
         if ($project->current_amount != 0) {
-            return response()->json(['message' => 'لا يمكن حذف هذا المشروع بسبب وجود تبرعات سابقة فيه.'], 401);
+            return response()->json(['message' => 'لا يمكن حذف هذا المشروع بسبب وجود تبرعات سابقة فيه.'], 400);
         }
         $project->delete();
         return response()->json(null, 204);
