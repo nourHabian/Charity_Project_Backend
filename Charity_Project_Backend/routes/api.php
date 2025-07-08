@@ -121,6 +121,9 @@ Route::post('/admin/login', [AdminController::class, 'loginAdmin']);
 
 Route::middleware('isAdmin')->group(function () {
 
+Route::post('/admin/logout', [AdminController::class, 'logoutAdmin']);
+
+
     // projects management
     Route::post('/admin/addCharityProject', [ProjectController::class, 'addCharityProject']);
     Route::post('/admin/addBeneficiaryProject', [ProjectController::class, 'addBeneficiaryProject']);

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AddVolunteerRequest;
+use App\Models\Notification;
 use App\Models\User;
 use App\Models\Volunteer;
 use Illuminate\Http\Request;
@@ -38,8 +39,15 @@ class VolunteerController extends Controller
             'volunteering_hours',
             'purpose_of_volunteering',
         ]);
+        $notification = [
+            'user_id' => $user->id,
+            'title' => 'تم استلام طلب التطوع',
+            'message' => 'تم استلام طلب تطوعك سيتم مراجعته و التواصل معك لاحقاً'
+        ];
+        Notification::create($notification);
 
-        return response()->json($volunteerInfo, 201);
+        return response()->json($volunteerInfo
+, 201);
     }
 
     public function getAllVolunteerRequests()

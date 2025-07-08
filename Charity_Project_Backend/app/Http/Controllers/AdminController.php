@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
+
 use function PHPUnit\Framework\isNull;
 
 class AdminController extends Controller
@@ -43,6 +44,19 @@ class AdminController extends Controller
             'token'   => $token,
         ]);
     }
+
+
+
+     public function logoutAdmin(Request $request)
+{
+    $admin = Auth::guard('admin')->user();
+
+    if ($admin && $admin->currentAccessToken()) {
+        $admin->currentAccessToken()->delete();
+    }
+
+    return response()->json(['message' => 'Admin Logout successful']);
+}
 
     public function monthlyDonations()
     {

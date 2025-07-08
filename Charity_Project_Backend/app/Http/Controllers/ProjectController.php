@@ -315,7 +315,7 @@ class ProjectController extends Controller
 
         if ($type) {
             $projects = Project::where('type_id', $type->id)
-                ->where('duration_type', 'تطوعي')
+                ->where('duration_type', 'تطوعي')->whereColumn('current_amount', '<', 'total_amount') 
                 ->get();
 
             return response()->json($projects, 200);
