@@ -189,7 +189,7 @@ class UserController extends Controller
             // add this to donor's donation history
             $history = [
                 'user_id' => $user->id,
-                'type' => 'gift',
+                'type' => 'هدية',
                 'amount' => $request->amount,
                 'recipient_number' => $request->phone_number,
                 'recipient_name' => $request->beneficiary_name
@@ -229,7 +229,7 @@ class UserController extends Controller
         // add to donation history
         $history = [
             'user_id' => $user->id,
-            'type' => 'zakat',
+            'type' => 'زكاة',
             'amount' => $request->amount,
         ];
         Donation::create($history);
@@ -287,7 +287,7 @@ class UserController extends Controller
         $history = [
             'user_id' => $user->id,
             'project_id' => $project->id,
-            'type' => 'project_donation',
+            'type' => 'تبرع لمشروع في الجمعية',
             'amount' => min($amount, $remaining),
         ];
         Donation::create($history);
@@ -350,7 +350,7 @@ class UserController extends Controller
         }
         $user->update([
             'monthly_donation' => $request->amount,
-            'monthly_donation_type' => $request->type
+            ' monthly_donation_type' => $request->type-> $request->type
         ]);
         $notification = [
             'user_id' => $user->id,
@@ -368,7 +368,7 @@ class UserController extends Controller
             return response()->json(['message' => 'الميزة غير مفعلة حالياً'], 200);
         }
         $user->update([
-            'monthly_donation' => 0,
+            'التبرع الشهري' => 0,
         ]);
         $notification = [
             'user_id' => $user->id,
