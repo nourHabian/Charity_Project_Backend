@@ -318,7 +318,7 @@ class ProjectController extends Controller
 
         if ($type) {
             $projects = Project::where('type_id', $type->id)
-                ->where('duration_type', 'تطوعي')->whereColumn('current_amount', '<', 'total_amount') 
+                ->where('duration_type', 'تطوعي')->whereColumn('current_amount', '<', 'total_amount')
                 ->get();
 
             return response()->json($projects, 200);
@@ -327,35 +327,35 @@ class ProjectController extends Controller
         }
     }
 
-public function getMyRequestStatus()
-{
-    $user = Auth::user();
-    if ($user->role !== 'مستفيد') {
-        return response()->json(['message' => 'هذه الخدمة متاحة فقط للمستفيدين.'], 403);
+    public function getMyRequestStatus()
+    {
+        $user = Auth::user();
+        if ($user->role !== 'مستفيد') {
+            return response()->json(['message' => 'هذه الخدمة متاحة فقط للمستفيدين.'], 403);
+        }
+
+        $project = Project::where('user_id', $user->id)
+            ->where('duration_type', 'فردي')
+            ->latest()
+            ->first();
+
+        if (!$project) {
+            return response()->json(['message' => 'لا يوجد أي مشروع مرتبط بك حالياً.'], 404);
+        }
+
+        $percentage = ($project->current_amount / $project->total_amount) * 100.0;
+
+        return response()->json([
+            'message' => 'تم جلب حالة المشروع بنجاح.',
+            'project_status' => [
+                'name' => $project->name,
+                'description' => $project->description,
+                'current_amount' => $project->current_amount,
+                'total_amount' => $project->total_amount,
+                'percentage' => $percentage,
+            ]
+        ], 200);
     }
-
-    $project = Project::where('user_id', $user->id)
-                      ->where('duration_type', 'فردي') 
-                      ->latest()
-                      ->first();
-
-    if (!$project) {
-        return response()->json(['message' => 'لا يوجد أي مشروع مرتبط بك حالياً.'], 404);
-    }
-
-    $percentage = ($project->current_amount / $project->total_amount) * 100.0;
-
-    return response()->json([
-        'message' => 'تم جلب حالة المشروع بنجاح.',
-        'project_status' => [
-            'name' => $project->name,
-            'description' => $project->description,
-            'current_amount' => $project->current_amount,
-            'total_amount' => $project->total_amount,
-            'percentage' => $percentage,
-        ]
-    ], 200);
-}
 
 
 

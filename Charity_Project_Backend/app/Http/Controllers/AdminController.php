@@ -547,91 +547,85 @@ class AdminController extends Controller
 
 
     //الاحصائيات
-     public function getStatistics()
-{
-    return response()->json([
-        'total_donations' => Donation::sum('amount'),
-        'accepted_volunteers' => User::where('role', 'متطوع')
-                                     ->where('volunteer_status', 'مقبول')
-                                     ->where('ban', false)  
-                                     ->count(),
-        'beneficiaries' => User::where('role', 'مستفيد')->where('ban', false) ->count(),
-        'donors' => User::where('role', 'متبرع')->count(),
-        'projects_count' => Project::count(),
-    ]);
-}
-
-
-//فلترة المشاريع
-
-public function getProjectsByType($typeName)
-{
-    $type = Type::where('name', $typeName)->first();
-
-    if ($type) {
-        $projects = Project::where('type_id', $type->id)->get();
-
-        return response()->json($projects, 200);
-    } else {
-        return response()->json(['message' => 'لا يوجد نوع بهذا الاسم'], 404);
-    }
-}
-
-
-// فلترة طلبات التطوع لمقبول مرفوض  معلق
-
-public function getVolunteerRequestsByStatus($status)
-{
-    $query = User::whereIn('role', ['متطوع','متبرع'])->where('ban', false);;
-
-    if ($status) {
-        $query->where('volunteer_status', $status);
-    }
-
-    $volunteers = $query->get([
-        'id',
-        'full_name',
-        'phone_number',
-        'age',
-        'volunteer_status',
-        'place_of_residence',
-        'gender',
-        'your_last_educational_qualification',
-        'your_studying_domain',
-        'volunteering_hours',
-        'purpose_of_volunteering',
-    ]);
-
-    return response()->json($volunteers, 200);
-}
-
-
-// فلترة المتطوعين محظور او لا
-
-public function filterVolunteersByBan($banned)
-{
-    $query = User::query();
-
-    $query->where('role', 'متطوع');
-
-    if ($banned === 'true') {
-        $query->where('ban', true);
-    } elseif ($banned === 'false') {
-        $query->where('ban', false);
-    } else {
+    public function getStatistics()
+    {
         return response()->json([
-            'error' => 'قيمة غير صحيحة للحقل banned، استخدم true أو false فقط.'
-        ], 400);
+            'total_donations' => Donation::sum('amount'),
+            'accepted_volunteers' => User::where('role', 'متطوع')
+                ->where('volunteer_status', 'مقبول')
+                ->where('ban', false)
+                ->count(),
+            'beneficiaries' => User::where('role', 'مستفيد')->where('ban', false)->count(),
+            'donors' => User::where('role', 'متبرع')->count(),
+            'projects_count' => Project::count(),
+        ]);
     }
 
-    $volunteers = $query->get();
 
-    return response()->json($volunteers);
-}
+    //فلترة المشاريع
+
+    public function getProjectsByType($typeName)
+    {
+        $type = Type::where('name', $typeName)->first();
+
+        if ($type) {
+            $projects = Project::where('type_id', $type->id)->get();
+
+            return response()->json($projects, 200);
+        } else {
+            return response()->json(['message' => 'لا يوجد نوع بهذا الاسم'], 404);
+        }
+    }
 
 
+    // فلترة طلبات التطوع لمقبول مرفوض  معلق
+
+    public function getVolunteerRequestsByStatus($status)
+    {
+        $query = User::whereIn('role', ['متطوع', 'متبرع'])->where('ban', false);;
+
+        if ($status) {
+            $query->where('volunteer_status', $status);
+        }
+
+        $volunteers = $query->get([
+            'id',
+            'full_name',
+            'phone_number',
+            'age',
+            'volunteer_status',
+            'place_of_residence',
+            'gender',
+            'your_last_educational_qualification',
+            'your_studying_domain',
+            'volunteering_hours',
+            'purpose_of_volunteering',
+        ]);
+
+        return response()->json($volunteers, 200);
+    }
 
 
+    // فلترة المتطوعين محظور او لا
 
+    public function filterVolunteersByBan($banned)
+    {
+        $query = User::query();
 
+        $query->where('role', 'متطوع');
+
+        if ($banned === 'true') {
+            $query->where('ban', true);
+        } elseif ($banned === 'false') {
+            $query->where('ban', false);
+        } else {
+            return response()->json([
+                'error' => 'قيمة غير صحيحة للحقل banned، استخدم true أو false فقط.'
+            ], 400);
+        }
+
+        $volunteers = $query->get();
+
+        return response()->json($volunteers);
+    }
 }
