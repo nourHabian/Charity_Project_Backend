@@ -32,7 +32,7 @@ class DonationController extends Controller
                 'type' => $donation->type,
                 'recipient_number' => $donation->recipient_number,
                 'recipient_name' => $recipient?->full_name,  
-                'created_at' => $donation->created_at->format('Y/m/d'),
+                'date' => $donation->created_at->format('Y/m/d'),
                 'project_name' => optional($donation->project)->name,
                 'project_type' => optional($donation->project)->type,
             ];

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\BeneficiaryRequestController;
 use App\Http\Controllers\DonationController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProjectController;
@@ -48,6 +49,11 @@ Route::middleware('auth:sanctum')->group(function () {
     // search in donate later list
     Route::get('/favourite/search', [FavouriteController::class, 'searchFavourite']);
 
+
+    // ******************************** Beneficiry APIS ********************************
+
+    Route::post('/register/beneficiry', [BeneficiaryRequestController::class, 'register']);
+    Route::post('/login/beneficiry', [BeneficiaryRequestController::class, 'login']);
 
     // ****** VOLUNTEER ACTIONS ******
 
@@ -103,12 +109,30 @@ Route::middleware('auth:sanctum')->group(function () {
     // view top ten donors
     Route::get('/getTopDonors', [UserController::class, 'getDonorsByPoints']);
     // view notification history
-    Route::post('/notifications', [NotificationController::class, 'showAllAndMarkAsRead']);
+    Route::get('/notifications', [NotificationController::class, 'showAllAndMarkAsRead']);
     // view donation history
     Route::get('/donations/user', [DonationController::class, 'getUserDonations']);
 });
 
+  // ******************************** Beneficiry APIS ********************************
 
+    Route::post('/register/beneficiary', [BeneficiaryRequestController::class, 'register']);
+    Route::post('/login/beneficiary', [BeneficiaryRequestController::class, 'login']);
+
+Route::middleware('auth:sanctum')->group(function () {
+
+    // logout
+    Route::post('/logout/beneficiary', [BeneficiaryRequestController::class, 'logout']);
+    // sent beneficiry's requests
+    Route::post('/request/beneficiary', [BeneficiaryRequestController::class, 'getBeneficiaryRequest']);
+    // sent feedbacks
+    Route::post('/feedback/beneficiary', [FeedbackController::class, 'submitFeedback']);
+    //get beneficiary notifications
+    Route::get('/notifications/beneficiary', [NotificationController::class, 'showAllAndMarkAsRead']);
+    // get beneficiary's project status
+    Route::get('/projectstatuse/beneficiary',[ProjectController::class,'getMyRequestStatus']);
+
+});
 
 
 // ******************************** ADMIN APIS ********************************
@@ -121,6 +145,7 @@ Route::middleware('isAdmin')->group(function () {
 
     Route::post('/admin/logout', [AdminController::class, 'logoutAdmin']);
 
+  
 
     // projects management
     Route::post('/admin/addCharityProject', [ProjectController::class, 'addCharityProject']);
@@ -155,8 +180,28 @@ Route::middleware('isAdmin')->group(function () {
 
 
 
-    // Route::put('/admin/editProject/{id}', [ProjectController::class, 'editProject']);
+      
+    
+ Route::get('/statistics', [AdminController::class, 'getStatistics']);
+
+ Route::get('/getProjectsByType/{typeName}', [AdminController::class, 'getProjectsByType']);
+ Route::get('/getVolunteerRequestsByStatus/{status}', [AdminController::class, 'getVolunteerRequestsByStatus']);
+
+Route::get('/filterVolunteersByBan/{banned}', [AdminController::class, 'filterVolunteersByBan']);
+
+    
 });
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -167,7 +212,7 @@ Route::middleware('isAdmin')->group(function () {
 - تسجيل خروج أدمن
 - عرض إحصائيات: (عدد المتطوعين الحالي بالجمعية _بس المقبولين_، عدد المحتاجين، عدد المتبرعين، عدد المشاريع، مبلغ التبرعات الكلية)
 - عرض كل المشاريع مع فلترة حسب نوعها
-- عرض كل طلبات التطوع (مع فلترة مقبول، مرفوض، قيد الدراسة)
+- عرض كل طلبات التطوع (مع فلترة مقبول، مرفوض، معلق )
 - عرض كل المتطوعين (مع فلترة محظور، مو محظور)
 - عرض كل طلبات المحتاجين (اول شي فلترة حسب صحي تعليمي سكني غذائي وبعدها فلترة مقبول مرفوض قيد الدراسة)
 - عرض كل المحتاجين مع فلترة (محظور - مو محظور)
@@ -200,12 +245,12 @@ Route::middleware('isAdmin')->group(function () {
 
 ******************** محتاج ***********************
 **** قسم بتول:
-- انشاء حساب محتاج
-- تسجيل دخول 
-- تسجيل خروج
-- تقديم طلب المساعدة
-- ارسال فيدباك بعد ما يكون بعت الطلب
-- يشوف سجل اشعارات
+// - انشاء حساب محتاج
+// - تسجيل دخول 
+// - تسجيل خروج
+//- تقديم طلب المساعدة
+//- ارسال فيدباك بعد ما يكون بعت الطلب
+//- يشوف سجل اشعارات
 - تتبع حالة المشاريع
 
 ******************** اشعارات المحتاج ***********************

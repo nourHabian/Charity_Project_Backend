@@ -18,7 +18,7 @@ public function up(): void
             $table->foreignId('project_id')->nullable()->constrained('projects')->cascadeOnDelete();
             $table->string('recipient_number')->nullable();
             $table->string('recipient_name')->nullable();
-            $table->enum('type', ['project_donation', 'zakat', 'monthly_donation', 'gift'])->default('project_donation');
+            $table->enum('type', ['هدية', 'زكاة', 'تبرع شهري', 'تبرع لمشروع في الجمعية'])->default('تبرع لمشروع في الجمعية');
             $table->float('amount');
             $table->boolean('delivered')->default(false);
             $table->timestamps();

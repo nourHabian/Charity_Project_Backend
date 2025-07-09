@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('phone_number')->nullable()->unique();
             $table->string('email')->unique();
             $table->string('password');
-            $table->string('verification_code');
+            $table->string('verification_code')->nullable();
             $table->boolean('verified')->default(false);
             $table->date('date_of_birth')->nullable();
             $table->enum('gender', ['ذكر', 'أنثى'])->nullable();
