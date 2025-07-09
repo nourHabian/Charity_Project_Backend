@@ -39,16 +39,18 @@ class BeneficiaryRequestController extends Controller
             
             public function login(Request $request)
             {
-                $credentials = $request->validate([
+                $loginData = $request->validate([
                     'email' => 'required|string|email',
                     'password' => 'required|string',
                 ]);
-                $user = User::where('email', $credentials['email'])->first(); 
-                 if (!$user || !Hash::check($credentials['password'], $user->password)) {
+                $user = User::where('email', $loginData['email'])->first(); 
+                 if (!$user || !Hash::check($loginData['password'], $user->password)) {
                     return response()->json(['message' => 'بيانات الدخول غير صحيحة'], 401);
                 }
+                if($user->ban){
+                    return response()->json(['message' => 'تم حظر حسابك، يمكنك التواصل مع إدارة الجمعية'], 403);
+                }
 
-                $user = User::where('email', $request->email)->firstOrFail();
                 if ($user->role !=='مستفيد') {
                      return response()->json(['message' => 'غير مسموح للمتبرعين بتسجيل الدخول'], 403);
                  }
