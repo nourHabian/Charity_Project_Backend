@@ -628,4 +628,149 @@ class AdminController extends Controller
 
         return response()->json($volunteers);
     }
+
+
+    //فلترة المستفيدين لمحظور او لا
+public function filterBeneficiaryByBan($banned)
+{
+    if (!in_array($banned, ['true', 'false'])) {
+        return response()->json([
+            'error' => 'قيمة غير صحيحة للحقل banned، استخدم true أو false فقط.'
+        ], 400);
+    }
+
+    $isBanned = $banned === 'true';
+
+    $beneficiaries = User::where('role', 'مستفيد')
+        ->where('ban', $isBanned)
+        ->get(['full_name', 'email', 'ban']);
+
+    return response()->json($beneficiaries, 200);
+}
+
+public function getFilteredBeneficiaryRequests($type, $status)
+{
+    $query = BeneficiaryRequest::with('type');
+
+    if ($type) {
+        $typeModel = \App\Models\Type::where('name', $type)->first();
+        if ($typeModel) {
+            $query->where('type_id', $typeModel->id);
+        } else {
+            return response()->json([]);  
+        }
+    }
+
+    if ($status) {
+        $query->where('status', $status);
+    }
+
+    $requests = $query->get();
+
+    return response()->json($requests);
+}
+
+
+
+
+// فلترة هدايا
+public function getFilteredGiftDelivered($delivered)
+{
+    $query = Donation::where('type', 'gift');
+
+    if (!is_null($delivered)) {
+        if ($delivered === 'true') {
+            $query->where('delivered', true);
+        } elseif ($delivered === 'false') {
+            $query->where('delivered', false);
+        } else {
+            return response()->json([
+                'error' => 'قيمة غير صحيحة للحقل delivered، استخدم true أو false فقط.'
+            ], 400);
+        }
+    }
+
+    $donations = $query->with(['user:id,full_name,email'])->get();
+
+    $filtered = $donations->map(function ($donation) {
+        return [
+            'recipient_name'   => $donation->recipient_name,
+            'recipient_number' => $donation->recipient_number,
+            'amount'           => $donation->amount,
+            'delivered'        => $donation->delivered,
+            'full_name'        => optional($donation->user)->full_name,
+            'email'            => optional($donation->user)->email,
+        ];
+    });
+
+    return response()->json($filtered);
+}
+
+
+
+
+
+public function getFilteredFeedbacks($status )
+{
+    $allowedStatuses = ['معلق', 'مقبول', 'مرفوض'];
+
+    if ($status && !in_array($status, $allowedStatuses)) {
+        return response()->json([
+            'error' => 'قيمة غير صحيحة للحالة. استخدم: معلق، مقبول، مرفوض فقط.'
+        ], 400);
+    }
+
+    
+    $query = Feedback::query();
+
+    if ($status) {
+        $query->where('status', $status);
+    }
+
+    $feedbacks = $query->get(['user_name', 'message', 'status', 'created_at']);
+
+    return response()->json($feedbacks, 200);
+}
+
+
+
+public function showBeneficiaryRequest(Request $request)
+{
+    $id = $request->input('id');  
+
+    $beneficiaryRequest = BeneficiaryRequest::with('type', 'user')->find($id);
+
+    if (!$beneficiaryRequest) {
+        return response()->json(['message' => 'الطلب غير موجود'], 404);
+    }
+    return response()->json([
+        'user' => [
+            'id' => optional($beneficiaryRequest->user)->id,
+            'full_name' => optional($beneficiaryRequest->user)->full_name,
+            'email' => optional($beneficiaryRequest->user)->email,
+        ],
+        'type' => optional($beneficiaryRequest->type)->name,
+        'marital_status' => $beneficiaryRequest->marital_status,
+        'number_of_kids' => $beneficiaryRequest->number_of_kids,
+        'kids_description' => $beneficiaryRequest->kids_description,
+        'city' => $beneficiaryRequest->city,
+        'home_address' => $beneficiaryRequest->home_address,
+        'monthly_income' => $beneficiaryRequest->monthly_income,
+        'current_job' => $beneficiaryRequest->current_job,
+        'monthly_income_source' => $beneficiaryRequest->monthly_income_source,
+        'is_taking_donations' => $beneficiaryRequest->is_taking_donations,
+        'other_donations_sources' => $beneficiaryRequest->other_donations_sources,
+        'number_of_needy' => $beneficiaryRequest->number_of_needy,
+        'expected_cost' => $beneficiaryRequest->expected_cost,
+        'description' => $beneficiaryRequest->description,
+        'severity_level' => $beneficiaryRequest->severity_level,
+        'document_path' => $beneficiaryRequest->document_path ? asset('storage/' . $beneficiaryRequest->document_path) : null,
+        'current_housing_condition' => $beneficiaryRequest->current_housing_condition,
+        'host_address' => $beneficiaryRequest->host_address,
+        'host_number' => $beneficiaryRequest->host_number,
+        'status' => $beneficiaryRequest->status,
+        'created_at' => optional($beneficiaryRequest->created_at)->toDateTimeString(),
+        'updated_at' => optional($beneficiaryRequest->updated_at)->toDateTimeString(),
+    ]);
+}
 }

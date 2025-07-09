@@ -187,6 +187,18 @@ Route::middleware('isAdmin')->group(function () {
     Route::get('/getVolunteerRequestsByStatus/{status}', [AdminController::class, 'getVolunteerRequestsByStatus']);
 
     Route::get('/filterVolunteersByBan/{banned}', [AdminController::class, 'filterVolunteersByBan']);
+
+
+
+
+
+    Route::get('/filterBeneficiaryByBan/{banned}', [AdminController::class, 'filterBeneficiaryByBan']);
+
+
+    Route::get('/getFilteredBeneficiaryRequests/{type}/{status}', [AdminController::class, 'getFilteredBeneficiaryRequests']);
+    Route::get('/getFilteredGiftDelivered/{delivered}', [AdminController::class, 'getFilteredGiftDelivered']);
+    Route::get('/getFilteredFeedbacks/{status}', [AdminController::class, 'getFilteredFeedbacks']);
+    Route::get('/showBeneficiaryRequest', [AdminController::class, 'showBeneficiaryRequest']);
 });
 
 
