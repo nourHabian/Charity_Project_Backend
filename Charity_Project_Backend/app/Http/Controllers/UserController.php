@@ -37,6 +37,7 @@ class UserController extends Controller
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'verification_code' => $verification_code,
+                'role' =>'متبرع'
             ]);
         } else {
             $existed_user = User::where('email', $request->email)->firstOrFail();
@@ -160,7 +161,7 @@ class UserController extends Controller
         // search the beneficiary
         $beneficiary = User::where('phone_number', $request->phone_number)->first();
         // check if this user does exist and is a beneficiary
-        if ($beneficiary && $beneficiary->role == 'مستفيد') {
+        if ($beneficiary && $beneficiary->role == 'مستفيد' && !$beneficiary->ban) {
             // check if there's enough money in wallet
             if ($request->amount > $user->balance) {
                 return response()->json(['message' => 'لا يوجد لديك رصيد كافي للقيام بهذه العملية، الرجاء شحن المحفظة والمحاولة مرة أخرى'], 422);
@@ -188,9 +189,10 @@ class UserController extends Controller
             // add this to donor's donation history
             $history = [
                 'user_id' => $user->id,
-                'type' => 'gift',
+                'type' => 'هدية',
                 'amount' => $request->amount,
-                'recipient_number' => $request->phone_number
+                'recipient_number' => $request->phone_number,
+                'recipient_name' => $request->beneficiary_name
             ];
             Donation::create($history);
 
@@ -227,7 +229,7 @@ class UserController extends Controller
         // add to donation history
         $history = [
             'user_id' => $user->id,
-            'type' => 'zakat',
+            'type' => 'زكاة',
             'amount' => $request->amount,
         ];
         Donation::create($history);
@@ -282,10 +284,13 @@ class UserController extends Controller
 
         // add to donation history
         $remaining = $project->total_amount - $project->current_amount;
+        if ($project->duration_type === 'دائم') {
+            $remaining = $amount;
+        }
         $history = [
             'user_id' => $user->id,
             'project_id' => $project->id,
-            'type' => 'project_donation',
+            'type' => 'تبرع لمشروع في الجمعية',
             'amount' => min($amount, $remaining),
         ];
         Donation::create($history);
@@ -348,7 +353,7 @@ class UserController extends Controller
         }
         $user->update([
             'monthly_donation' => $request->amount,
-            'monthly_donation_type' => $request->type
+            ' monthly_donation_type' => $request->type-> $request->type
         ]);
         $notification = [
             'user_id' => $user->id,
@@ -366,7 +371,7 @@ class UserController extends Controller
             return response()->json(['message' => 'الميزة غير مفعلة حالياً'], 200);
         }
         $user->update([
-            'monthly_donation' => 0,
+            'التبرع الشهري' => 0,
         ]);
         $notification = [
             'user_id' => $user->id,
