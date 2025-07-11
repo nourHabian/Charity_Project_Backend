@@ -547,91 +547,230 @@ class AdminController extends Controller
 
 
     //الاحصائيات
-     public function getStatistics()
-{
-    return response()->json([
-        'total_donations' => Donation::sum('amount'),
-        'accepted_volunteers' => User::where('role', 'متطوع')
-                                     ->where('volunteer_status', 'مقبول')
-                                     ->where('ban', false)  
-                                     ->count(),
-        'beneficiaries' => User::where('role', 'مستفيد')->where('ban', false) ->count(),
-        'donors' => User::where('role', 'متبرع')->count(),
-        'projects_count' => Project::count(),
-    ]);
-}
-
-
-//فلترة المشاريع
-
-public function getProjectsByType($typeName)
-{
-    $type = Type::where('name', $typeName)->first();
-
-    if ($type) {
-        $projects = Project::where('type_id', $type->id)->get();
-
-        return response()->json($projects, 200);
-    } else {
-        return response()->json(['message' => 'لا يوجد نوع بهذا الاسم'], 404);
-    }
-}
-
-
-// فلترة طلبات التطوع لمقبول مرفوض  معلق
-
-public function getVolunteerRequestsByStatus($status)
-{
-    $query = User::whereIn('role', ['متطوع','متبرع'])->where('ban', false);;
-
-    if ($status) {
-        $query->where('volunteer_status', $status);
+    public function getStatistics()
+    {
+        return response()->json([
+            'total_donations' => Donation::sum('amount'),
+            'accepted_volunteers' => User::where('role', 'متطوع')
+                ->where('volunteer_status', 'مقبول')
+                ->where('ban', false)
+                ->count(),
+            'beneficiaries' => User::where('role', 'مستفيد')->where('ban', false)->count(),
+            'donors' => User::where('role', 'متبرع')->count(),
+            'projects_count' => Project::count(),
+        ]);
     }
 
-    $volunteers = $query->get([
-        'id',
-        'full_name',
-        'phone_number',
-        'age',
-        'volunteer_status',
-        'place_of_residence',
-        'gender',
-        'your_last_educational_qualification',
-        'your_studying_domain',
-        'volunteering_hours',
-        'purpose_of_volunteering',
-    ]);
 
-    return response()->json($volunteers, 200);
-}
+    //فلترة المشاريع
+
+    public function getProjectsByType($typeName)
+    {
+        $type = Type::where('name', $typeName)->first();
+
+        if ($type) {
+            $projects = Project::where('type_id', $type->id)->get();
+
+            return response()->json($projects, 200);
+        } else {
+            return response()->json(['message' => 'لا يوجد نوع بهذا الاسم'], 404);
+        }
+    }
 
 
-// فلترة المتطوعين محظور او لا
+    // فلترة طلبات التطوع لمقبول مرفوض  معلق
 
-public function filterVolunteersByBan($banned)
+    public function getVolunteerRequestsByStatus($status)
+    {
+        $query = User::whereIn('role', ['متطوع', 'متبرع'])->where('ban', false);;
+
+        if ($status) {
+            $query->where('volunteer_status', $status);
+        }
+
+        $volunteers = $query->get([
+            'id',
+            'full_name',
+            'phone_number',
+            'age',
+            'volunteer_status',
+            'place_of_residence',
+            'gender',
+            'your_last_educational_qualification',
+            'your_studying_domain',
+            'volunteering_hours',
+            'purpose_of_volunteering',
+        ]);
+
+        return response()->json($volunteers, 200);
+    }
+
+
+    // فلترة المتطوعين محظور او لا
+
+    public function filterVolunteersByBan($banned)
+    {
+        $query = User::query();
+
+        $query->where('role', 'متطوع');
+
+        if ($banned === 'true') {
+            $query->where('ban', true);
+        } elseif ($banned === 'false') {
+            $query->where('ban', false);
+        } else {
+            return response()->json([
+                'error' => 'قيمة غير صحيحة للحقل banned، استخدم true أو false فقط.'
+            ], 400);
+        }
+
+        $volunteers = $query->get();
+
+        return response()->json($volunteers);
+    }
+
+
+    //فلترة المستفيدين لمحظور او لا
+public function filterBeneficiaryByBan($banned)
 {
-    $query = User::query();
-
-    $query->where('role', 'متطوع');
-
-    if ($banned === 'true') {
-        $query->where('ban', true);
-    } elseif ($banned === 'false') {
-        $query->where('ban', false);
-    } else {
+    if (!in_array($banned, ['true', 'false'])) {
         return response()->json([
             'error' => 'قيمة غير صحيحة للحقل banned، استخدم true أو false فقط.'
         ], 400);
     }
 
-    $volunteers = $query->get();
+    $isBanned = $banned === 'true';
 
-    return response()->json($volunteers);
+    $beneficiaries = User::where('role', 'مستفيد')
+        ->where('ban', $isBanned)
+        ->get(['full_name', 'email', 'ban']);
+
+    return response()->json($beneficiaries, 200);
+}
+
+public function getFilteredBeneficiaryRequests($type, $status)
+{
+    $query = BeneficiaryRequest::with('type');
+
+    if ($type) {
+        $typeModel = \App\Models\Type::where('name', $type)->first();
+        if ($typeModel) {
+            $query->where('type_id', $typeModel->id);
+        } else {
+            return response()->json([]);  
+        }
+    }
+
+    if ($status) {
+        $query->where('status', $status);
+    }
+
+    $requests = $query->get();
+
+    return response()->json($requests);
+}
+
+
+
+
+// فلترة هدايا
+public function getFilteredGiftDelivered($delivered)
+{
+    $query = Donation::where('type', 'gift');
+
+    if (!is_null($delivered)) {
+        if ($delivered === 'true') {
+            $query->where('delivered', true);
+        } elseif ($delivered === 'false') {
+            $query->where('delivered', false);
+        } else {
+            return response()->json([
+                'error' => 'قيمة غير صحيحة للحقل delivered، استخدم true أو false فقط.'
+            ], 400);
+        }
+    }
+
+    $donations = $query->with(['user:id,full_name,email'])->get();
+
+    $filtered = $donations->map(function ($donation) {
+        return [
+            'recipient_name'   => $donation->recipient_name,
+            'recipient_number' => $donation->recipient_number,
+            'amount'           => $donation->amount,
+            'delivered'        => $donation->delivered,
+            'full_name'        => optional($donation->user)->full_name,
+            'email'            => optional($donation->user)->email,
+        ];
+    });
+
+    return response()->json($filtered);
 }
 
 
 
 
 
+public function getFilteredFeedbacks($status )
+{
+    $allowedStatuses = ['معلق', 'مقبول', 'مرفوض'];
 
+    if ($status && !in_array($status, $allowedStatuses)) {
+        return response()->json([
+            'error' => 'قيمة غير صحيحة للحالة. استخدم: معلق، مقبول، مرفوض فقط.'
+        ], 400);
+    }
+
+    
+    $query = Feedback::query();
+
+    if ($status) {
+        $query->where('status', $status);
+    }
+
+    $feedbacks = $query->get(['user_name', 'message', 'status', 'created_at']);
+
+    return response()->json($feedbacks, 200);
+}
+
+
+
+public function showBeneficiaryRequest(Request $request)
+{
+    $id = $request->input('id');  
+
+    $beneficiaryRequest = BeneficiaryRequest::with('type', 'user')->find($id);
+
+    if (!$beneficiaryRequest) {
+        return response()->json(['message' => 'الطلب غير موجود'], 404);
+    }
+    return response()->json([
+        'user' => [
+            'id' => optional($beneficiaryRequest->user)->id,
+            'full_name' => optional($beneficiaryRequest->user)->full_name,
+            'email' => optional($beneficiaryRequest->user)->email,
+        ],
+        'type' => optional($beneficiaryRequest->type)->name,
+        'marital_status' => $beneficiaryRequest->marital_status,
+        'number_of_kids' => $beneficiaryRequest->number_of_kids,
+        'kids_description' => $beneficiaryRequest->kids_description,
+        'city' => $beneficiaryRequest->city,
+        'home_address' => $beneficiaryRequest->home_address,
+        'monthly_income' => $beneficiaryRequest->monthly_income,
+        'current_job' => $beneficiaryRequest->current_job,
+        'monthly_income_source' => $beneficiaryRequest->monthly_income_source,
+        'is_taking_donations' => $beneficiaryRequest->is_taking_donations,
+        'other_donations_sources' => $beneficiaryRequest->other_donations_sources,
+        'number_of_needy' => $beneficiaryRequest->number_of_needy,
+        'expected_cost' => $beneficiaryRequest->expected_cost,
+        'description' => $beneficiaryRequest->description,
+        'severity_level' => $beneficiaryRequest->severity_level,
+        'document_path' => $beneficiaryRequest->document_path ? asset('storage/' . $beneficiaryRequest->document_path) : null,
+        'current_housing_condition' => $beneficiaryRequest->current_housing_condition,
+        'host_address' => $beneficiaryRequest->host_address,
+        'host_number' => $beneficiaryRequest->host_number,
+        'status' => $beneficiaryRequest->status,
+        'created_at' => optional($beneficiaryRequest->created_at)->toDateTimeString(),
+        'updated_at' => optional($beneficiaryRequest->updated_at)->toDateTimeString(),
+    ]);
+}
 }

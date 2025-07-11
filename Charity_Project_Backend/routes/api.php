@@ -114,10 +114,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/donations/user', [DonationController::class, 'getUserDonations']);
 });
 
-  // ******************************** Beneficiry APIS ********************************
+// ******************************** Beneficiry APIS ********************************
 
-    Route::post('/register/beneficiary', [BeneficiaryRequestController::class, 'register']);
-    Route::post('/login/beneficiary', [BeneficiaryRequestController::class, 'login']);
+Route::post('/register/beneficiary', [BeneficiaryRequestController::class, 'register']);
+Route::post('/login/beneficiary', [BeneficiaryRequestController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
 
@@ -130,8 +130,7 @@ Route::middleware('auth:sanctum')->group(function () {
     //get beneficiary notifications
     Route::get('/notifications/beneficiary', [NotificationController::class, 'showAllAndMarkAsRead']);
     // get beneficiary's project status
-    Route::get('/projectstatuse/beneficiary',[ProjectController::class,'getMyRequestStatus']);
-
+    Route::get('/projectstatuse/beneficiary', [ProjectController::class, 'getMyRequestStatus']);
 });
 
 
@@ -145,7 +144,7 @@ Route::middleware('isAdmin')->group(function () {
 
     Route::post('/admin/logout', [AdminController::class, 'logoutAdmin']);
 
-  
+
 
     // projects management
     Route::post('/admin/addCharityProject', [ProjectController::class, 'addCharityProject']);
@@ -180,16 +179,26 @@ Route::middleware('isAdmin')->group(function () {
 
 
 
-      
-    
- Route::get('/statistics', [AdminController::class, 'getStatistics']);
 
- Route::get('/getProjectsByType/{typeName}', [AdminController::class, 'getProjectsByType']);
- Route::get('/getVolunteerRequestsByStatus/{status}', [AdminController::class, 'getVolunteerRequestsByStatus']);
 
-Route::get('/filterVolunteersByBan/{banned}', [AdminController::class, 'filterVolunteersByBan']);
+    Route::get('/statistics', [AdminController::class, 'getStatistics']);
 
-    
+    Route::get('/getProjectsByType/{typeName}', [AdminController::class, 'getProjectsByType']);
+    Route::get('/getVolunteerRequestsByStatus/{status}', [AdminController::class, 'getVolunteerRequestsByStatus']);
+
+    Route::get('/filterVolunteersByBan/{banned}', [AdminController::class, 'filterVolunteersByBan']);
+
+
+
+
+
+    Route::get('/filterBeneficiaryByBan/{banned}', [AdminController::class, 'filterBeneficiaryByBan']);
+
+
+    Route::get('/getFilteredBeneficiaryRequests/{type}/{status}', [AdminController::class, 'getFilteredBeneficiaryRequests']);
+    Route::get('/getFilteredGiftDelivered/{delivered}', [AdminController::class, 'getFilteredGiftDelivered']);
+    Route::get('/getFilteredFeedbacks/{status}', [AdminController::class, 'getFilteredFeedbacks']);
+    Route::get('/showBeneficiaryRequest', [AdminController::class, 'showBeneficiaryRequest']);
 });
 
 

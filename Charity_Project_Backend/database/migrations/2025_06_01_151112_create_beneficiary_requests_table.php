@@ -37,6 +37,7 @@ return new class extends Migration
             $table->enum('current_housing_condition', ['ملك', 'أجار', 'استضافة'])->nullable();
             $table->string('host_address')->nullable();
             $table->string('host_number')->nullable();
+            $table->enum('volunteer_status', ['معلق', 'مقبول', 'مرفوض'])->nullable()->default('معلق');
             $table->timestamps();
         });
     }

@@ -17,46 +17,46 @@ class UserSeeder extends Seeder
         User::create([
             'full_name' => 'tuka',
             'email' => 'tukaaalesh8@gmail.com',
-            
+
             'password' => Hash::make(12345678),
             'verification_code' => '1111',
             'verified' => true,
             'role' => 'متبرع',
-            'points'=>99,
-      ]);
+            'points' => 99,
+        ]);
 
         User::create([
             'full_name' => 'noor',
             'email' => 'noor@gmail.com',
-            
+
             'password' => Hash::make(12345678),
             'verification_code' => '1111',
             'verified' => true,
             'role' => 'متبرع',
-              'points'=>88
+            'points' => 88
         ]);
 
-         User::create([
+        User::create([
             'full_name' => 'lana',
             'email' => 'lana@gmail.com',
-            
+
             'password' => Hash::make(12345678),
             'verification_code' => '1111',
             'verified' => true,
-             'role' => 'متبرع',
-          'points'=>80
+            'role' => 'متبرع',
+            'points' => 80
         ]);
 
-         
-         
-        
- 
-        
 
-         User::create([
+
+
+
+
+
+        User::create([
             'full_name' => 'hala',
             'email' => 'hala@gmail.com',
-            'phone_number' => '1234567890',
+            'phone_number' => '0966871653',
             'password' => Hash::make(12345678),
             'verification_code' => '1111',
             'verified' => true,

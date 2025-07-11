@@ -284,6 +284,9 @@ class UserController extends Controller
 
         // add to donation history
         $remaining = $project->total_amount - $project->current_amount;
+        if ($project->duration_type === 'دائم') {
+            $remaining = $amount;
+        }
         $history = [
             'user_id' => $user->id,
             'project_id' => $project->id,
