@@ -337,7 +337,7 @@ public function getMyRequestStatus()
     $project = Project::where('user_id', $user->id)
                       ->where('duration_type', 'فردي') 
                       ->latest()
-                      ->first();
+                      ->get();
 
     if (!$project) {
         return response()->json(['message' => 'لا يوجد أي مشروع مرتبط بك حالياً.'], 404);

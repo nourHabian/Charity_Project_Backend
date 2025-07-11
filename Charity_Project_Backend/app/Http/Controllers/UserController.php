@@ -350,7 +350,7 @@ class UserController extends Controller
         }
         $user->update([
             'monthly_donation' => $request->amount,
-            ' monthly_donation_type' => $request->type-> $request->type
+            'monthly_donation_type' => $request->type
         ]);
         $notification = [
             'user_id' => $user->id,
