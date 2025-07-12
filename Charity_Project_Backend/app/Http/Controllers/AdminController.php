@@ -773,4 +773,20 @@ public function showBeneficiaryRequest(Request $request)
         'updated_at' => optional($beneficiaryRequest->updated_at)->toDateTimeString(),
     ]);
 }
+
+
+
+
+public function filterProjectByStatus($status)
+{
+    if (!in_array($status, ['جاري', 'معلق', 'مكتمل', 'محذوف'])) {
+        return response()->json([
+            'message' => 'الحالة غير صالحة.',
+        ], 422);
+    }
+
+    $projects = Project::where('status', $status)->get();
+
+    return response()->json($projects);
+}
 }
