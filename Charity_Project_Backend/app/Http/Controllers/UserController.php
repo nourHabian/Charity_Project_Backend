@@ -371,7 +371,7 @@ class UserController extends Controller
             return response()->json(['message' => 'الميزة غير مفعلة حالياً'], 200);
         }
         $user->update([
-            'التبرع الشهري' => 0,
+            'monthly_donation' => 0,
         ]);
         $notification = [
             'user_id' => $user->id,
