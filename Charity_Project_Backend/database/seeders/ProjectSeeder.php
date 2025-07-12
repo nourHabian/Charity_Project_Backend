@@ -489,7 +489,7 @@ class ProjectSeeder extends Seeder
                     'photo' => 'completed_project_images/زراعة قوقعة اذنية.png',
                     'priority' => 'مرتفع',
                     'total_amount' => 10000,
-                    'status' => 'منتهي'
+                    'status' => 'مكتمل'
 
                ],
                [
@@ -499,7 +499,7 @@ class ProjectSeeder extends Seeder
                     'photo' => 'completed_project_images/زراعة قلب لطفل.jpg',
                     'priority' => 'حرج',
                     'total_amount' => 25000,
-                    'status' => 'منتهي'
+                    'status' => 'مكتمل'
                ],
           ];
 

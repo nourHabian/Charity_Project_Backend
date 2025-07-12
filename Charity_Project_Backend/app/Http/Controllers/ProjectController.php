@@ -334,29 +334,31 @@ class ProjectController extends Controller
             return response()->json(['message' => 'هذه الخدمة متاحة فقط للمستفيدين.'], 403);
         }
 
-    $project = Project::where('user_id', $user->id)
-                      ->where('duration_type', 'فردي') 
-                      ->latest()
-                      ->first();
-
-        if (!$project) {
+        $projects = Project::where('user_id', $user->id)
+                   ->where('duration_type', 'فردي')
+                   ->latest()
+                   ->get();
+        if ($projects->isEmpty()) {
             return response()->json(['message' => 'لا يوجد أي مشروع مرتبط بك حالياً.'], 404);
         }
 
-        $percentage = ($project->current_amount / $project->total_amount) * 100.0;
-
-        return response()->json([
-            'message' => 'تم جلب حالة المشروع بنجاح.',
-            'project_status' => [
+        $results = $projects->map(function ($project) {
+            return [
                 'name' => $project->name,
                 'description' => $project->description,
                 'current_amount' => $project->current_amount,
                 'total_amount' => $project->total_amount,
-                'percentage' => $percentage,
-            ]
-        ], 200);
-    }
+                'percentage' => ($project->current_amount / $project->total_amount) * 100.0,
+            ];
+        });
 
+        return response()->json([
+            'message' => 'تم جلب المشاريع بنجاح.',
+            'projects' => $results
+        ], 200);
+
+        
+    }
 
 
     /* public function editProject(UpdateProjectRequest $request, $id)
@@ -365,4 +367,7 @@ class ProjectController extends Controller
         $project->update($request->validated());
         return response()->json($project, 200);
     } */
+
 }
+
+
