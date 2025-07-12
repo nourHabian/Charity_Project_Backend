@@ -11,7 +11,8 @@ use Illuminate\Support\Facades\Auth;
 
 class VolunteerController extends Controller
 {
-    // التسجيل على استبيان التطوع
+
+    //التسجيل على استبيان التطوع
     public function addVolunteerRequest(AddVolunteerRequest $request)
     {
         $user = Auth::user();
@@ -23,6 +24,17 @@ class VolunteerController extends Controller
         }
 
         $validatedData = $request->validated();
+        if (
+            isset($validatedData['phone_number']) &&
+            User::where('phone_number', $validatedData['phone_number'])
+            ->where('id', '!=', $user->id)
+            ->exists()
+        ) {
+            return response()->json([
+                'message' => 'رقم الهاتف مستخدم بالفعل من قبل مستخدم آخر.'
+            ], 422);
+        }
+
         $validatedData['volunteer_status'] = 'معلق';
 
         $user->update($validatedData);
@@ -46,9 +58,17 @@ class VolunteerController extends Controller
         ];
         Notification::create($notification);
 
-        return response()->json($volunteerInfo
-, 201);
+        return response()->json(
+            $volunteerInfo,
+            201
+        );
     }
+
+
+
+
+
+
 
     public function getAllVolunteerRequests()
     {
