@@ -779,7 +779,7 @@ public function showBeneficiaryRequest(Request $request)
 
 public function filterProjectByStatus($status)
 {
-    if (!in_array($status, ['جاري', 'معلق', 'مكتمل', 'محذوف'])) {
+    if (!in_array($status, ['جاري', 'معلق', 'منتهي', 'محذوف'])) {
         return response()->json([
             'message' => 'الحالة غير صالحة.',
         ], 422);
