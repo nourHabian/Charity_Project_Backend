@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('photo')->nullable();
             $table->float('total_amount')->nullable();
             $table->float('current_amount')->default(0);
-            $table->enum('status', ['جاري', 'معلق', 'منتهي', 'ملغى'])->default('جاري');
+            $table->enum('status', ['جاري', 'معلق', 'مكتمل', 'محذوف'])->default('جاري');
             $table->enum('priority', ['منخفض', 'متوسط', 'مرتفع', 'حرج'])->default('متوسط');
             $table->enum('duration_type', ['مؤقت', 'دائم', 'تطوعي', 'فردي'])->default('مؤقت');
             $table->string('location')->nullable();

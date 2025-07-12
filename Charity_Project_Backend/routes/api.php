@@ -199,8 +199,8 @@ Route::middleware('isAdmin')->group(function () {
     Route::get('/getFilteredGiftDelivered/{delivered}', [AdminController::class, 'getFilteredGiftDelivered']);
     Route::get('/getFilteredFeedbacks/{status}', [AdminController::class, 'getFilteredFeedbacks']);
     Route::get('/showBeneficiaryRequest', [AdminController::class, 'showBeneficiaryRequest']);
+    Route::get('/filterProjectByStatus/{status}', [AdminController::class, 'filterProjectByStatus']);
 });
-
 
 
 
