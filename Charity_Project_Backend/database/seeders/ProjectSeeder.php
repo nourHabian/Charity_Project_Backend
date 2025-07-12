@@ -480,6 +480,44 @@ class ProjectSeeder extends Seeder
 
           ];
 
+
+           $completed_projects = [
+               [
+                    'type_id' => 1,
+                    'name' => 'زراعة قوقعة أذنية لطفلة تعاني من فقدان شديد في السمع ',
+                    'description' => 'بعد تقييم دقيق وشامل لحالة الطفلة الصحية والسمعية، تم اتخاذ القرار الطبي بزراعة القوقعة كحل علاجي فعّال. تأتي هذه الخطوة لتفتح آفاقاً جديدة أمام الطفلة لاستعادة حاسة السمع، وتحسين مهارات النطق والتواصل، بما يضمن دمجها بشكل سلس في بيئتها التعليمية والاجتماعية، ويمهد لمستقبل أفضل.',
+                    'photo' => 'completed_project_images/زراعة قوقعة اذنية.png',
+                    'priority' => 'مرتفع',
+                    'total_amount' => 10000,
+                    'status' => 'منتهي'
+
+               ],
+               [
+                    'type_id' => 1,
+                    'name' => 'إجراء عملية زراعة قلب لطفل',
+                    'description' => 'نجحت العملية بفضل الله، وبفضل الدعم الكريم من كل من تبرع وساهم في إنجاحها. تم تقديم الرعاية اللازمة لمتابعة تعافي الطفل وتحسين جودة حياته، مع متابعة طبية دقيقة لضمان استقرار حالته الصحية.',
+                    'photo' => 'completed_project_images/زراعة قلب لطفل.jpg',
+                    'priority' => 'حرج',
+                    'total_amount' => 25000,
+                    'status' => 'منتهي'
+               ],
+          ];
+
+
+          foreach ($completed_projects as $project) {
+               Project::create([
+                    'type_id' => $project['type_id'],
+                    'name' => $project['name'],
+                    'description' => $project['description'],
+                    'photo' => $project['photo'],
+                    'priority' => $project['priority'],
+                    'total_amount' => $project['total_amount'],
+                    'status' => $project['status'],
+        
+               ]);
+          }
+
+
           foreach ($volunteer_projects as $project) {
                Project::create([
                     'type_id' => $project['type_id'],
