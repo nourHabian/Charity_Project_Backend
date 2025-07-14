@@ -110,6 +110,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/getTopDonors', [UserController::class, 'getDonorsByPoints']);
     // view notification history
     Route::post('/notifications', [NotificationController::class, 'showAllAndMarkAsRead']);
+    //get unread notifications
+    Route::get('/notifications/unread', [NotificationController::class, 'getUnreadCount']);
     // view donation history
     Route::get('/donations/user', [DonationController::class, 'getUserDonations']);
 });
