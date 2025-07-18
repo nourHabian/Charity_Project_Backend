@@ -557,5 +557,18 @@ class ProjectSeeder extends Seeder
                     'photo' => $project['photo'],
                ]);
           }
+
+          // beneficiary project
+
+          Project::create([
+               'user_id' => 5,
+               'type_id' => 1,
+               'name' => 'مساعدة صحية لأحد المحتاجين',
+               'description' => 'محتاج بحاجة إلى مساعدة ببعض التحاليل والصور الطبية',
+               'photo' => 'charity_logo/logo.png',
+               'duration_type' => 'فردي',
+               'current_amount' => 100,
+               'total_amount' => 10000
+          ]);
      }
 }

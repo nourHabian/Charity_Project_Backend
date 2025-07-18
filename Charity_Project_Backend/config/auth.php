@@ -35,18 +35,19 @@ return [
     |
     */
 
-   
 
-        'guards' => [
+
+    'guards' => [
         'web' => [
             'driver' => 'session',
             'provider' => 'users',
         ],
 
-'admin' => [
-    'driver' => 'sanctum',
-    'provider' => 'admins',
-],
+        'admin' => [
+            'driver' => 'sanctum',
+            'provider' => 'admins',
+        ],
+
     ],
 
     /*
@@ -66,17 +67,19 @@ return [
     |
     */
 
-    
-'providers' => [
+
+    'providers' => [
         'users' => [
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', App\Models\User::class),
         ],
 
         'admins' => [
-    'driver' => 'eloquent',
-    'model' => App\Models\Admin::class,
-],
+            'driver' => 'eloquent',
+            'model' => App\Models\Admin::class,
+        ],
+
+
         // 'users' => [
         //     'driver' => 'database',
         //     'table' => 'users',

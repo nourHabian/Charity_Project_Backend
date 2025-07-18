@@ -121,16 +121,24 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::post('/register/beneficiary', [BeneficiaryRequestController::class, 'register']);
 Route::post('/login/beneficiary', [BeneficiaryRequestController::class, 'login']);
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum', 'isBeneficiary'])->group(function () {
 
     // logout
     Route::post('/logout/beneficiary', [BeneficiaryRequestController::class, 'logout']);
-    // sent beneficiry's requests
-    Route::post('/request/beneficiary', [BeneficiaryRequestController::class, 'getBeneficiaryRequest']);
+    // sent beneficiary's health requests
+    Route::post('/beneficiary/request/health', [BeneficiaryRequestController::class, 'submitHealthRequest']);
+    // sent beneficiary's residential requests
+    Route::post('/beneficiary/request/residential', [BeneficiaryRequestController::class, 'submitResidentialRequest']);
+    // sent beneficiary's food requests
+    Route::post('/beneficiary/request/food', [BeneficiaryRequestController::class, 'submitFoodRequest']);
+    // sent beneficiary's educational requests
+    Route::post('/beneficiary/request/educational', [BeneficiaryRequestController::class, 'submitEducationalRequest']);
     // sent feedbacks
     Route::post('/feedback/beneficiary', [FeedbackController::class, 'submitFeedback']);
     //get beneficiary notifications
     Route::get('/notifications/beneficiary', [NotificationController::class, 'showAllAndMarkAsRead']);
+    //get beneficiary notifications
+    Route::get('/beneficiary/notifications/unread', [NotificationController::class, 'getUnreadBeneficiaryCount']);
     // get beneficiary's project status
     Route::get('/projectstatuse/beneficiary', [ProjectController::class, 'getMyRequestStatus']);
 });
