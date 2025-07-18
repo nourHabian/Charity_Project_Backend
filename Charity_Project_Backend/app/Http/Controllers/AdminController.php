@@ -653,7 +653,7 @@ public function getFilteredBeneficiaryRequests($type, $status)
     $query = BeneficiaryRequest::with('type');
 
     if ($type) {
-        $typeModel = \App\Models\Type::where('name', $type)->first();
+        $typeModel = Type::where('name', $type)->first();
         if ($typeModel) {
             $query->where('type_id', $typeModel->id);
         } else {

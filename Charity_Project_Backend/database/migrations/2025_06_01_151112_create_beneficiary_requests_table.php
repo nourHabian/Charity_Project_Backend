@@ -34,7 +34,7 @@ return new class extends Migration
             $table->string('document_path')->nullable();
             $table->enum('current_housing_condition', ['ملك', 'أجار', 'استضافة', 'لا يوجد سكن'])->nullable();
             $table->enum('needed_housing_help', ['إصلاحات منزلية', 'مساعدة في دفع الإيجار', 'تأمين سكن'])->nullable();
-            $table->enum('volunteer_status', ['معلق', 'مقبول', 'مرفوض'])->nullable()->default('معلق');
+            $table->enum('status', ['معلق', 'مقبول', 'مرفوض'])->nullable()->default('معلق');
             $table->timestamps();
         });
     }
