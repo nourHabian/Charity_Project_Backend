@@ -431,7 +431,7 @@ class UserController extends Controller
     public function getDonorsByPoints()
     {
         $users = User::whereIn('role', ['متبرع', 'متطوع'])
-            ->orderByDesc('points')
+              ->where('points', '>', 20)->orderByDesc('points')
             ->take(10)
             ->get(['full_name', 'points']);
 
