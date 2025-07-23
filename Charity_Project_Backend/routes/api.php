@@ -49,12 +49,6 @@ Route::middleware('auth:sanctum')->group(function () {
     // search in donate later list
     Route::get('/favourite/search', [FavouriteController::class, 'searchFavourite']);
 
-
-    // ******************************** Beneficiry APIS ********************************
-
-    Route::post('/register/beneficiry', [BeneficiaryRequestController::class, 'register']);
-    Route::post('/login/beneficiry', [BeneficiaryRequestController::class, 'login']);
-
     // ****** VOLUNTEER ACTIONS ******
 
     // submit a volunteer form
