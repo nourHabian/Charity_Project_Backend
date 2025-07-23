@@ -114,7 +114,7 @@ class UserController extends Controller
     public function editPassword(Request $request)
     {
         $validate = $request->validate([
-            'new_password' => 'required|string|min:6|max:10|confirmed',
+            'new_password' => 'required|string|min:6|max:30|confirmed',
         ]);
 
         $user = Auth::user();

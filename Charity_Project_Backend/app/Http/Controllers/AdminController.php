@@ -87,7 +87,7 @@ class AdminController extends Controller
                     // add to donation history
                     $history = [
                         'user_id' => $user->id,
-                        'type' => 'monthly_donation',
+                        'type' => 'تبرع شهري',
                         'amount' => $user->monthly_donation,
                     ];
                     Donation::create($history);
