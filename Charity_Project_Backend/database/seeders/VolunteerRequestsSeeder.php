@@ -146,6 +146,11 @@ class VolunteerRequestsSeeder extends Seeder
                 $user->update([
                     'volunteer_status' => $request['volunteer_status'],
                 ]);
+                if ($request['volunteer_status'] === 'مقبول') {
+                    $user->update([
+                        'role' => 'متطوع',
+                    ]);
+                }
             }
         }
     }
