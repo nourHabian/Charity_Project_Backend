@@ -424,6 +424,13 @@ class UserController extends Controller
             'project_id' => $project->id,
         ];
         Volunteer::create($volunteer);
+
+        $notification = [
+            'user_id' => $user->id,
+            'title' => 'تطوع جديد',
+            'message' => 'تم انضمامك بنجاح إلى مشروع ' . $project->name . ' ، سيتم التواصل معك على رقمك لموافاتك بالتفاصيل.'
+        ];
+        Notification::create($notification);
         return response()->json(['message' => 'تمت العملية بنجاح، أنت الآن متطوع في هذا المشروع'], 200);
     }
 

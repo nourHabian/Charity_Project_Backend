@@ -6,6 +6,7 @@ use App\Http\Requests\AddVolunteerRequest;
 use App\Models\Notification;
 use App\Models\User;
 use App\Models\Volunteer;
+use App\Models\VolunteerRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,7 +18,7 @@ class VolunteerController extends Controller
     {
         $user = Auth::user();
 
-        if ($user->volunteer_status !== null) {
+        if ($user->volunteer_status === 'مقبول' || $user->volunteer_status === 'معلق' || $user->ban) {
             return response()->json([
                 'message' => 'لقد قمت بالتسجيل على استبيان التطوع مسبقًا ولا يمكنك التسجيل مرة أخرى.'
             ], 409);
@@ -35,22 +36,14 @@ class VolunteerController extends Controller
             ], 422);
         }
 
+        $user->volunteer_status = 'معلق';
+        $user->save();
         $validatedData['volunteer_status'] = 'معلق';
+        $validatedData['user_id'] = $user->id;
+        VolunteerRequest::create($validatedData);
 
-        $user->update($validatedData);
 
-        $volunteerInfo = $user->only([
-            'full_name',
-            'phone_number',
-            'age',
-            'volunteer_status',
-            'place_of_residence',
-            'gender',
-            'your_last_educational_qualification',
-            'your_studying_domain',
-            'volunteering_hours',
-            'purpose_of_volunteering',
-        ]);
+        $validatedData['full_name'] = $user->full_name;
         $notification = [
             'user_id' => $user->id,
             'title' => 'تم استلام طلب التطوع',
@@ -59,7 +52,7 @@ class VolunteerController extends Controller
         Notification::create($notification);
 
         return response()->json(
-            $volunteerInfo,
+            $validatedData,
             201
         );
     }

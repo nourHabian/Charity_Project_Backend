@@ -58,6 +58,10 @@ class User extends Authenticatable
         return $this->hasMany(BeneficiaryRequest::class);
     }
 
+    public function volunteeryRequests() {
+        return $this->hasMany(VolunteerRequest::class);
+    }
+
     public function favouriteProjects() {
         return $this->belongsToMany(Project::class, 'favourites')->withTimestamps();
     }

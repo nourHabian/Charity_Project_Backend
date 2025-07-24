@@ -307,7 +307,8 @@ class ProjectController extends Controller
         if ($project->current_amount != 0) {
             return response()->json(['message' => 'لا يمكن حذف هذا المشروع بسبب وجود تبرعات سابقة فيه.'], 400);
         }
-        $project->delete();
+        $project->status = 'محذوف';
+        $project->save();
         return response()->json(null, 204);
     }
 

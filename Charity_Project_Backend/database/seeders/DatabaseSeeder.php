@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             FeedbackSeeder::class,
             AdminSeeder::class,
             SupplySeeder::class,
+            VolunteerRequestsSeeder::class,
         ]);
     }
 }

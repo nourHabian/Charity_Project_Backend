@@ -19,8 +19,8 @@ return new class extends Migration
             $table->string('verification_code')->nullable();
             $table->boolean('verified')->default(false);
             $table->date('date_of_birth')->nullable();
-            $table->enum('gender', ['ذكر', 'أنثى'])->nullable();
-            $table->integer('age')->nullable();
+            // $table->enum('gender', ['ذكر', 'أنثى'])->nullable();
+            // $table->integer('age')->nullable();
             $table->enum('role', ['متبرع', 'مستفيد', 'متطوع']);
             $table->float('balance')->default(0);
             $table->bigInteger('points')->default(0);
@@ -31,11 +31,11 @@ return new class extends Migration
             $table->boolean('ban')->default(false);
             $table->enum('volunteer_status', ['معلق', 'مقبول', 'مرفوض'])->nullable();
             $table->boolean('is_working')->default(false);
-            $table->string('purpose_of_volunteering')->nullable();
-            $table->string('place_of_residence')->nullable();
-            $table->integer('volunteering_hours')->nullable();
-            $table->enum('your_last_educational_qualification', ['معهد متوسط /دبلوم ', 'طالب جامعي', ' بكالوريوس','ماجستير'])->nullable();
-            $table->string('your_studying_domain')->nullable();
+            // $table->string('purpose_of_volunteering')->nullable();
+            // $table->string('place_of_residence')->nullable();
+            // $table->integer('volunteering_hours')->nullable();
+            // $table->enum('your_last_educational_qualification', ['معهد متوسط /دبلوم ', 'طالب جامعي', ' بكالوريوس','ماجستير'])->nullable();
+            // $table->string('your_studying_domain')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
             $table->timestamps();

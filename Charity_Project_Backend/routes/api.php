@@ -162,8 +162,6 @@ Route::middleware('isAdmin')->group(function () {
     Route::post('/admin/donateToProject', [AdminController::class, 'donateToProject']);
 
     // volunteer management
-    Route::get('/admin/getAllVolunteerRequests', [VolunteerController::class, 'getAllVolunteerRequests']);
-
     Route::post('/admin/approveVolunteerRequest', [AdminController::class, 'approveVolunteerRequest']);
     Route::post('/admin/rejectVolunteerRequest', [AdminController::class, 'rejectVolunteerRequest']);
     Route::post('/admin/banVolunteer', [AdminController::class, 'banVolunteer']);

@@ -12,6 +12,7 @@ use App\Models\Project;
 use App\Models\Type;
 use App\Models\User;
 use App\Models\Volunteer;
+use App\Models\VolunteerRequest;
 use Carbon\Carbon;
 use GuzzleHttp\Handler\Proxy;
 use Illuminate\Support\Facades\Auth;
@@ -212,14 +213,13 @@ class AdminController extends Controller
     public function approveVolunteerRequest(Request $request)
     {
         $validate = $request->validate([
-            'phone_number' => 'required|string|exists:users,phone_number',
+            'id' => 'required|exists:volunteer_requests,id',
         ]);
-        // رقم الشخص يلي قدم على طلب التطوع
-        $phone_number = $request->phone_number;
-        $user = User::where('phone_number', $phone_number)->first();
-        // في غلط بالرقم ف المستخدم مو موجود
+        $volunteer_request = VolunteerRequest::where('id', $request->id)->first();
+        $user = $volunteer_request->user;
+        // في غلط بالايدي ف المستخدم مو موجود
         if (is_null($user)) {
-            return response()->json(['message' => 'رقم المستخدم خاطئ'], 400);
+            return response()->json(['message' => 'حدث خطأ أثناء محاولة الوصول إلى هذا المستخدم، يرجى المحاولة لاحقاً'], 400);
         }
         // مالو باعت استبيان تطوع
         if (is_null($user->volunteer_status)) {
@@ -231,8 +231,10 @@ class AdminController extends Controller
         }
         // قبول الطلب
         $user->volunteer_status = 'مقبول';
+        $volunteer_request->volunteer_status = 'مقبول';
         $user->role = 'متطوع';
         $user->save();
+        $volunteer_request->save();
 
         $notification = [
             'user_id' => $user->id,
@@ -247,14 +249,13 @@ class AdminController extends Controller
     public function rejectVolunteerRequest(Request $request)
     {
         $validate = $request->validate([
-            'phone_number' => 'required|string|exists:users,phone_number',
+            'id' => 'required|exists:volunteer_requests,id',
         ]);
-        // رقم الشخص يلي قدم على طلب التطوع
-        $phone_number = $request->phone_number;
-        $user = User::where('phone_number', $phone_number)->first();
-        // في غلط بالرقم ف المستخدم مو موجود
+        $volunteer_request = VolunteerRequest::where('id', $request->id)->first();
+        $user = $volunteer_request->user;
+        // في غلط بالايدي ف المستخدم مو موجود
         if (is_null($user)) {
-            return response()->json(['message' => 'رقم المستخدم خاطئ'], 400);
+            return response()->json(['message' => 'حدث خطأ أثناء محاولة الوصول إلى هذا المستخدم، يرجى المحاولة لاحقاً'], 400);
         }
         // مالو باعت استبيان تطوع
         if (is_null($user->volunteer_status)) {
@@ -265,9 +266,11 @@ class AdminController extends Controller
             return response()->json(['message' => 'لا يمكنك رفض الطلب إن لم يكن معلقاً'], 400);
         }
         // رفض الطلب
-        $user->volunteer_status = null;
+        $user->volunteer_status = 'مرفوض';
+        $volunteer_request->volunteer_status = 'مرفوض';
         $user->role = 'متبرع';
         $user->save();
+        $volunteer_request->save();
 
         $notification = [
             'user_id' => $user->id,
@@ -282,14 +285,12 @@ class AdminController extends Controller
     public function banVolunteer(Request $request)
     {
         $validate = $request->validate([
-            'phone_number' => 'required|string|exists:users,phone_number',
+            'id' => 'required|exists:users,id',
         ]);
-        // رقم الشخص يلي قدم على طلب التطوع
-        $phone_number = $request->phone_number;
-        $user = User::where('phone_number', $phone_number)->first();
-        // في غلط بالرقم ف المستخدم مو موجود
+        $user = User::where('id', $request->id)->first();
+        // في غلط ف المستخدم مو موجود
         if (is_null($user)) {
-            return response()->json(['message' => 'رقم المستخدم خاطئ'], 400);
+            return response()->json(['message' => 'حدث خطأ أثناء محاولة الوصول إلى المستخدم، يرجى المحاولة لاحقاً'], 400);
         }
         // مالو باعت استبيان تطوع
         if (is_null($user->volunteer_status)) {
@@ -304,7 +305,8 @@ class AdminController extends Controller
             return response()->json(['message' => 'لا يمكنك حظر المتطوع إن لم يكن مقبولاً بعد'], 400);
         }
         // حظر المتطوع
-        $user->volunteer_status = 'مرفوض';
+
+        // $user->volunteer_status = 'مرفوض'; not needed cause $user->volunteer_status refers to the status of his last request and it must be 'مقبول'
         $user->role = 'متبرع';
         $user->ban = true;
         $user->is_working = false;
@@ -325,14 +327,12 @@ class AdminController extends Controller
     public function unblockVolunteer(Request $request)
     {
         $validate = $request->validate([
-            'phone_number' => 'required|string|exists:users,phone_number',
+            'id' => 'required|exists:users,id',
         ]);
-        // رقم الشخص يلي قدم على طلب التطوع
-        $phone_number = $request->phone_number;
-        $user = User::where('phone_number', $phone_number)->first();
-        // في غلط بالرقم ف المستخدم مو موجود
+        $user = User::where('id', $request->id)->first();
+        // في غلط ف المستخدم مو موجود
         if (is_null($user)) {
-            return response()->json(['message' => 'رقم المستخدم خاطئ'], 400);
+            return response()->json(['message' => 'حدث خطأ أثناء محاولة الوصول إلى المستخدم، يرجى المحاولة لاحقاً'], 400);
         }
         // مالو باعت استبيان تطوع
         if (is_null($user->volunteer_status)) {
