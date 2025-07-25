@@ -61,31 +61,4 @@ class VolunteerController extends Controller
 
 
 
-
-
-    public function getAllVolunteerRequests()
-    {
-        $admin = Auth::guard('admin')->user();
-
-        if (!$admin) {
-            return response()->json(['message' => 'غير مصرح لك بالوصول إلى هذه البيانات.'], 403);
-        }
-
-        // جلب المستخدمين الذين لديهم استبيانات تطوع
-        $volunteerRequests = User::whereNotNull('volunteer_status')->get([
-            'id',
-            'full_name',
-            'phone_number',
-            'volunteer_status',
-            'volunteering_domain',
-            'purpose_of_volunteering',
-            'place_of_residence',
-            'gender',
-            'age',
-            'volunteering_hours',
-            'your_last_educational_qualification'
-        ]);
-
-        return response()->json($volunteerRequests, 200);
-    }
 }

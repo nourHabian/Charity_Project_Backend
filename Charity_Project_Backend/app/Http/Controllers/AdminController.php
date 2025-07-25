@@ -547,20 +547,34 @@ class AdminController extends Controller
 
 
     //الاحصائيات
-    public function getStatistics()
-    {
-        return response()->json([
-            'total_donations' => Donation::sum('amount'),
-            'accepted_volunteers' => User::where('role', 'متطوع')
-                ->where('volunteer_status', 'مقبول')
-                ->where('ban', false)
-                ->count(),
-            'beneficiaries' => User::where('role', 'مستفيد')->where('ban', false)->count(),
-            'donors' => User::where('role', 'متبرع')->count(),
-            'projects_count' => Project::count(),
-        ]);
-    }
 
+public function getStatistics()
+{
+    $charity = Charity::first(); 
+
+    $health_projects_balance = $charity->health_projects_balance;
+    $educational_projects_balance = $charity->educational_projects_balance;
+    $nutritional_projects_balance = $charity->nutritional_projects_balance;
+    $housing_projects_balance = $charity->housing_projects_balance;
+    $religious_projects_balance = $charity->religious_projects_balance;
+
+    return response()->json([
+        'total_donations' => Donation::sum('amount'),
+        'accepted_volunteers' => User::where('role', 'متطوع')
+            ->where('volunteer_status', 'مقبول')
+            ->where('ban', false)
+            ->count(),
+        'beneficiaries' => User::where('role', 'مستفيد')->where('ban', false)->count(),
+        'donors' => User::where('role', 'متبرع')->count(),
+        'projects_count' => Project::count(),
+
+        'health_projects_balance' => $health_projects_balance,
+        'educational_projects_balance' => $educational_projects_balance,
+        'nutritional_projects_balance' => $nutritional_projects_balance,
+        'housing_projects_balance' => $housing_projects_balance,
+        'religious_projects_balance' => $religious_projects_balance,
+    ]);
+}
 
     //فلترة المشاريع
 
@@ -578,32 +592,32 @@ class AdminController extends Controller
     }
 
 
-    // فلترة طلبات التطوع لمقبول مرفوض  معلق
+    // فلترة طلبات التطوع (مقبول - مرفوض - معلق)
+public function getVolunteerRequestsByStatus($status)
+{
+    $query = VolunteerRequest::query(); 
 
-    public function getVolunteerRequestsByStatus($status)
-    {
-        $query = User::whereIn('role', ['متطوع', 'متبرع'])->where('ban', false);;
-
-        if ($status) {
-            $query->where('volunteer_status', $status);
-        }
-
-        $volunteers = $query->get([
-            'id',
-            'full_name',
-            'phone_number',
-            'age',
-            'volunteer_status',
-            'place_of_residence',
-            'gender',
-            'your_last_educational_qualification',
-            'your_studying_domain',
-            'volunteering_hours',
-            'purpose_of_volunteering',
-        ]);
-
-        return response()->json($volunteers, 200);
+    if (!empty($status)) {
+        $query->where('volunteer_status', $status);
     }
+
+    $volunteers = $query->get([
+        'id',
+        'user_id',
+        'phone_number',
+        'age',
+        'volunteer_status',
+        'place_of_residence',
+        'gender',
+        'your_last_educational_qualification',
+        'your_studying_domain',
+        'volunteering_hours',
+        'purpose_of_volunteering',
+    ]);
+
+    return response()->json($volunteers, 200);
+}
+
 
 
     // فلترة المتطوعين محظور او لا
@@ -633,13 +647,15 @@ class AdminController extends Controller
     //فلترة المستفيدين لمحظور او لا
 public function filterBeneficiaryByBan($banned)
 {
-    if (!in_array($banned, ['true', 'false'])) {
+    if ($banned === 'true') {
+        $isBanned = true;
+    } elseif ($banned === 'false') {
+        $isBanned = false;
+    } else {
         return response()->json([
             'error' => 'قيمة غير صحيحة للحقل banned، استخدم true أو false فقط.'
         ], 400);
     }
-
-    $isBanned = $banned === 'true';
 
     $beneficiaries = User::where('role', 'مستفيد')
         ->where('ban', $isBanned)
@@ -733,41 +749,44 @@ public function getFilteredFeedbacks($status )
 }
 
 
-
 public function showBeneficiaryRequest(Request $request)
 {
-    $id = $request->input('id');  
+    $id = $request->input('id'); 
 
-    $beneficiaryRequest = BeneficiaryRequest::with('type', 'user')->find($id);
+    $beneficiaryRequest = BeneficiaryRequest::with(['type', 'user', 'supplies'])->find($id);
 
     if (!$beneficiaryRequest) {
         return response()->json(['message' => 'الطلب غير موجود'], 404);
     }
+
     return response()->json([
+        'id' => $beneficiaryRequest->id,
+        'full_name' => $beneficiaryRequest->full_name,
+        'phone_number' => $beneficiaryRequest->phone_number,
+        'age' => $beneficiaryRequest->age,
+        'gender' => $beneficiaryRequest->gender,
         'user' => [
             'id' => optional($beneficiaryRequest->user)->id,
             'full_name' => optional($beneficiaryRequest->user)->full_name,
             'email' => optional($beneficiaryRequest->user)->email,
         ],
         'type' => optional($beneficiaryRequest->type)->name,
+        'supplies' => $beneficiaryRequest->supplies->pluck('name'), 
         'marital_status' => $beneficiaryRequest->marital_status,
         'number_of_kids' => $beneficiaryRequest->number_of_kids,
         'kids_description' => $beneficiaryRequest->kids_description,
-        'city' => $beneficiaryRequest->city,
+        'governorate' => $beneficiaryRequest->governorate,
         'home_address' => $beneficiaryRequest->home_address,
         'monthly_income' => $beneficiaryRequest->monthly_income,
         'current_job' => $beneficiaryRequest->current_job,
         'monthly_income_source' => $beneficiaryRequest->monthly_income_source,
-        'is_taking_donations' => $beneficiaryRequest->is_taking_donations,
-        'other_donations_sources' => $beneficiaryRequest->other_donations_sources,
         'number_of_needy' => $beneficiaryRequest->number_of_needy,
         'expected_cost' => $beneficiaryRequest->expected_cost,
         'description' => $beneficiaryRequest->description,
         'severity_level' => $beneficiaryRequest->severity_level,
         'document_path' => $beneficiaryRequest->document_path ? asset('storage/' . $beneficiaryRequest->document_path) : null,
         'current_housing_condition' => $beneficiaryRequest->current_housing_condition,
-        'host_address' => $beneficiaryRequest->host_address,
-        'host_number' => $beneficiaryRequest->host_number,
+        'needed_housing_help' => $beneficiaryRequest->needed_housing_help,
         'status' => $beneficiaryRequest->status,
         'created_at' => optional($beneficiaryRequest->created_at)->toDateTimeString(),
         'updated_at' => optional($beneficiaryRequest->updated_at)->toDateTimeString(),
@@ -776,12 +795,11 @@ public function showBeneficiaryRequest(Request $request)
 
 
 
-
 public function filterProjectByStatus($status)
 {
     if (!in_array($status, ['جاري', 'معلق', 'منتهي', 'محذوف'])) {
         return response()->json([
-            'message' => 'الحالة غير صالحة.',
+            'message' => 'الحالة غير موجوة.',
         ], 422);
     }
 
