@@ -155,6 +155,7 @@ Route::middleware('isAdmin')->group(function () {
     Route::post('/admin/addBeneficiaryProject', [ProjectController::class, 'addBeneficiaryProject']);
     Route::post('/admin/addVolunteerProject', [ProjectController::class, 'addVolunteerProject']);
     Route::delete('/admin/deleteProject', [ProjectController::class, 'deleteProject']);
+    Route::post('/admin/changeProjectStatus', [ProjectController::class, 'changeProjectStatus']);
 
 
     // donation management

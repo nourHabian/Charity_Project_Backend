@@ -8,6 +8,7 @@ use App\Http\Requests\AddProjectRequest;
 use App\Http\Requests\AddVolunteerProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Models\Charity;
+use App\Models\Donation;
 use App\Models\Notification;
 use App\Models\Project;
 use App\Models\Type;
@@ -30,7 +31,7 @@ class ProjectController extends Controller
 
     public function healthProjects()
     {
-        $projects = Project::where('type_id', 1)->where('duration_type', '!=', 'تطوعي')->where('duration_type', '!=', 'دائم')->where('status', '!=', 'منتهي')->get();
+        $projects = Project::where('type_id', 1)->where('duration_type', '!=', 'تطوعي')->where('duration_type', '!=', 'دائم')->whereNotIn('status', ['منتهي', 'معلق'])->get();
         foreach ($projects as $project) {
             $project['photo_url'] = asset(Storage::url($project['photo']));
             $percentage = ($project['current_amount'] / $project['total_amount']) * 100.0;
@@ -46,7 +47,7 @@ class ProjectController extends Controller
 
     public function educationalProjects()
     {
-        $projects = Project::where('type_id', 2)->where('duration_type', '!=', 'تطوعي')->where('duration_type', '!=', 'دائم')->where('status', '!=', 'منتهي')->get();
+        $projects = Project::where('type_id', 2)->where('duration_type', '!=', 'تطوعي')->where('duration_type', '!=', 'دائم')->whereNotIn('status', ['منتهي', 'معلق'])->get();
         foreach ($projects as $project) {
             $project['photo_url'] = asset(Storage::url($project['photo']));
             $percentage = ($project['current_amount'] / $project['total_amount']) * 100.0;
@@ -58,7 +59,7 @@ class ProjectController extends Controller
 
     public function residentialProjects()
     {
-        $projects = Project::where('type_id', 3)->where('duration_type', '!=', 'تطوعي')->where('duration_type', '!=', 'دائم')->where('status', '!=', 'منتهي')->get();
+        $projects = Project::where('type_id', 3)->where('duration_type', '!=', 'تطوعي')->where('duration_type', '!=', 'دائم')->whereNotIn('status', ['منتهي', 'معلق'])->get();
         foreach ($projects as $project) {
             $project['photo_url'] = asset(Storage::url($project['photo']));
             $percentage = ($project['current_amount'] / $project['total_amount']) * 100.0;
@@ -70,7 +71,7 @@ class ProjectController extends Controller
 
     public function nutritionalProjects()
     {
-        $projects = Project::where('type_id', 4)->where('duration_type', '!=', 'تطوعي')->where('duration_type', '!=', 'دائم')->where('status', '!=', 'منتهي')->get();
+        $projects = Project::where('type_id', 4)->where('duration_type', '!=', 'تطوعي')->where('duration_type', '!=', 'دائم')->whereNotIn('status', ['منتهي', 'معلق'])->get();
         foreach ($projects as $project) {
             $project['photo_url'] = asset(Storage::url($project['photo']));
             $percentage = ($project['current_amount'] / $project['total_amount']) * 100.0;
@@ -82,7 +83,7 @@ class ProjectController extends Controller
 
     public function religionProjects()
     {
-        $projects = Project::where('type_id', 7)->where('duration_type', '!=', 'تطوعي')->where('duration_type', '!=', 'دائم')->where('status', '!=', 'منتهي')->get();
+        $projects = Project::where('type_id', 7)->where('duration_type', '!=', 'تطوعي')->where('duration_type', '!=', 'دائم')->whereNotIn('status', ['منتهي', 'معلق'])->get();
         foreach ($projects as $project) {
             $project['photo_url'] = asset(Storage::url($project['photo']));
             $percentage = ($project['current_amount'] / $project['total_amount']) * 100.0;
@@ -94,7 +95,7 @@ class ProjectController extends Controller
 
     public function emergencyProjects()
     {
-        $projects = Project::where('priority', 'حرج')->where('duration_type', '!=', 'تطوعي')->where('duration_type', '!=', 'دائم')->where('status', '!=', 'منتهي')->get();
+        $projects = Project::where('priority', 'حرج')->where('duration_type', '!=', 'تطوعي')->where('duration_type', '!=', 'دائم')->whereNotIn('status', ['منتهي', 'معلق'])->get();
         foreach ($projects as $project) {
             $project['photo_url'] = asset(Storage::url($project['photo']));
             $percentage = ($project['current_amount'] / $project['total_amount']) * 100.0;
@@ -312,6 +313,49 @@ class ProjectController extends Controller
         return response()->json(null, 204);
     }
 
+
+
+    public function changeProjectStatus(Request $request)
+    {
+        $request->validate([
+            'project_id' => 'required|exists:projects,id',
+            'status'     => 'required|in:جاري,معلق',
+        ]);
+
+        $project = Project::find($request->project_id);
+        $oldStatus = $project->status;  // نحتفظ بالحالة القديمة
+        $project->status = $request->status;
+        $project->save();
+
+        // جلب المستخدمين الذين تبرعوا لهذا المشروع
+        $donorIds = Donation::where('project_id', $project->id)
+                            ->distinct()
+                            ->pluck('user_id');
+
+        // إرسال إشعارات حسب الحالة الجديدة
+        foreach ($donorIds as $userId) {
+            if ($request->status === 'معلق') {
+                Notification::create([
+                    'user_id' => $userId,
+                    'title'   => 'تعليق المشروع مؤقتاً',
+                    'message' => "نود إعلامكم بأنه تم تعليق المشروع '{$project->name}' لفترة قصيرة، وسيعود لاستقبال التبرعات قريباً.",
+                    'is_read' => false,
+                ]);
+            } elseif ($request->status === 'جاري' && $oldStatus === 'معلق') {
+                Notification::create([
+                    'user_id' => $userId,
+                    'title'   => 'إعادة تفعيل المشروع',
+                    'message' => "تمت إعادة تفعيل المشروع '{$project->name}' وهو الآن يستقبل التبرعات مجدداً. نشكركم على دعمكم!",
+                    'is_read' => false,
+                ]);
+            }
+        }
+
+        return response()->json(['message' => 'تم تحديث حالة المشروع بنجاح.'], 200);
+    }
+
+
+   
     //ارجاع المشاريع التطوع حسب التايب
     public function getVolunteerProjectsByType($volunteeringDomain)
     {
