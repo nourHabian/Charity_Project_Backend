@@ -23,6 +23,8 @@ class DatabaseSeeder extends Seeder
             AdminSeeder::class,
             SupplySeeder::class,
             VolunteerRequestsSeeder::class,
+            BeneficiaryRequestsSeeder::class,
+            
         ]);
     }
 }

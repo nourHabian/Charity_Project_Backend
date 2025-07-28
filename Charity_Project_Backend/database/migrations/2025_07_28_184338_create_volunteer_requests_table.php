@@ -12,8 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('volunteer_requests', function (Blueprint $table) {
+
             $table->id();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->string('full_name');
             $table->string('phone_number');
             $table->enum('gender', ['ذكر', 'أنثى']);
             $table->integer('age');

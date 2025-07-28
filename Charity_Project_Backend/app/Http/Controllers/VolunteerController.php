@@ -40,10 +40,10 @@ class VolunteerController extends Controller
         $user->save();
         $validatedData['volunteer_status'] = 'معلق';
         $validatedData['user_id'] = $user->id;
+        $validatedData['full_name'] = $user->full_name;
         VolunteerRequest::create($validatedData);
 
 
-        $validatedData['full_name'] = $user->full_name;
         $notification = [
             'user_id' => $user->id,
             'title' => 'تم استلام طلب التطوع',

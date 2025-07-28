@@ -187,6 +187,8 @@ Route::middleware('isAdmin')->group(function () {
     Route::get('/statistics', [AdminController::class, 'getStatistics']);
 
     Route::get('/getProjectsByType/{typeName}', [AdminController::class, 'getProjectsByType']);
+    Route::get('/getProjectsByFilters', [AdminController::class, 'getProjectsByFilters']);
+
     Route::get('/getVolunteerRequestsByStatus/{status}', [AdminController::class, 'getVolunteerRequestsByStatus']);
 
     Route::get('/filterVolunteersByBan/{banned}', [AdminController::class, 'filterVolunteersByBan']);

@@ -139,8 +139,9 @@ class VolunteerRequestsSeeder extends Seeder
         ];
 
         foreach ($requests as $request) {
-            VolunteerRequest::create($request);
             $user = User::find($request['user_id']);
+            $request['full_name'] = $user->full_name;
+            VolunteerRequest::create($request);
 
             if ($user) {
                 $user->update([
