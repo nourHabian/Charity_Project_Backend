@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Storage;
 use Mockery\Matcher\Not;
 use PHPUnit\Framework\TestStatus\Notice;
 
@@ -813,7 +814,7 @@ class AdminController extends Controller
         $validated = $request->validate([
             'status' => ['required', 'string', Rule::in(['جاري', 'معلق', 'منتهي', 'محذوف'])],
             'priority' => ['required', 'string', Rule::in(['منخفض', 'متوسط', 'مرتفع', 'حرج', 'الكل'])],
-            'type' => ['required', 'string', Rule::in(['صحي', 'تعليمي', 'سكني', 'ديني', 'غذائي', 'ميداني', 'عن بعد'])],
+            'type' => ['required', 'string', Rule::in(['الكل', 'صحي', 'تعليمي', 'سكني', 'ديني', 'غذائي', 'ميداني', 'عن بعد'])],
             'duration_type' => ['required', 'string', Rule::in(['الكل', 'مؤقت', 'دائم', 'فردي', 'تطوعي'])],
         ]);
         $projects = Project::query()
@@ -836,6 +837,9 @@ class AdminController extends Controller
 
             ->get();
 
+        foreach ($projects as $project) {
+            $project['photo_url'] = asset(Storage::url($project->photo));
+        }
         return response()->json($projects);
     }
 }
