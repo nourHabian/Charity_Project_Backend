@@ -165,7 +165,7 @@ class BeneficiaryRequestController extends Controller
 
         if ($lastRequest) {
             $daysSinceLast = now()->diffInDays($lastRequest->created_at);
-            if ($daysSinceLast < -1) {
+            if ($daysSinceLast < 20) {
                 return response()->json([
                     'message' => 'لا يمكنك تقديم طلب جديد قبل مرور 20 يوم على آخر طلب تم تقديمه.',
                     'days_remaining' => 20 - $daysSinceLast
