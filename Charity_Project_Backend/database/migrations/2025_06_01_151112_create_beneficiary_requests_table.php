@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('beneficiary_requests - 2025_06_01_151112_create_beneficiary_requests_table.php:14', function (Blueprint $table) {
+        Schema::create('beneficiary_requests', function (Blueprint $table) {
             $table->id();
             $table->string('full_name');
             $table->string('phone_number');
