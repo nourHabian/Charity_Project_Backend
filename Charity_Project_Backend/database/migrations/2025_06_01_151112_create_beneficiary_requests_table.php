@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('beneficiary_requests', function (Blueprint $table) {
             $table->id();
             $table->string('full_name');
-            $table->string('phone_number')->unique();
+            $table->string('phone_number');
             $table->enum('gender', ['ذكر', 'أنثى']);
             $table->integer('age');
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();

@@ -16,10 +16,11 @@ class CharitySeeder extends Seeder
         $charity = [
             'number_of_donations' => 0,
             'number_of_beneficiaries' => 0,
-            'health_projects_balance' => 0,
-            'educational_projects_balance' => 0,
-            'nutritional_projects_balance' => 0,
-            'housing_projects_balance' => 0
+            'health_projects_balance' => 100000000,
+            'educational_projects_balance' => 100000000,
+            'nutritional_projects_balance' => 100000000,
+            'housing_projects_balance' => 100000000,
+            'religious_projects_balance' => 100000000,
         ];
         Charity::create($charity);
     }

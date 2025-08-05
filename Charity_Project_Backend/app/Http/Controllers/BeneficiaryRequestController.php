@@ -142,6 +142,13 @@ class BeneficiaryRequestController extends Controller
             unset($validatedData['document']);
         }
 
+        $notification = [
+            'user_id' => $user->id,
+            'title' => 'متابعة طلب المساعدة',
+            'message' => 'تم إرسال طلب مساعدتك بنجاح، سيتم مراجعتها وإعلامك بالتحديثات بأقرب وقت، شكراً لثقتك بنا'
+        ];
+        Notification::create($notification);
+
         $requestRecord = BeneficiaryRequest::create($validatedData);
         return response()->json([
             'message' => 'تم إرسال طلب المساعدة الصحية بنجاح',
@@ -177,6 +184,12 @@ class BeneficiaryRequestController extends Controller
             $validatedData['document_path'] = $path;
             unset($validatedData['document']);
         }
+        $notification = [
+            'user_id' => $user->id,
+            'title' => 'متابعة طلب المساعدة',
+            'message' => 'تم إرسال طلب مساعدتك بنجاح، سيتم مراجعتها وإعلامك بالتحديثات بأقرب وقت، شكراً لثقتك بنا'
+        ];
+        Notification::create($notification);
 
         $requestRecord = BeneficiaryRequest::create($validatedData);
         return response()->json([
@@ -209,6 +222,14 @@ class BeneficiaryRequestController extends Controller
         unset($validatedData['needed_food_help']);
         $requestRecord = BeneficiaryRequest::create($validatedData);  
         $supplyIds = Supply::whereIn('name', $request->needed_food_help)->pluck('id')->toArray();     
+        
+        $notification = [
+            'user_id' => $user->id,
+            'title' => 'متابعة طلب المساعدة',
+            'message' => 'تم إرسال طلب مساعدتك بنجاح، سيتم مراجعتها وإعلامك بالتحديثات بأقرب وقت، شكراً لثقتك بنا'
+        ];
+        Notification::create($notification);
+
         $requestRecord->supplies()->attach($supplyIds);
         return response()->json([
             'message' => 'تم إرسال طلب المساعدة الغذائية بنجاح',
@@ -240,6 +261,14 @@ class BeneficiaryRequestController extends Controller
         unset($validatedData['needed_educational_help']);
         $requestRecord = BeneficiaryRequest::create($validatedData);  
         $supplyIds = Supply::whereIn('name', $request->needed_educational_help)->pluck('id')->toArray();     
+        
+        $notification = [
+            'user_id' => $user->id,
+            'title' => 'متابعة طلب المساعدة',
+            'message' => 'تم إرسال طلب مساعدتك بنجاح، سيتم مراجعتها وإعلامك بالتحديثات بأقرب وقت، شكراً لثقتك بنا'
+        ];
+        Notification::create($notification);
+        
         $requestRecord->supplies()->attach($supplyIds);
         return response()->json([
             'message' => 'تم إرسال طلب المساعدة التعليمية بنجاح',

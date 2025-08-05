@@ -155,6 +155,7 @@ Route::middleware('isAdmin')->group(function () {
     Route::post('/admin/addBeneficiaryProject', [ProjectController::class, 'addBeneficiaryProject']);
     Route::post('/admin/addVolunteerProject', [ProjectController::class, 'addVolunteerProject']);
     Route::delete('/admin/deleteProject', [ProjectController::class, 'deleteProject']);
+    Route::post('/admin/changeProjectStatus', [ProjectController::class, 'changeProjectStatus']);
 
 
     // donation management
@@ -186,6 +187,8 @@ Route::middleware('isAdmin')->group(function () {
     Route::get('/statistics', [AdminController::class, 'getStatistics']);
 
     Route::get('/getProjectsByType/{typeName}', [AdminController::class, 'getProjectsByType']);
+    Route::get('/getProjectsByFilters', [AdminController::class, 'getProjectsByFilters']);
+
     Route::get('/getVolunteerRequestsByStatus/{status}', [AdminController::class, 'getVolunteerRequestsByStatus']);
 
     Route::get('/filterVolunteersByBan/{banned}', [AdminController::class, 'filterVolunteersByBan']);
@@ -225,7 +228,7 @@ Route::middleware('isAdmin')->group(function () {
 - عرض كل المشاريع مع فلترة حسب نوعها
 - عرض كل طلبات التطوع (مع فلترة مقبول، مرفوض، معلق )
 - عرض كل المتطوعين (مع فلترة محظور، مو محظور)
-- عرض كل طلبات المحتاجين (اول شي فلترة حسب صحي تعليمي سكني غذائي وبعدها فلترة مقبول مرفوض قيد الدراسة)
+- عرض كل طلبات المحتاجين (اول شي فلترة حسب صحي تعليمي سكني غذائي وبعدها فلترة مقبول مرفوض معلق)
 - عرض كل المحتاجين مع فلترة (محظور - مو محظور)
 - عرض الهدايا الواصلة للمحتاجين (مع فلترة تم التسليم ولم يتم التسليم)
 - عرض الفيدباكات مع فلترة (مرفوض مقبول قيد الدراسة)

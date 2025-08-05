@@ -62,7 +62,7 @@ class UserSeeder extends Seeder
         User::create([
             'full_name' => 'heba',
             'email' => 'heba@gmail.com',
-            'phone_number' => '1234567893',
+            'phone_number' => '0966871652',
             'password' => Hash::make(12345678),
             'verification_code' => '1111',
             'verified' => true,
@@ -123,6 +123,33 @@ class UserSeeder extends Seeder
             'verified' => true,
             'role' => 'متبرع',
             'points' => 0,
+        ]);
+          User::create([
+            'full_name' => 'ali',
+            'email' => 'ali@gmail.com',
+            'phone_number' => '0987654321',
+            'password' => Hash::make(12345678),
+            'verification_code' => '1111',
+            'verified' => true,
+            'role' => 'مستفيد',
+        ]);
+          User::create([
+            'full_name' => 'omar',
+            'email' => 'omar@gmail.com',
+            'phone_number' => '0912345678',
+            'password' => Hash::make(12345678),
+            'verification_code' => '1111',
+            'verified' => true,
+            'role' => 'مستفيد',
+        ]);
+          User::create([
+            'full_name' => 'dana',
+            'email' => 'dana@gmail.com',
+            'phone_number' => '0966871655',
+            'password' => Hash::make(12345678),
+            'verification_code' => '1111',
+            'verified' => true,
+            'role' => 'مستفيد',
         ]);
     }
 }
