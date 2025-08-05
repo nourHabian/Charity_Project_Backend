@@ -35,7 +35,8 @@ class BeneficiaryFoodRequest extends FormRequest
             'monthly_income' => 'required|numeric|min:0',
             'current_job' => 'required|string|max:100',
             'monthly_income_source' => ['required', 'string', Rule::in(['لا يوجد دخل', 'راتب تقاعدي', 'مساعدات من أقارب', 'مساعدات من جمعيات', 'عمل'])],
-
+            
+            'number_of_needy' => 'required|integer|min:1|max:20',
             'needed_food_help' => ['required', 'array', 'min:1'],
             'needed_food_help.*' => ['required', 'string', 'exists:supplies,name'],
             'description' => 'required|string|max:1000',

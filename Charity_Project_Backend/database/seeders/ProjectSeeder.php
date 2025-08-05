@@ -488,6 +488,7 @@ class ProjectSeeder extends Seeder
                     'description' => 'بعد تقييم دقيق وشامل لحالة الطفلة الصحية والسمعية، تم اتخاذ القرار الطبي بزراعة القوقعة كحل علاجي فعّال. تأتي هذه الخطوة لتفتح آفاقاً جديدة أمام الطفلة لاستعادة حاسة السمع، وتحسين مهارات النطق والتواصل، بما يضمن دمجها بشكل سلس في بيئتها التعليمية والاجتماعية، ويمهد لمستقبل أفضل.',
                     'photo' => 'completed_project_images/زراعة_قوقعة_اذنية.png',
                     'priority' => 'مرتفع',
+                    'current_amount' => 10000,
                     'total_amount' => 10000,
                     'status' => 'منتهي'
 
@@ -498,6 +499,7 @@ class ProjectSeeder extends Seeder
                     'description' => 'نجحت العملية بفضل الله، وبفضل الدعم الكريم من كل من تبرع وساهم في إنجاحها. تم تقديم الرعاية اللازمة لمتابعة تعافي الطفل وتحسين جودة حياته، مع متابعة طبية دقيقة لضمان استقرار حالته الصحية.',
                     'photo' => 'completed_project_images/زراعة_قلب_لطفل.jpg',
                     'priority' => 'حرج',
+                    'current_amount' => 25000,
                     'total_amount' => 25000,
                     'status' => 'منتهي'
                ],
@@ -512,6 +514,7 @@ class ProjectSeeder extends Seeder
                     'photo' => $project['photo'],
                     'priority' => $project['priority'],
                     'total_amount' => $project['total_amount'],
+                    'current_amount' => $project['current_amount'],
                     'status' => $project['status'],
         
                ]);

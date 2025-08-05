@@ -693,7 +693,7 @@ class AdminController extends Controller
     // فلترة هدايا
     public function getFilteredGiftDelivered($delivered)
     {
-        $query = Donation::where('type', 'gift');
+        $query = Donation::where('type', 'هدية');
 
         if (!is_null($delivered)) {
             if ($delivered === 'true') {
@@ -711,6 +711,7 @@ class AdminController extends Controller
 
         $filtered = $donations->map(function ($donation) {
             return [
+                'id'               => $donation->id,
                 'recipient_name'   => $donation->recipient_name,
                 'recipient_number' => $donation->recipient_number,
                 'amount'           => $donation->amount,
@@ -744,7 +745,7 @@ class AdminController extends Controller
             $query->where('status', $status);
         }
 
-        $feedbacks = $query->get(['user_name', 'message', 'status', 'created_at']);
+        $feedbacks = $query->get(['id', 'user_name', 'message', 'status', 'created_at']);
 
         return response()->json($feedbacks, 200);
     }

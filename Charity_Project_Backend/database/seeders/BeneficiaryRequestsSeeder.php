@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\BeneficiaryRequest;
+use App\Models\RequestedSupply;
+use App\Models\Supply;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -78,17 +80,16 @@ class BeneficiaryRequestsSeeder extends Seeder
                 'gender' => 'ذكر',
                 'age' => 19,
                 'marital_status' => 'أعزب',
-                'number_of_kids' => 0,
+                'number_of_kids' => 2,
                 'governorate' => 'حلب',
-                'kids_description' => null,
+                'kids_description' => 'طفلان أحدهما في الابتدائي والآخر ثانوي',
                 'home_address' => 'حي الحمدانية، حلب',
                 'monthly_income' => 0,
-                'current_job' => 'طالب جامعي',
+                'current_job' => 'لا يوجد',
                 'monthly_income_source' => 'لا يوجد',
                 'number_of_needy' => 1,
                 'expected_cost' => 300000,
                 'description' => 'مصاريف جامعة (أقساط ومستلزمات دراسية)',
-                'severity_level' => 'متوسط',
                 'document_path' => null,
                 'current_housing_condition' => 'ملك',
                 'needed_housing_help' => null,
@@ -112,7 +113,6 @@ class BeneficiaryRequestsSeeder extends Seeder
                 'number_of_needy' => 1,
                 'expected_cost' => 300000,
                 'description' => 'مصاريف جامعة (أقساط ومستلزمات دراسية)',
-                'severity_level' => 'متوسط',
                 'document_path' => null,
                 'current_housing_condition' => 'أجار',
                 'needed_housing_help' => null,
@@ -143,7 +143,6 @@ class BeneficiaryRequestsSeeder extends Seeder
                 'number_of_needy' => 3,
                 'expected_cost' => 500000,
                 'description' => 'مساعدة إيجار منزل',
-                'severity_level' => 'متوسط',
                 'document_path' => null,
                 'current_housing_condition' => 'أجار',
                 'needed_housing_help' => 'تأمين سكن',
@@ -170,7 +169,6 @@ class BeneficiaryRequestsSeeder extends Seeder
                 'number_of_needy' => 3,
                 'expected_cost' => 500000,
                 'description' => 'مساعدة إيجار منزل',
-                'severity_level' => 'متوسط',
                 'document_path' => null,
                 'current_housing_condition' => 'ملك',
                 'needed_housing_help' => 'تأمين سكن',
@@ -195,7 +193,6 @@ class BeneficiaryRequestsSeeder extends Seeder
                 'number_of_needy' => 5,
                 'expected_cost' => 700000,
                 'description' => 'دفع إيجار منزل وتكاليف تجهيزات أساسية',
-                'severity_level' => 'مرتفع',
                 'document_path' => null,
                 'current_housing_condition' => 'أجار',
                 'needed_housing_help' => 'تأمين سكن',
@@ -220,7 +217,6 @@ class BeneficiaryRequestsSeeder extends Seeder
                 'number_of_needy' => 8,
                 'expected_cost' => 400000,
                 'description' => 'حاجة ماسة لسلة غذائية تكفي لشهرين',
-                'severity_level' => 'حرج',
                 'document_path' => null,
                 'current_housing_condition' => 'ملك',
                 'needed_housing_help' => null,
@@ -245,7 +241,6 @@ class BeneficiaryRequestsSeeder extends Seeder
                 'number_of_needy' => 8,
                 'expected_cost' => 400000,
                 'description' => 'حاجة ماسة لسلة غذائية تكفي لشهرين',
-                'severity_level' => 'حرج',
                 'document_path' => null,
                 'current_housing_condition' => 'ملك',
                 'needed_housing_help' => null,
@@ -258,8 +253,6 @@ class BeneficiaryRequestsSeeder extends Seeder
 
 
         ];
-
-
 
         foreach ($beneficiaryRequests as  $beneficiaryRequest) {
             BeneficiaryRequest::create([
@@ -285,8 +278,32 @@ class BeneficiaryRequestsSeeder extends Seeder
                 'current_housing_condition' => $beneficiaryRequest['current_housing_condition'],
                 'needed_housing_help' => $beneficiaryRequest['needed_housing_help'],
                 'status' => $beneficiaryRequest['status'],
-
             ]);
         }
+
+        RequestedSupply::create([
+            'beneficiary_request_id' => 3,
+            'supply_id' => 3
+        ]);
+        RequestedSupply::create([
+            'beneficiary_request_id' => 3,
+            'supply_id' => 5
+        ]);
+        RequestedSupply::create([
+            'beneficiary_request_id' => 4,
+            'supply_id' => 4
+        ]);
+        RequestedSupply::create([
+            'beneficiary_request_id' => 8,
+            'supply_id' => 1
+        ]);
+        RequestedSupply::create([
+            'beneficiary_request_id' => 8,
+            'supply_id' => 2
+        ]);
+        RequestedSupply::create([
+            'beneficiary_request_id' => 9,
+            'supply_id' => 1
+        ]);
     }
 }

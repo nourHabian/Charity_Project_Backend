@@ -98,7 +98,7 @@ class VolunteerRequestsSeeder extends Seeder
                 'your_studying_domain' => "هندسة معلوماتية",
                 'volunteering_hours' => 5,
                 'purpose_of_volunteering' => "مساعدة المحتاجين عن طريق التبرع بوقتي لخدمتهم",
-                'volunteer_status' => "معلق"
+                'volunteer_status' => "مرفوض"
             ],
             [
                 'user_id' => 9,
@@ -110,7 +110,7 @@ class VolunteerRequestsSeeder extends Seeder
                 'your_studying_domain' => "هندسة معلوماتية",
                 'volunteering_hours' => 5,
                 'purpose_of_volunteering' => "مساعدة المحتاجين عن طريق التبرع بوقتي لخدمتهم",
-                'volunteer_status' => "مقبول"
+                'volunteer_status' => "معلق"
             ],
             [
                 'user_id' => 10,
@@ -134,7 +134,7 @@ class VolunteerRequestsSeeder extends Seeder
                 'your_studying_domain' => "هندسة معلوماتية",
                 'volunteering_hours' => 5,
                 'purpose_of_volunteering' => "مساعدة المحتاجين عن طريق التبرع بوقتي لخدمتهم",
-                'volunteer_status' => "مرفوض"
+                'volunteer_status' => "مقبول"
             ],
         ];
 
