@@ -197,17 +197,21 @@ Route::middleware('isAdmin')->group(function () {
 });
 
 
-
-
+// ******************************** SUPER ADMIN APIS ********************************
 
 
 
 Route::post('/superAdmin/login', [AdminController::class, 'superAdminLogin']);
 
 Route::middleware('isSuperAdmin')->group(function () {
-
     // logout
     Route::post('/superAdmin/logout', [AdminController::class, 'superAdminLogout']);
+    // add new admin
+    Route::post('/superAdmin/addAdmin', [AdminController::class, 'addAdmin']);
+    // block an admin
+    Route::post('/superAdmin/blockAdmin', [AdminController::class, 'blockAdmin']);
+    // get filtered admins (blocked / unblocked)
+    Route::get('/superAdmin/filterAdminsByBan/{banned}', [AdminController::class, 'filterAdminsByBan']);
 });
 
 

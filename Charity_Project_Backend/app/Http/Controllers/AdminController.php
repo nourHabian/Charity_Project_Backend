@@ -15,6 +15,7 @@ use App\Models\Volunteer;
 use App\Models\VolunteerRequest;
 use Carbon\Carbon;
 use GuzzleHttp\Handler\Proxy;
+use GuzzleHttp\Promise\Create;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -42,37 +43,13 @@ class AdminController extends Controller
             ], 401);
         }
 
+        if ($admin->deleted) {
+            return response()->json(['message' => 'this account was deleted by super admin'], 401);
+        }
         $token = $admin->createToken('admin_token')->plainTextToken;
 
         return response()->json([
             'message' => 'Admin login successful',
-            'admin'   => $admin,
-            'token'   => $token,
-        ]);
-    }
-
-    public function superAdminLogin(Request $request) {
-        $credentials = $request->validate([
-            'email'    => ['required', 'email'],
-            'password' => ['required'],
-        ]);
-
-        $admin = Admin::where('email', $credentials['email'])->first();
-
-        if (!$admin || !Hash::check($credentials['password'], $admin->password)) {
-            return response()->json([
-                'message' => 'Invalid email or password',
-            ], 401);
-        }
-
-        if (!$admin->is_super_admin) {
-            return response()->json(['message' => 'Unauthorized: super admin access only'], 403);
-        }
-
-        $token = $admin->createToken('admin_token')->plainTextToken;
-
-        return response()->json([
-            'message' => 'Super Admin login successful',
             'admin'   => $admin,
             'token'   => $token,
         ]);
@@ -87,17 +64,6 @@ class AdminController extends Controller
         }
 
         return response()->json(['message' => 'Admin Logout successful']);
-    }
-
-    public function superAdminLogout(Request $request)
-    {
-        $admin = Auth::guard('admin')->user();
-
-        if ($admin && $admin->currentAccessToken()) {
-            $admin->currentAccessToken()->delete();
-        }
-
-        return response()->json(['message' => 'Super Admin Logout successful']);
     }
 
     public function monthlyDonations()
@@ -726,8 +692,6 @@ class AdminController extends Controller
     }
 
 
-
-
     // فلترة هدايا
     public function getFilteredGiftDelivered($delivered)
     {
@@ -761,8 +725,6 @@ class AdminController extends Controller
 
         return response()->json($filtered);
     }
-
-
 
 
 
@@ -880,5 +842,105 @@ class AdminController extends Controller
             $project['photo_url'] = asset(Storage::url($project->photo));
         }
         return response()->json($projects);
+    }
+
+
+    // ***************** SUPER ADMIN FUNCTIONS
+
+    public function superAdminLogin(Request $request)
+    {
+        $credentials = $request->validate([
+            'email'    => ['required', 'email'],
+            'password' => ['required'],
+        ]);
+
+        $admin = Admin::where('email', $credentials['email'])->first();
+
+        if (!$admin || !Hash::check($credentials['password'], $admin->password)) {
+            return response()->json([
+                'message' => 'Invalid email or password',
+            ], 401);
+        }
+
+        if (!$admin->is_super_admin) {
+            return response()->json(['message' => 'Unauthorized: super admin access only'], 403);
+        }
+
+        $token = $admin->createToken('admin_token')->plainTextToken;
+
+        return response()->json([
+            'message' => 'Super Admin login successful',
+            'admin'   => $admin,
+            'token'   => $token,
+        ]);
+    }
+
+    public function superAdminLogout(Request $request)
+    {
+        $admin = Auth::guard('admin')->user();
+
+        if ($admin && $admin->currentAccessToken()) {
+            $admin->currentAccessToken()->delete();
+        }
+
+        return response()->json(['message' => 'Super Admin Logout successful']);
+    }
+
+    public function addAdmin(Request $request)
+    {
+        $validated = $request->validate([
+            'full_name' => 'required|string|max:40',
+            'email' => 'required|string|email|unique:admins,email|max:40',
+            'password' => 'required|string|min:5|confirmed',
+        ]);
+        $admin = Admin::create([
+            'full_name' => $validated['full_name'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
+        ]);
+        return response()->json($admin, 201);
+    }
+
+    public function blockAdmin(Request $request)
+    {
+        $validate = $request->validate([
+            'id' => 'required|exists:admins,id',
+        ]);
+
+        $admin = Admin::where('id', $request->id)->first();
+        // في غلط ف المستخدم مو موجود
+        if (is_null($admin)) {
+            return response()->json(['message' => 'حدث خطأ أثناء محاولة الوصول إلى الأدمن، يرجى المحاولة لاحقاً'], 400);
+        }
+        // اذا كان حاظرو من قبل
+        if ($admin->deleted) {
+            return response()->json(['message' => 'لقد قمت بحظر هذا الأدمن من قبل'], 400);
+        }
+        if ($admin->is_super_admin) {
+            return response()->json(['message' => 'لا يمكن حظر السوبر أدمن'], 400);
+        }
+        // حظر الأدمن
+        $admin->deleted = true;
+        $admin->save();
+        return response()->json(['message' => 'تم حظر هذا الأدمن بنجاح'], 200);
+    }
+
+    public function filterAdminsByBan($banned)
+    {
+        if ($banned === 'true') {
+            $isBanned = true;
+        } elseif ($banned === 'false') {
+            $isBanned = false;
+        } else {
+            return response()->json([
+                'error' => 'قيمة غير صحيحة للحقل banned، استخدم true أو false فقط.'
+            ], 400);
+        }
+
+        $admins = Admin::where('is_super_admin', false)
+            ->where('deleted', $isBanned)
+            ->get();
+
+        return response()->json($admins, 200);
     }
 }

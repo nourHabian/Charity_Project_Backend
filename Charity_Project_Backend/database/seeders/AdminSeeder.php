@@ -15,6 +15,12 @@ class AdminSeeder extends Seeder
   public function run(): void
   {
     Admin::create([
+      'full_name' => 'SuperAdmin',
+      'email' => 'SuperAdmin@gmail.com',
+      'password' => Hash::make(12345678),
+      'is_super_admin' => true,
+    ]);
+    Admin::create([
       'full_name' => 'Admin_01',
       'email' => 'Admin_01@gmail.com',
       'password' => Hash::make(12345678),
@@ -28,12 +34,7 @@ class AdminSeeder extends Seeder
       'full_name' => 'Admin_03',
       'email' => 'Admin_03@gmail.com',
       'password' => Hash::make(12345678),
-    ]);
-    Admin::create([
-      'full_name' => 'SuperAdmin',
-      'email' => 'SuperAdmin@gmail.com',
-      'password' => Hash::make(12345678),
-      'is_super_admin' => true,
+      'deleted' => true,
     ]);
   }
 }

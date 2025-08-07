@@ -16,10 +16,12 @@ class IsAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!Auth::guard('admin')->check()) {
-            return response()->json([
-                'message' => 'Unauthorized: Admin access only.'
-            ], 401);
+        $admin = Auth::guard('admin')->user();
+        if (!$admin) {
+            return response()->json(['message' => 'Unauthorized: Admin access only.'], 401);
+        }
+        if ($admin->deleted) {
+            return response()->json(['message' => 'Unauthorized: This account is deleted by super admin.'], 401);
         }
         return $next($request);
     }
