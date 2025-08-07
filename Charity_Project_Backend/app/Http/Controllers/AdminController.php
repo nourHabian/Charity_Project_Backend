@@ -925,6 +925,30 @@ class AdminController extends Controller
         return response()->json(['message' => 'تم حظر هذا الأدمن بنجاح'], 200);
     }
 
+    public function unblockAdmin(Request $request)
+    {
+        $validate = $request->validate([
+            'id' => 'required|exists:admins,id',
+        ]);
+
+        $admin = Admin::where('id', $request->id)->first();
+        // في غلط ف المستخدم مو موجود
+        if (is_null($admin)) {
+            return response()->json(['message' => 'حدث خطأ أثناء محاولة الوصول إلى الأدمن، يرجى المحاولة لاحقاً'], 400);
+        }
+        // اذا ما كان حاظرو من قبل
+        if (!$admin->deleted) {
+            return response()->json(['message' => 'هذا الأدمن غير محظور مسبقاً'], 400);
+        }
+        if ($admin->is_super_admin) {
+            return response()->json(['message' => 'لا يمكن حظر أو فك حظر السوبر أدمن'], 400);
+        }
+        // فك حظر الأدمن
+        $admin->deleted = false;
+        $admin->save();
+        return response()->json(['message' => 'تم فك حظر هذا الأدمن بنجاح'], 200);
+    }
+
     public function filterAdminsByBan($banned)
     {
         if ($banned === 'true') {

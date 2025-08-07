@@ -210,6 +210,8 @@ Route::middleware('isSuperAdmin')->group(function () {
     Route::post('/superAdmin/addAdmin', [AdminController::class, 'addAdmin']);
     // block an admin
     Route::post('/superAdmin/blockAdmin', [AdminController::class, 'blockAdmin']);
+    // unblock an admin
+    Route::post('/superAdmin/unblockAdmin', [AdminController::class, 'unblockAdmin']);
     // get filtered admins (blocked / unblocked)
     Route::get('/superAdmin/filterAdminsByBan/{banned}', [AdminController::class, 'filterAdminsByBan']);
 });
