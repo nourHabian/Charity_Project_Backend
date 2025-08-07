@@ -22,6 +22,5 @@ class IsAdmin
             ], 401);
         }
         return $next($request);
-   
     }
 }

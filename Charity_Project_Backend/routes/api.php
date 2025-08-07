@@ -157,7 +157,6 @@ Route::middleware('isAdmin')->group(function () {
     Route::delete('/admin/deleteProject', [ProjectController::class, 'deleteProject']);
     Route::post('/admin/changeProjectStatus', [ProjectController::class, 'changeProjectStatus']);
 
-
     // donation management
     Route::post('/admin/doAllMonthlyDonations', [AdminController::class, 'monthlyDonations']);
     Route::post('/admin/donateToProject', [AdminController::class, 'donateToProject']);
@@ -175,14 +174,9 @@ Route::middleware('isAdmin')->group(function () {
     Route::post('/admin/banBeneficiary', [AdminController::class, 'banBeneficiary']);
     Route::post('/admin/unblockBeneficiary', [AdminController::class, 'unblockBeneficiary']);
 
-
     Route::post('/admin/giftDelivered', [AdminController::class, 'giftDelivered']);
     Route::post('/admin/acceptFeedback', [AdminController::class, 'acceptFeedback']);
     Route::post('/admin/rejectFeedback', [AdminController::class, 'rejectFeedback']);
-
-
-
-
 
     Route::get('/statistics', [AdminController::class, 'getStatistics']);
 
@@ -193,12 +187,7 @@ Route::middleware('isAdmin')->group(function () {
 
     Route::get('/filterVolunteersByBan/{banned}', [AdminController::class, 'filterVolunteersByBan']);
 
-
-
-
-
     Route::get('/filterBeneficiaryByBan/{banned}', [AdminController::class, 'filterBeneficiaryByBan']);
-
 
     Route::get('/getFilteredBeneficiaryRequests/{type}/{status}', [AdminController::class, 'getFilteredBeneficiaryRequests']);
     Route::get('/getFilteredGiftDelivered/{delivered}', [AdminController::class, 'getFilteredGiftDelivered']);
@@ -213,7 +202,13 @@ Route::middleware('isAdmin')->group(function () {
 
 
 
+Route::post('/superAdmin/login', [AdminController::class, 'superAdminLogin']);
 
+Route::middleware('isSuperAdmin')->group(function () {
+
+    // logout
+    Route::post('/superAdmin/logout', [AdminController::class, 'superAdminLogout']);
+});
 
 
 

@@ -51,6 +51,33 @@ class AdminController extends Controller
         ]);
     }
 
+    public function superAdminLogin(Request $request) {
+        $credentials = $request->validate([
+            'email'    => ['required', 'email'],
+            'password' => ['required'],
+        ]);
+
+        $admin = Admin::where('email', $credentials['email'])->first();
+
+        if (!$admin || !Hash::check($credentials['password'], $admin->password)) {
+            return response()->json([
+                'message' => 'Invalid email or password',
+            ], 401);
+        }
+
+        if (!$admin->is_super_admin) {
+            return response()->json(['message' => 'Unauthorized: super admin access only'], 403);
+        }
+
+        $token = $admin->createToken('admin_token')->plainTextToken;
+
+        return response()->json([
+            'message' => 'Super Admin login successful',
+            'admin'   => $admin,
+            'token'   => $token,
+        ]);
+    }
+
     public function logoutAdmin(Request $request)
     {
         $admin = Auth::guard('admin')->user();
@@ -60,6 +87,17 @@ class AdminController extends Controller
         }
 
         return response()->json(['message' => 'Admin Logout successful']);
+    }
+
+    public function superAdminLogout(Request $request)
+    {
+        $admin = Auth::guard('admin')->user();
+
+        if ($admin && $admin->currentAccessToken()) {
+            $admin->currentAccessToken()->delete();
+        }
+
+        return response()->json(['message' => 'Super Admin Logout successful']);
     }
 
     public function monthlyDonations()

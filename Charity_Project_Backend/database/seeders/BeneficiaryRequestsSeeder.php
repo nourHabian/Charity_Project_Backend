@@ -254,7 +254,10 @@ class BeneficiaryRequestsSeeder extends Seeder
 
         ];
 
-        foreach ($beneficiaryRequests as  $beneficiaryRequest) {
+        foreach ($beneficiaryRequests as $beneficiaryRequest) {
+            if (!array_key_exists('severity_level', $beneficiaryRequest)) {
+                $beneficiaryRequest['severity_level'] = 'متوسط';
+            }
             BeneficiaryRequest::create([
                 'user_id' => $beneficiaryRequest['user_id'],
                 'type_id' => $beneficiaryRequest['type_id'],
