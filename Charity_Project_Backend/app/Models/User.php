@@ -42,38 +42,48 @@ class User extends Authenticatable
         ];
     }
 
-    public function feedbacks() {
+    public function feedbacks()
+    {
         return $this->hasMany(Feedback::class);
     }
 
-    public function projects() {
+    public function projects()
+    {
         return $this->hasMany(Project::class);
     }
 
-    public function notifications() {
+    public function notifications()
+    {
         return $this->hasMany(Notification::class);
     }
 
-    public function beneficiaryRequests() {
+    public function beneficiaryRequests()
+    {
         return $this->hasMany(BeneficiaryRequest::class);
     }
 
-    public function volunteeryRequests() {
+    public function volunteeryRequests()
+    {
         return $this->hasMany(VolunteerRequest::class);
     }
 
-    public function favouriteProjects() {
+    public function favouriteProjects()
+    {
         return $this->belongsToMany(Project::class, 'favourites')->withTimestamps();
     }
 
-    public function donations() {
+    public function donations()
+    {
         return $this->hasMany(Donation::class);
     }
 
-    public function volunteeredProjects() {
+    public function volunteeredProjects()
+    {
         return $this->belongsToMany(Project::class, 'volunteers')->withTimestamps();
     }
 
-
-    
+    public function volunteers()
+    {
+        return $this->hasMany(Volunteer::class);
+    }
 }

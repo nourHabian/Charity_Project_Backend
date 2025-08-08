@@ -645,6 +645,21 @@ class AdminController extends Controller
 
         $volunteers = $query->get();
 
+        foreach ($volunteers as $volunteer) {
+            if ($volunteer->is_working) {
+                $currentVolunteerRecord = Volunteer::where('user_id', $volunteer->id)
+                    ->with('project')
+                    ->orderBy('created_at', 'desc')
+                    ->first();
+
+                $volunteer['current_project'] = $currentVolunteerRecord
+                    ? $currentVolunteerRecord->project
+                    : null;
+            } else {
+                $volunteer['current_project'] = null;
+            }
+        }
+
         return response()->json($volunteers);
     }
 
