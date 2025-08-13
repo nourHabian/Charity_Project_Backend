@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AdminDonationHistoryController;
 use App\Http\Controllers\BeneficiaryRequestController;
 use App\Http\Controllers\DonationController;
 use App\Http\Controllers\NotificationController;
@@ -9,6 +10,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\VolunteerController;
 use App\Http\Controllers\FavouriteController;
 use App\Http\Controllers\FeedbackController;
+use App\Models\AdminDonationHistory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -214,6 +216,8 @@ Route::middleware('isSuperAdmin')->group(function () {
     Route::post('/superAdmin/unblockAdmin', [AdminController::class, 'unblockAdmin']);
     // get filtered admins (blocked / unblocked)
     Route::get('/superAdmin/filterAdminsByBan/{banned}', [AdminController::class, 'filterAdminsByBan']);
+    // get admins donation history
+    Route::get('/superAdmin/donations', [AdminDonationHistoryController::class, 'getAdminDonations']);
 });
 
 

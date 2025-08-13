@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Admin;
+use App\Models\AdminDonationHistory;
 use App\Models\BeneficiaryRequest;
 use App\Models\Charity;
 use App\Models\Donation;
@@ -151,6 +152,7 @@ class AdminController extends Controller
             'amount' => 'required|numeric|min:1',
             'id' => 'required|exists:projects,id'
         ]);
+        $admin = Auth::guard('admin')->user();
         $id = $request->id;
         $amount = $request->amount;
         $project = Project::findOrFail($id);
@@ -213,6 +215,12 @@ class AdminController extends Controller
             }
         }
         $project->save();
+        $history = [
+            'admin_id' => $admin->id,
+            'project_id' => $project->id,
+            'amount' => min($amount, $remaining),
+        ];
+        AdminDonationHistory::create($history);
         return response()->json(['message' => 'تم التبرع لهذا المشروع بنجاح وسحب مبلغ ' . min($amount, $remaining) . '$ من رصيد الجمعية'], 200);
     }
 
@@ -646,18 +654,9 @@ class AdminController extends Controller
         $volunteers = $query->get();
 
         foreach ($volunteers as $volunteer) {
-            if ($volunteer->is_working) {
-                $currentVolunteerRecord = Volunteer::where('user_id', $volunteer->id)
-                    ->with('project')
-                    ->orderBy('created_at', 'desc')
-                    ->first();
-
-                $volunteer['current_project'] = $currentVolunteerRecord
-                    ? $currentVolunteerRecord->project
-                    : null;
-            } else {
-                $volunteer['current_project'] = null;
-            }
+            $volunteer['phone_number'] = VolunteerRequest::where('user_id', $volunteer->id)
+                ->where('volunteer_status', 'مقبول')
+                ->value('phone_number');
         }
 
         return response()->json($volunteers);
@@ -855,6 +854,20 @@ class AdminController extends Controller
 
         foreach ($projects as $project) {
             $project['photo_url'] = asset(Storage::url($project->photo));
+            if ($project['duration_type'] === 'تطوعي') {
+                $project['volunteers_list'] = $project->users->map(function ($user) {
+                    return [
+                        'id' => $user->id,
+                        'name' => $user->full_name,
+                        'email' => $user->email,
+                        'role' => $user->role,
+                        'volunteer_status' => $user->volunteer_status,
+                        'is_working' => $user->is_working,
+                        'blocked' => $user->ban
+                    ];
+                });
+            }
+            unset($project->users);
         }
         return response()->json($projects);
     }

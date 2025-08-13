@@ -24,7 +24,7 @@ class ProjectSeeder extends Seeder
                     'location' => 'عين ترما',
                     'volunteer_hours' => ' 3 ساعات أسبوعياً ',
                     'total_amount' => '10',
-                    'current_amount' => '0',
+                    'current_amount' => '2',
                     'duration_type' => 'تطوعي',
                     'photo' => 'charity_logo/logo.png',
 
@@ -39,7 +39,7 @@ class ProjectSeeder extends Seeder
                     'location' => 'مركز الرعاية في باب مصلى',
                     'volunteer_hours' => '3 ساعات أسبوعياً ',
                     'total_amount' => '10',
-                    'current_amount' => '0',
+                    'current_amount' => '1',
                     'duration_type' => 'تطوعي',
                     'photo' => 'charity_logo/logo.png',
 

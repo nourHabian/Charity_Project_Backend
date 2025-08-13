@@ -26,7 +26,8 @@ class DatabaseSeeder extends Seeder
             VolunteerRequestsSeeder::class,
             BeneficiaryRequestsSeeder::class,
             DonationSeeder::class,
-            
+            VolunteerSeeder::class, // if this seeder stopped working, the project current_amount should be modified from the projectSeeder
+
         ]);
     }
 }

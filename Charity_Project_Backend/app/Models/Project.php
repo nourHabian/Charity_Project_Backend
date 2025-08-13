@@ -25,7 +25,12 @@ class Project extends Model
 
     public function volunteers()
     {
-        return $this->belongsToMany(User::class, 'volunteers')->withTimestamps();
+        return $this->hasMany(Volunteer::class);
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'volunteers', 'project_id', 'user_id');
     }
 
     public function favouritedByUsers()
