@@ -196,6 +196,9 @@ Route::middleware('isAdmin')->group(function () {
     Route::get('/getFilteredFeedbacks/{status}', [AdminController::class, 'getFilteredFeedbacks']);
     Route::get('/showBeneficiaryRequest', [AdminController::class, 'showBeneficiaryRequest']);
     Route::get('/filterProjectByStatus/{status}', [AdminController::class, 'filterProjectByStatus']);
+    Route::get('/beneficiariesPerYear', [AdminController::class, 'beneficiariesPerYear']);
+
+
 });
 
 
@@ -218,6 +221,9 @@ Route::middleware('isSuperAdmin')->group(function () {
     Route::get('/superAdmin/filterAdminsByBan/{banned}', [AdminController::class, 'filterAdminsByBan']);
     // get admins donation history
     Route::get('/superAdmin/donations', [AdminDonationHistoryController::class, 'getAdminDonations']);
+
+    Route::get('/finishedProjectsPerYear', [AdminController::class, 'finishedProjectsPerYear']);
+
 });
 
 

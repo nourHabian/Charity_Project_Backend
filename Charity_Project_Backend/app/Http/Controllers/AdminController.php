@@ -995,4 +995,57 @@ class AdminController extends Controller
 
         return response()->json($admins, 200);
     }
+
+
+public function beneficiariesPerYear()
+{
+    $years = User::where('role', 'مستفيد')
+        ->where('ban', false)
+        ->pluck('created_at')
+        ->map(fn($date) => $date->format('Y')) 
+        ->unique()    
+        ->sort();
+
+    $data = [];
+
+    foreach ($years as $year) {
+        $count = User::where('role', 'مستفيد')
+            ->where('ban', false)
+            ->whereYear('created_at', $year)
+            ->count();
+
+        $data[] = [
+            'year' => $year,
+            'beneficiaries' => $count,
+        ];
+    }
+
+    return response()->json($data);
+}
+ 
+
+public function finishedProjectsPerYear()
+{
+
+    $years = Project::where('status', 'منتهي')
+        ->pluck('created_at')
+        ->map(fn($date) => $date->format('Y')) 
+        ->unique()    
+        ->sort();
+
+    $data = [];
+
+    foreach ($years as $year) {
+        $count = Project::where('status', 'منتهي')
+            ->whereYear('created_at', $year)
+            ->count();
+
+        $data[] = [
+            'year' => $year,
+            'projects' => $count,
+        ];
+    }
+
+    return response()->json($data);
+}
 }

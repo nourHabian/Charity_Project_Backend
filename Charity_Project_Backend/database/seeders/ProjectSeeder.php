@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Project;
+use Carbon\Carbon;
 use Illuminate\Container\Attributes\Storage as AttributesStorage;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -455,7 +456,7 @@ class ProjectSeeder extends Seeder
                          'نسعى إلى تعزيز القيم الإسلامية في نفوس النشء، ' .
                          'والمساهمة في بناء جيلٍ واعٍ متمسك بدينه وأخلاقه.',
                     'photo' => 'temporary_projects_images/religion_project_001.png',
-                    'total_amount' => 4350
+                    'total_amount' => 4350,
                ],
                [
                     'type_id' => 7,
@@ -465,7 +466,7 @@ class ProjectSeeder extends Seeder
                          'يشمل المشروع طباعة وتوزيع نسخ من القرآن الكريم بأحجام مختلفة، ' .
                          'تأمين كتب التفسير، الحديث، الفقه، والسيرة النبوية.',
                     'photo' => 'temporary_projects_images/religion_project_002.png',
-                    'total_amount' => 2900
+                    'total_amount' => 2900 ,
                ],
                [
                     'type_id' => 7,
@@ -474,7 +475,8 @@ class ProjectSeeder extends Seeder
                          'وذلك من خلال تقديم كفالات مالية شهرية تُعينهم على التفرّغ لطلب العلم، ' .
                          'وتغطي احتياجاتهم الأساسية من سكن، غذاء، ومستلزمات دراسية.',
                     'photo' => 'temporary_projects_images/religion_project_003.png',
-                    'total_amount' => 68300
+                    'total_amount' => 68300,
+                    
                ],
 
 
@@ -490,7 +492,8 @@ class ProjectSeeder extends Seeder
                     'priority' => 'مرتفع',
                     'current_amount' => 10000,
                     'total_amount' => 10000,
-                    'status' => 'منتهي'
+                    'status' => 'منتهي',
+                    'created_at' => Carbon::create(2025, 1, 15, 10, 0, 0),
 
                ],
                [
@@ -501,8 +504,12 @@ class ProjectSeeder extends Seeder
                     'priority' => 'حرج',
                     'current_amount' => 25000,
                     'total_amount' => 25000,
-                    'status' => 'منتهي'
+                    'status' => 'منتهي',
+                   'created_at' => Carbon::create(2021, 1, 15, 10, 0, 0),
+
                ],
+
+               
           ];
 
 
@@ -516,7 +523,8 @@ class ProjectSeeder extends Seeder
                     'total_amount' => $project['total_amount'],
                     'current_amount' => $project['current_amount'],
                     'status' => $project['status'],
-        
+               'created_at' => $project['created_at'],
+
                ]);
           }
 
@@ -571,7 +579,8 @@ class ProjectSeeder extends Seeder
                'photo' => 'charity_logo/logo.png',
                'duration_type' => 'فردي',
                'current_amount' => 100,
-               'total_amount' => 10000
+               'total_amount' => 10000 ,
+
           ]);
      }
 }

@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -58,11 +59,44 @@ class UserSeeder extends Seeder
 
         ]);
 
+        
+        User::create([
+            'full_name' => 'halaa',
+            'email' => 'halaa@gmail.com',
+            'phone_number' => '0966879653',
+            'password' => Hash::make(12345678),
+            'verification_code' => '1111',
+            'verified' => true,
+            'role' => 'مستفيد',
+
+        ]);
+          
+        
+        User::create([
+            'full_name' => 'hala',
+            'email' => 'hala22@gmail.com',
+            'phone_number' => '0966876653',
+            'password' => Hash::make(12345678),
+            'verification_code' => '1111',
+            'verified' => true,
+            'role' => 'مستفيد',
+
+        ]);
 
         User::create([
             'full_name' => 'heba',
             'email' => 'heba@gmail.com',
             'phone_number' => '0966871652',
+            'password' => Hash::make(12345678),
+            'verification_code' => '1111',
+            'verified' => true,
+            'role' => 'مستفيد',
+        ]);
+
+        User::create([
+            'full_name' => 'hebaa',
+            'email' => 'hebaa@gmail.com',
+            'phone_number' => '0966851652',
             'password' => Hash::make(12345678),
             'verification_code' => '1111',
             'verified' => true,
@@ -132,6 +166,7 @@ class UserSeeder extends Seeder
             'verification_code' => '1111',
             'verified' => true,
             'role' => 'مستفيد',
+            'created_at' => Carbon::create(2023, 1, 15, 10, 0, 0),
         ]);
           User::create([
             'full_name' => 'omar',
@@ -141,6 +176,8 @@ class UserSeeder extends Seeder
             'verification_code' => '1111',
             'verified' => true,
             'role' => 'مستفيد',
+            'created_at' => Carbon::create(2023, 1, 15, 10, 0, 0),
+
         ]);
           User::create([
             'full_name' => 'dana',
@@ -150,6 +187,58 @@ class UserSeeder extends Seeder
             'verification_code' => '1111',
             'verified' => true,
             'role' => 'مستفيد',
+            'created_at' => Carbon::create(2023, 1, 15, 10, 0, 0),
+
         ]);
+
+          User::create([
+            'full_name' => 'lolo',
+            'email' => 'lolo@gmail.com',
+            'phone_number' => '0956871655',
+            'password' => Hash::make(12345678),
+            'verification_code' => '1111',
+            'verified' => true,
+            'role' => 'مستفيد',
+            'created_at' => Carbon::create(2024, 1, 15, 10, 0, 0),
+
+        ]);
+
+        
+          User::create([
+            'full_name' => 'lolooo',
+            'email' => 'lolo1@gmail.com',
+            'phone_number' => '0958871655',
+            'password' => Hash::make(12345678),
+            'verification_code' => '1111',
+            'verified' => true,
+            'role' => 'مستفيد',
+            'created_at' => Carbon::create(2022, 1, 15, 10, 0, 0),
+
+        ]);
+        
+          User::create([
+            'full_name' => 'haneen',
+            'email' => 'haneen1@gmail.com',
+            'phone_number' => '0958271655',
+            'password' => Hash::make(12345678),
+            'verification_code' => '1111',
+            'verified' => true,
+            'role' => 'مستفيد',
+            'created_at' => Carbon::create(2021, 1, 15, 10, 0, 0),
+
+        ]);
+        User::create([
+            'full_name' => 'luna',
+            'email' => 'luna1@gmail.com',
+            'phone_number' => '0958071655',
+            'password' => Hash::make(12345678),
+            'verification_code' => '1111',
+            'verified' => true,
+            'role' => 'مستفيد',
+            'created_at' => Carbon::create(2021, 1, 15, 10, 0, 0),
+
+        ]);
+
+
     }
 }

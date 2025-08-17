@@ -42,6 +42,8 @@ class BeneficiaryRequestsSeeder extends Seeder
                 'current_housing_condition' => null,
                 'needed_housing_help' => null,
                 'status' => 'معلق',
+
+            
             ],
 
 
