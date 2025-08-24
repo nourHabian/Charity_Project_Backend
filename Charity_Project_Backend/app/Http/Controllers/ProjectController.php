@@ -109,7 +109,7 @@ class ProjectController extends Controller
     public function getCompletedProjects()
     {
         $projects = Project::where('status', 'منتهي')
-            ->where('duration_type', '!=', 'تطوعي')
+            ->whereNotIn('duration_type', ['تطوعي','فردي'])
             ->get();
 
         $formattedProjects = $projects->map(function ($project) {
