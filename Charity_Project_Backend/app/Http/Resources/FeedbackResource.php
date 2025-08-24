@@ -17,6 +17,7 @@ class FeedbackResource extends JsonResource
         return [
             'id' => $this->id,
             'user_id' => $this->user_id,
+            'user_name' => $this->user_name,
             'message' => $this->message,
             'date' =>  $this->created_at->format('Y/m/d'),
         ];
