@@ -385,14 +385,15 @@ class AdminController extends Controller
         }
         $volunteers = $project->volunteers;
         foreach ($volunteers as $volunteer) {
-            $volunteer->is_working = false;
+            $user = User::Find($volunteer->user_id);
+            $user->is_working = false;
             $notification = [
-                'user_id' => $volunteer->id,
+                'user_id' => $user->id,
                 'title' => 'انتهاء مشروع التطوع',
                 'message' => 'انتهى مشروع التطوع ' . $project->name . ' الذي كنت مشاركاً به، شكراً لعطائك🙏🏻'
             ];
             Notification::create($notification);
-            $volunteer->save();
+            $user->save();
         }
         $project->status = 'منتهي';
         $project->save();
