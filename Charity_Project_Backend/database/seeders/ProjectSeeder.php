@@ -424,6 +424,16 @@ class ProjectSeeder extends Seeder
                     'photo' => 'temporary_projects_images/residential_project_005.jpg',
                     'total_amount' => 135400
                ],
+               [
+                    'type_id' => 3,
+                    'name' => "ترميم منزل أسرة متعففة تضرر بفعل الأحوال الجوية",
+                    'description' =>   'تم تأهيل المنزل بالكامل وتوفير الاحتياجات الأساسية من عزل وتدفئة، ما ضمن بيئة معيشية آمنة وكريمة للعائلة. المشروع أعاد الأمل والاستقرار لأسرة كانت على وشك فقدان مأواها الوحيد.',
+                    'photo' => 'completed_project_images/ترميم_منزل.jpg',
+                    'priority' => 'حرج',
+                    'total_amount' => 15000,
+                    'current_amount' => 15000,
+                    'status' => 'منتهي'
+               ],
 
 
                [
@@ -466,7 +476,7 @@ class ProjectSeeder extends Seeder
                          'يشمل المشروع طباعة وتوزيع نسخ من القرآن الكريم بأحجام مختلفة، ' .
                          'تأمين كتب التفسير، الحديث، الفقه، والسيرة النبوية.',
                     'photo' => 'temporary_projects_images/religion_project_002.png',
-                    'total_amount' => 2900 ,
+                    'total_amount' => 2900,
                ],
                [
                     'type_id' => 7,
@@ -476,14 +486,14 @@ class ProjectSeeder extends Seeder
                          'وتغطي احتياجاتهم الأساسية من سكن، غذاء، ومستلزمات دراسية.',
                     'photo' => 'temporary_projects_images/religion_project_003.png',
                     'total_amount' => 68300,
-                    
+
                ],
 
 
           ];
 
 
-           $completed_projects = [
+          $completed_projects = [
                [
                     'type_id' => 1,
                     'name' => 'زراعة قوقعة أذنية لطفلة تعاني من فقدان شديد في السمع',
@@ -505,11 +515,11 @@ class ProjectSeeder extends Seeder
                     'current_amount' => 25000,
                     'total_amount' => 25000,
                     'status' => 'منتهي',
-                   'created_at' => Carbon::create(2021, 1, 15, 10, 0, 0),
+                    'created_at' => Carbon::create(2021, 1, 15, 10, 0, 0),
 
                ],
 
-               
+
           ];
 
 
@@ -523,7 +533,7 @@ class ProjectSeeder extends Seeder
                     'total_amount' => $project['total_amount'],
                     'current_amount' => $project['current_amount'],
                     'status' => $project['status'],
-               'created_at' => $project['created_at'],
+                    'created_at' => $project['created_at'],
 
                ]);
           }
@@ -579,7 +589,7 @@ class ProjectSeeder extends Seeder
                'photo' => 'charity_logo/logo.png',
                'duration_type' => 'فردي',
                'current_amount' => 100,
-               'total_amount' => 10000 ,
+               'total_amount' => 10000,
 
           ]);
      }
