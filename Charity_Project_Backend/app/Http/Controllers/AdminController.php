@@ -703,6 +703,10 @@ class AdminController extends Controller
 
         $requests = $query->get();
 
+        foreach ($requests as $request) {
+            $request['email'] = User::where('id', $request['user_id'])->first()->email;
+        }
+
         return response()->json($requests);
     }
 

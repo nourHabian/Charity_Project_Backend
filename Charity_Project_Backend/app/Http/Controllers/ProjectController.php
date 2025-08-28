@@ -196,7 +196,7 @@ class ProjectController extends Controller
         $type = Type::where('name', $validatedData['type_id'])->first();
         $validatedData['type_id'] = $type->id;
 
-        $beneficiary = User::where('phone_number', $validatedData['phone_number'])->first();
+        $beneficiary = User::where('email', $validatedData['email'])->first();
         if ($beneficiary->role !== 'مستفيد') {
             return response()->json(['message' => 'لا يوجد مستفيد مسجل في الجمعية بهذا الرقم'], 400);
         }
@@ -238,7 +238,7 @@ class ProjectController extends Controller
 
         $validatedData['duration_type'] = 'فردي';
         $validatedData['user_id'] = $beneficiary->id;
-        unset($validatedData['phone_number']);
+        unset($validatedData['email']);
 
         // create the project
         $project = Project::create($validatedData);

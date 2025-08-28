@@ -26,7 +26,7 @@ class AddBeneficiaryProjectRequest extends FormRequest
             'type_id' => 'required|string|exists:types,name',
             'name' => 'required|string|max:50',
             'description' => 'required|string|max:500',
-            'phone_number' => 'required|string|exists:users,phone_number',
+            'email' => 'required|string|email|exists:users,email',
             'photo' => 'required|file|mimes:png,jpg,jpeg,gif|max:2048',
             'total_amount' => 'required|numeric|min:10',
             'current_amount' => 'required|numeric|min:0',
