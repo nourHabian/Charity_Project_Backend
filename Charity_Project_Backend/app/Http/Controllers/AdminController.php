@@ -74,7 +74,7 @@ class AdminController extends Controller
             $users = User::where('monthly_donation', '!=', 0)->get();
             $charity = Charity::findOrFail(1);
             if ($charity->last_monthly_donation != null && Carbon::today()->isSameDay($charity->last_monthly_donation)) {
-                return response()->json(['message' => 'you did monthly donation this month'], 200);
+                return response()->json(['message' => 'لقد قمت بتفعيل التبرع الشهري لهذا الشهر'], 200);
             }
             $charity->last_monthly_donation = Carbon::today();
             foreach ($users as $user) {
@@ -91,6 +91,7 @@ class AdminController extends Controller
                         'message' => 'تم تنفيذ التبرع الشهري بنجاح، نشكرك على التزامك المستمر بالعطاء'
                     ];
                     Notification::create($notification);
+                    sendWhatsAppMessage($user->phone_number, "تم تنفيذ التبرع الشهري بنجاح، نشكرك على التزامك المستمر بالعطاء");
 
                     // add to donation history
                     $history = [
@@ -127,6 +128,7 @@ class AdminController extends Controller
                         'message' => 'تعذر تنفيذ التبرع الشهري لهذا الشهر بسبب عدم توافر رصيد كافي في محفظتك. يرجى إعادة الشحن لضمان استمرارية الدعم.'
                     ];
                     Notification::create($notification);
+                    sendWhatsAppMessage($user->phone_number, "تعذر تنفيذ التبرع الشهري لهذا الشهر بسبب عدم توافر رصيد كافي في محفظتك. يرجى إعادة الشحن لضمان استمرارية الدعم.");
                 }
             }
             $users = User::where('monthly_donation', 0)
@@ -141,9 +143,9 @@ class AdminController extends Controller
                 ];
                 Notification::create($notification);
             }
-            return response()->json(['message' => 'monthly donation has been payed for users who activated it, and notifications has been sent to users who did not activate it yet'], 200);
+            return response()->json(['message' => 'تم تفعيل التبرع الشهري للمستخدمين المفعّلين لهذه الميزة، كما تم إرسال إشعارات تذكيرية بهذه الميزة للمستخدمين الغير مفعلين لها'], 200);
         }
-        return response()->json(['message' => 'today is not the first of the month'], 400);
+        return response()->json(['message' => 'اليوم ليس أول يوم في الشهر'], 400);
     }
 
     public function donateToProject(Request $request)
@@ -200,6 +202,7 @@ class AdminController extends Controller
                     'message' => 'تم تغطية حالتك بالكامل، وسيتم التواصل معك بأقرب وقت لتوصيل التبرعات، نسأل الله أن ييسر لك الأمور ويجزي المتبرعين خيراً.'
                 ];
                 Notification::create($notification);
+                sendWhatsAppMessage($beneficiary->phone_number, "تم تغطية حالتك بالكامل، وسيتم التواصل معك بأقرب وقت لتوصيل التبرعات، نسأل الله أن ييسر لك الأمور ويجزي المتبرعين خيراً.");
             }
 
             // send notifications to all participated donors in this project
@@ -253,9 +256,10 @@ class AdminController extends Controller
         $notification = [
             'user_id' => $user->id,
             'title' => 'تحديث على طلب التطوع',
-            'message' => 'تم قبول طلب تطوعكم معنا في الجمعية بنجاح! نتطلع قدماً لعملكم معنا✨'
+            'message' => 'تم قبول طلب تطوعكم معنا في الجمعية! نتطلع قدماً لعملكم معنا✨'
         ];
         Notification::create($notification);
+        sendWhatsAppMessage($user->phone_number, "تم قبول طلب تطوعكم معنا في الجمعية! نتطلع قدماً لعملكم معنا✨");
 
         return response()->json(['message' => 'تم قبول هذا المتطوع بنجاح'], 200);
     }
@@ -292,6 +296,7 @@ class AdminController extends Controller
             'message' => 'شكراً على طلبك للتطوع معنا. نعتذر، لم يتم قبول طلبك. نقدّر اهتمامك ونتمنى لك التوفيق.'
         ];
         Notification::create($notification);
+        sendWhatsAppMessage($user->phone_number, "شكراً على طلبك للتطوع معنا. نعتذر، لم يتم قبول طلبك. نقدّر اهتمامك ونتمنى لك التوفيق.");
 
         return response()->json(['message' => 'تم رفض هذا الطلب بنجاح'], 200);
     }
@@ -328,9 +333,10 @@ class AdminController extends Controller
         $notification = [
             'user_id' => $user->id,
             'title' => 'تحديث على حالة التطوع',
-            'message' => 'تم إيقاف تطوعك في الجمعية بسبب مخالفات في تنفيذ المهام التطوعية، لمتابعة التفاصيل أو الاعتراض، يُرجى التواصل مع إدارة التطبيق على صفحة الفيسبوك الخاصة بالجمعية'
+            'message' => 'تم إيقاف تطوعك في الجمعية بسبب مخالفات في تنفيذ المهام التطوعية، لمتابعة التفاصيل أو الاعتراض، يُرجى التواصل مع إدارة التطبيق على رقم الواتساب الخاص بالجمعية'
         ];
         Notification::create($notification);
+        sendWhatsAppMessage($user->phone_number, "تم إيقاف تطوعك في الجمعية بسبب مخالفات في تنفيذ المهام التطوعية، لمتابعة التفاصيل أو الاعتراض، يُرجى التواصل مع إدارة التطبيق على هذا الرقم الخاص بالجمعية");
 
         // احتمال يكون حاليا عم يشتغل بشي مشروع _ حاليا ماحعدل شي بهي الحالة
 
@@ -366,6 +372,7 @@ class AdminController extends Controller
             'message' => 'تم فك حظر التطوع الخاص بك، نتطلع لعودتك إلى العمل معنا✨'
         ];
         Notification::create($notification);
+        sendWhatsAppMessage($user->phone_number, "تم فك حظر التطوع الخاص بك، نتطلع لعودتك إلى العمل معنا✨");
 
         return response()->json(['message' => 'تم فك الحظر عن هذا المتطوع بنجاح'], 200);
     }
@@ -393,6 +400,7 @@ class AdminController extends Controller
                 'message' => 'انتهى مشروع التطوع ' . $project->name . ' الذي كنت مشاركاً به، شكراً لعطائك🙏🏻'
             ];
             Notification::create($notification);
+            sendWhatsAppMessage($user->phone_number, 'انتهى مشروع التطوع ' . $project->name . ' الذي كنت مشاركاً به، شكراً لعطائك🙏🏻');
             $user->save();
         }
         $project->status = 'منتهي';
@@ -422,6 +430,7 @@ class AdminController extends Controller
             'message' => 'تم قبول طلب المساعدة الخاص بك، سيتم جمع التبرعات لحالتك بأقرب وقت وسنوافيك بالتفاصيل قريباً✨'
         ];
         Notification::create($notification);
+        sendWhatsAppMessage($beneficiary->phone_number, "تم قبول طلب المساعدة الخاص بك، سيتم جمع التبرعات لحالتك بأقرب وقت وسنوافيك بالتفاصيل قريباً✨");
     }
 
     public function rejectBeneficiaryRequest(Request $request)
@@ -443,9 +452,10 @@ class AdminController extends Controller
         $notification = [
             'user_id' => $beneficiary->id,
             'title' => 'تحديث على حالة طلبك',
-            'message' => 'نعتذر، تم رفض الطلب الخاص بك لأسباب تتعلق بمدى مصداقية المعلومات والوثائق المدخلة.'
+            'message' => 'نعتذر، تم رفض الطلب الخاص بك لأسباب تتعلق بمدى مصداقية المعلومات.'
         ];
         Notification::create($notification);
+        sendWhatsAppMessage($beneficiary->phone_number, "نعتذر، تم رفض الطلب الخاص بك لأسباب تتعلق بمدى مصداقية المعلومات.");
     }
 
     public function banBeneficiary(Request $request)
@@ -469,6 +479,7 @@ class AdminController extends Controller
         }
         $beneficiary->ban = true;
         $beneficiary->save();
+        
         return response()->json(['message' => 'تم حظر هذا المحتاج بنجاح'], 200);
     }
 
@@ -519,6 +530,7 @@ class AdminController extends Controller
 
         Notification::create($donor_notification);
         Notification::create($beneficiary_notification);
+        sendWhatsAppMessage($beneficiary->phone_number, "تم تسليم هديتك إليك اليوم بنجاح، نأمل أن تكون سبباً في رسم البسمة على  وجهك✨");
 
         $donation->delivered = true;
         $donation->save();
@@ -1002,55 +1014,55 @@ class AdminController extends Controller
     }
 
 
-public function beneficiariesPerYear()
-{
-    $years = User::where('role', 'مستفيد')
-        ->where('ban', false)
-        ->pluck('created_at')
-        ->map(fn($date) => $date->format('Y')) 
-        ->unique()    
-        ->sort();
-
-    $data = [];
-
-    foreach ($years as $year) {
-        $count = User::where('role', 'مستفيد')
+    public function beneficiariesPerYear()
+    {
+        $years = User::where('role', 'مستفيد')
             ->where('ban', false)
-            ->whereYear('created_at', $year)
-            ->count();
+            ->pluck('created_at')
+            ->map(fn($date) => $date->format('Y'))
+            ->unique()
+            ->sort();
 
-        $data[] = [
-            'year' => $year,
-            'beneficiaries' => $count,
-        ];
+        $data = [];
+
+        foreach ($years as $year) {
+            $count = User::where('role', 'مستفيد')
+                ->where('ban', false)
+                ->whereYear('created_at', $year)
+                ->count();
+
+            $data[] = [
+                'year' => $year,
+                'beneficiaries' => $count,
+            ];
+        }
+
+        return response()->json($data);
     }
 
-    return response()->json($data);
-}
- 
 
-public function finishedProjectsPerYear()
-{
+    public function finishedProjectsPerYear()
+    {
 
-    $years = Project::where('status', 'منتهي')
-        ->pluck('created_at')
-        ->map(fn($date) => $date->format('Y')) 
-        ->unique()    
-        ->sort();
+        $years = Project::where('status', 'منتهي')
+            ->pluck('created_at')
+            ->map(fn($date) => $date->format('Y'))
+            ->unique()
+            ->sort();
 
-    $data = [];
+        $data = [];
 
-    foreach ($years as $year) {
-        $count = Project::where('status', 'منتهي')
-            ->whereYear('created_at', $year)
-            ->count();
+        foreach ($years as $year) {
+            $count = Project::where('status', 'منتهي')
+                ->whereYear('created_at', $year)
+                ->count();
 
-        $data[] = [
-            'year' => $year,
-            'projects' => $count,
-        ];
+            $data[] = [
+                'year' => $year,
+                'projects' => $count,
+            ];
+        }
+
+        return response()->json($data);
     }
-
-    return response()->json($data);
-}
 }

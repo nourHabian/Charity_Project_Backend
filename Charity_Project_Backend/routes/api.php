@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminDonationHistoryController;
 use App\Http\Controllers\BeneficiaryRequestController;
+use App\Http\Controllers\CharityController;
 use App\Http\Controllers\DonationController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProjectController;
@@ -225,9 +226,6 @@ Route::middleware('isSuperAdmin')->group(function () {
     Route::get('/finishedProjectsPerYear', [AdminController::class, 'finishedProjectsPerYear']);
 
 });
-
-
-
 
 
 /*

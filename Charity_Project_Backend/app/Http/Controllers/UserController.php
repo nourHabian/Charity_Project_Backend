@@ -37,7 +37,7 @@ class UserController extends Controller
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'verification_code' => $verification_code,
-                'role' =>'متبرع'
+                'role' => 'متبرع'
             ]);
         } else {
             $existed_user = User::where('email', $request->email)->firstOrFail();
@@ -185,6 +185,7 @@ class UserController extends Controller
             ];
             Notification::create($beneficiary_notification);
             Notification::create($donor_notification);
+            sendWhatsAppMessage($beneficiary->phone_number, 'تم توصيل هدية إليك من أحد المتبرعين بمبلغ ' . $request->amount . ' نأمل أن تكون سبباً في رسم البسمة على وجهك.');
 
             // add this to donor's donation history
             $history = [
@@ -322,6 +323,7 @@ class UserController extends Controller
                     'message' => 'تم تغطية حالتك بالكامل، وسيتم التواصل معك بأقرب وقت لتوصيل التبرعات، نسأل الله أن ييسر لك الأمور ويجزي المتبرعين خيراً.'
                 ];
                 Notification::create($notification);
+                sendWhatsAppMessage($beneficiary->phone_number, "تم تغطية حالتك بالكامل، وسيتم التواصل معك بأقرب وقت لتوصيل التبرعات، نسأل الله أن ييسر لك الأمور ويجزي المتبرعين خيراً.");
             }
 
             // send notifications to all participated donors in this project
@@ -438,7 +440,7 @@ class UserController extends Controller
     public function getDonorsByPoints()
     {
         $users = User::whereIn('role', ['متبرع', 'متطوع'])
-              ->where('points', '>', 20)->orderByDesc('points')
+            ->where('points', '>', 20)->orderByDesc('points')
             ->take(10)
             ->get(['full_name', 'points']);
 

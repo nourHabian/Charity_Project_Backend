@@ -109,7 +109,7 @@ class ProjectController extends Controller
     public function getCompletedProjects()
     {
         $projects = Project::where('status', 'منتهي')
-            ->whereNotIn('duration_type', ['تطوعي','فردي'])
+            ->whereNotIn('duration_type', ['تطوعي', 'فردي'])
             ->get();
 
         $formattedProjects = $projects->map(function ($project) {
@@ -251,6 +251,7 @@ class ProjectController extends Controller
             'message' => 'تم نشر حالتك في التطبيق، نأمل أن تصل المساعدة إليك قريباً بإذن الله'
         ];
         Notification::create($notification);
+        sendWhatsAppMessage($beneficiary->phone_number, "تم نشر حالتك في التطبيق، نأمل أن تصل المساعدة إليك قريباً بإذن الله");
 
         // send notifications to donors if needed
         $users = User::all();
@@ -296,6 +297,7 @@ class ProjectController extends Controller
                     'message' => 'مشروع تطوعي جديد متاح الآن ' . $project->name . ' يمكنك التقديم والمساهمة في خدمة المجتمع، انضم واصنع فرقاً'
                 ];
                 Notification::create($notification);
+                sendWhatsAppMessage($user->phone_number, 'مشروع تطوعي جديد متاح الآن ' . $project->name . ' يمكنك التقديم والمساهمة في خدمة المجتمع، انضم واصنع فرقاً');
             }
         }
         return response()->json($project, 201);
@@ -329,8 +331,8 @@ class ProjectController extends Controller
 
         // جلب المستخدمين الذين تبرعوا لهذا المشروع
         $donorIds = Donation::where('project_id', $project->id)
-                            ->distinct()
-                            ->pluck('user_id');
+            ->distinct()
+            ->pluck('user_id');
 
         // إرسال إشعارات حسب الحالة الجديدة
         foreach ($donorIds as $userId) {
@@ -339,14 +341,12 @@ class ProjectController extends Controller
                     'user_id' => $userId,
                     'title'   => 'تعليق المشروع مؤقتاً',
                     'message' => "نود إعلامكم بأنه تم تعليق المشروع '{$project->name}' لفترة قصيرة، وسيعود لاستقبال التبرعات قريباً.",
-                    'is_read' => false,
                 ]);
             } elseif ($request->status === 'جاري' && $oldStatus === 'معلق') {
                 Notification::create([
                     'user_id' => $userId,
                     'title'   => 'إعادة تفعيل المشروع',
                     'message' => "تمت إعادة تفعيل المشروع '{$project->name}' وهو الآن يستقبل التبرعات مجدداً. نشكركم على دعمكم!",
-                    'is_read' => false,
                 ]);
             }
         }
@@ -355,7 +355,7 @@ class ProjectController extends Controller
     }
 
 
-   
+
     //ارجاع المشاريع التطوع حسب التايب
     public function getVolunteerProjectsByType($volunteeringDomain)
     {
@@ -363,7 +363,7 @@ class ProjectController extends Controller
 
         if ($type) {
             $projects = Project::where('type_id', $type->id)
-                ->where('duration_type', 'تطوعي') ->where('status', 'جاري') ->whereColumn('current_amount', '<', 'total_amount')
+                ->where('duration_type', 'تطوعي')->where('status', 'جاري')->whereColumn('current_amount', '<', 'total_amount')
                 ->get();
 
             return response()->json($projects, 200);
@@ -380,9 +380,9 @@ class ProjectController extends Controller
         }
 
         $projects = Project::where('user_id', $user->id)
-                   ->where('duration_type', 'فردي')
-                   ->latest()
-                   ->get();
+            ->where('duration_type', 'فردي')
+            ->latest()
+            ->get();
         if ($projects->isEmpty()) {
             return response()->json(['message' => 'لا يوجد أي مشروع مرتبط بك حالياً.'], 404);
         }
@@ -401,8 +401,6 @@ class ProjectController extends Controller
             'message' => 'تم جلب المشاريع بنجاح.',
             'projects' => $results
         ], 200);
-
-        
     }
 
 
@@ -412,7 +410,4 @@ class ProjectController extends Controller
         $project->update($request->validated());
         return response()->json($project, 200);
     } */
-
 }
-
-
