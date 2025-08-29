@@ -219,7 +219,7 @@ class UserSeeder extends Seeder
           User::create([
             'full_name' => 'haneen',
             'email' => 'haneen1@gmail.com',
-            'phone_number' => '0960973598',
+            'phone_number' => '0981411273',
             'password' => Hash::make(12345678),
             'verification_code' => '1111',
             'verified' => true,
