@@ -42,4 +42,10 @@ class Project extends Model
     {
         return $this->hasMany(Notification::class);
     }
+
+    public function adminDonations()
+    {
+        return $this->belongsToMany(Admin::class, 'admin_donation_histories', 'project_id', 'admin_id')
+            ->withPivot('amount', 'created_at');
+    }
 }
