@@ -16,7 +16,7 @@ class DonationSeeder extends Seeder
          $donations = [
             [
                 'user_id' => 1,
-                'recipient_number' => '0966871652',
+                'recipient_number' => '0994550368',
                 'recipient_name' => 'heba',
                 'amount' => 10000,
                 'type' => 'هدية',
@@ -25,7 +25,7 @@ class DonationSeeder extends Seeder
 
             [
                 'user_id' => 2,
-                'recipient_number' => '0966871653',
+                'recipient_number' => '0939897321',
                 'recipient_name' => 'hala',
                 'amount' => 50000,
                 'type' => 'هدية',
@@ -34,7 +34,7 @@ class DonationSeeder extends Seeder
 
             [
                 'user_id' => 6,
-                'recipient_number' => '0966871655',
+                'recipient_number' => '0962381185',
                 'recipient_name' => 'dana',
                 'amount' => 50000,
                 'type' => 'هدية',
@@ -43,7 +43,7 @@ class DonationSeeder extends Seeder
 
             [ 
                 'user_id' => 7,
-                'recipient_number' => '0987654321',
+                'recipient_number' => '0957805275',
                 'recipient_name' => 'ali',
                 'amount' => 250000,
                 'type' => 'هدية',
@@ -52,7 +52,7 @@ class DonationSeeder extends Seeder
 
             [
                 'user_id' => 9 ,
-                'recipient_number' => '0912345678',
+                'recipient_number' => '0958740475',
                 'recipient_name' => 'omar',
                 'amount' => 100000,
                 'type' => 'هدية',
@@ -61,7 +61,7 @@ class DonationSeeder extends Seeder
 
             [
                 'user_id' => 6,
-                'recipient_number' => '0966871655',
+                'recipient_number' => '0962381185',
                 'recipient_name' => 'dana',
                 'amount' => 800000,
                 'type' => 'هدية',

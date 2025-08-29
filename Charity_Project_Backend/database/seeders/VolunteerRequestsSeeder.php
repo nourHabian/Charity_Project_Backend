@@ -17,7 +17,7 @@ class VolunteerRequestsSeeder extends Seeder
         $requests = [
             [
                 'user_id' => 6,
-                'phone_number' => "0987654321",
+                'phone_number' => "0933914855",
                 'age' => 21,
                 'place_of_residence' => "دمشق",
                 'gender' => "أنثى",
@@ -29,7 +29,7 @@ class VolunteerRequestsSeeder extends Seeder
             ],
             [
                 'user_id' => 6,
-                'phone_number' => "0987654322",
+                'phone_number' => "0933914855",
                 'age' => 21,
                 'place_of_residence' => "دمشق",
                 'gender' => "أنثى",
@@ -41,7 +41,7 @@ class VolunteerRequestsSeeder extends Seeder
             ],
             [
                 'user_id' => 6,
-                'phone_number' => "0987654323",
+                'phone_number' => "0933914855",
                 'age' => 21,
                 'place_of_residence' => "دمشق",
                 'gender' => "أنثى",
@@ -54,7 +54,7 @@ class VolunteerRequestsSeeder extends Seeder
 
             [
                 'user_id' => 7,
-                'phone_number' => "0987654324",
+                'phone_number' => "0936105802",
                 'age' => 21,
                 'place_of_residence' => "دمشق",
                 'gender' => "أنثى",
@@ -66,7 +66,7 @@ class VolunteerRequestsSeeder extends Seeder
             ],
             [
                 'user_id' => 8,
-                'phone_number' => "0987654325",
+                'phone_number' => "0936105802",
                 'age' => 21,
                 'place_of_residence' => "دمشق",
                 'gender' => "أنثى",
@@ -78,7 +78,7 @@ class VolunteerRequestsSeeder extends Seeder
             ],
             [
                 'user_id' => 8,
-                'phone_number' => "0987654326",
+                'phone_number' => "0936105802",
                 'age' => 21,
                 'place_of_residence' => "دمشق",
                 'gender' => "أنثى",
@@ -90,7 +90,7 @@ class VolunteerRequestsSeeder extends Seeder
             ],
             [
                 'user_id' => 9,
-                'phone_number' => "0987654327",
+                'phone_number' => "0981411273",
                 'age' => 21,
                 'place_of_residence' => "دمشق",
                 'gender' => "أنثى",
@@ -102,7 +102,7 @@ class VolunteerRequestsSeeder extends Seeder
             ],
             [
                 'user_id' => 9,
-                'phone_number' => "0987654328",
+                'phone_number' => "0981411273",
                 'age' => 21,
                 'place_of_residence' => "دمشق",
                 'gender' => "أنثى",
@@ -114,7 +114,7 @@ class VolunteerRequestsSeeder extends Seeder
             ],
             [
                 'user_id' => 10,
-                'phone_number' => "0987654329",
+                'phone_number' => "0940871174",
                 'age' => 21,
                 'place_of_residence' => "دمشق",
                 'gender' => "أنثى",
@@ -126,7 +126,7 @@ class VolunteerRequestsSeeder extends Seeder
             ],
             [
                 'user_id' => 11,
-                'phone_number' => "0987654320",
+                'phone_number' => "0939334305",
                 'age' => 21,
                 'place_of_residence' => "دمشق",
                 'gender' => "أنثى",
