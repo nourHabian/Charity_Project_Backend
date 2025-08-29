@@ -70,7 +70,7 @@ class AdminController extends Controller
     public function monthlyDonations()
     {
         // اذا اليوم اول الشهر بس كمان لازم شيك انو اخر مرة سحبت من العالم كان الشهر الماضي
-        if (Carbon::now()->day === 1) {
+        if (Carbon::now()->day === 30) {
             $users = User::where('monthly_donation', '!=', 0)->get();
             $charity = Charity::findOrFail(1);
             if ($charity->last_monthly_donation != null && Carbon::today()->isSameDay($charity->last_monthly_donation)) {
@@ -329,7 +329,7 @@ class AdminController extends Controller
         $notification = [
             'user_id' => $user->id,
             'title' => 'تحديث على حالة التطوع',
-            'message' => 'تم إيقاف تطوعك في الجمعية بسبب مخالفات في تنفيذ المهام التطوعية، لمتابعة التفاصيل أو الاعتراض، يُرجى التواصل مع إدارة التطبيق على رقم الواتساب الخاص بالجمعية'
+            'message' => 'تم إيقاف تطوعك في الجمعية بسبب مخالفات في تنفيذ المهام التطوعية، لمتابعة التفاصيل أو الاعتراض، يُرجى التواصل مع إدارة التطبيق على رقم الواتساب الخاص بالجمعية: 0999999999'
         ];
         Notification::create($notification);
 

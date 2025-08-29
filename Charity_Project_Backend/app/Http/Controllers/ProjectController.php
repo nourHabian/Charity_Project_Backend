@@ -289,7 +289,7 @@ class ProjectController extends Controller
         // send notification to volunteers
         $users = User::all();
         foreach ($users as $user) {
-            if ($user->role === 'متطوع') {
+            if ($user->role === 'متطوع' && !$user->ban) {
                 $notification = [
                     'user_id' => $user->id,
                     'project_id' => $project->id,

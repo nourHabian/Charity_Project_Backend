@@ -25,16 +25,16 @@ class VolunteerController extends Controller
         }
 
         $validatedData = $request->validated();
-        if (
-            isset($validatedData['phone_number']) &&
-            User::where('phone_number', $validatedData['phone_number'])
-            ->where('id', '!=', $user->id)
-            ->exists()
-        ) {
-            return response()->json([
-                'message' => 'رقم الهاتف مستخدم بالفعل من قبل مستخدم آخر.'
-            ], 422);
-        }
+        // if (
+        //     isset($validatedData['phone_number']) &&
+        //     User::where('phone_number', $validatedData['phone_number'])
+        //     ->where('id', '!=', $user->id)
+        //     ->exists()
+        // ) {
+        //     return response()->json([
+        //         'message' => 'رقم الهاتف مستخدم بالفعل من قبل مستخدم آخر.'
+        //     ], 422);
+        // }
 
         $user->volunteer_status = 'معلق';
         $user->save();

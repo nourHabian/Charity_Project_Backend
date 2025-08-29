@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('verification_code')->nullable();
             $table->boolean('verified')->default(false);
-            $table->date('date_of_birth')->nullable();
+            // $table->date('date_of_birth')->nullable();
             // $table->enum('gender', ['ذكر', 'أنثى'])->nullable();
             // $table->integer('age')->nullable();
             $table->enum('role', ['متبرع', 'مستفيد', 'متطوع']);
