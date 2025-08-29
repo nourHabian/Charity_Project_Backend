@@ -297,7 +297,6 @@ class ProjectController extends Controller
                     'message' => 'مشروع تطوعي جديد متاح الآن ' . $project->name . ' يمكنك التقديم والمساهمة في خدمة المجتمع، انضم واصنع فرقاً'
                 ];
                 Notification::create($notification);
-                sendWhatsAppMessage($user->phone_number, 'مشروع تطوعي جديد متاح الآن ' . $project->name . ' يمكنك التقديم والمساهمة في خدمة المجتمع، انضم واصنع فرقاً');
             }
         }
         return response()->json($project, 201);
