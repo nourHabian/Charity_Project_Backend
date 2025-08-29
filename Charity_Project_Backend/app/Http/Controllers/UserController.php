@@ -279,15 +279,22 @@ class UserController extends Controller
         if ($amount > $user->balance) {
             return response()->json(['message' => 'ليس لديك رصيد كافٍ لإتمام هذه العملية، الرجاء شحن المحفظة وإعادة المحاولة.'], 400);
         }
-        $user->balance -= $amount;
-        $user->points += floor(5 * log(1 + $amount));
-        $user->save();
 
         // add to donation history
         $remaining = $project->total_amount - $project->current_amount;
         if ($project->duration_type === 'دائم') {
             $remaining = $amount;
+        } else if ($remaining < $amount) {
+            return response()->json([
+                'message' => 'لا يمكنك التبرع بمبلغ ' . $amount . '$ لأنه أكبر من المبلغ المتبقي لإتمام المشروع',
+                'maximum_amount' => $remaining
+            ], 200);
         }
+        
+        $user->balance -= $amount;
+        $user->points += floor(5 * log(1 + $amount));
+        $user->save();
+
         $history = [
             'user_id' => $user->id,
             'project_id' => $project->id,
